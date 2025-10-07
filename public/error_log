@@ -1,0 +1,6 @@
+[09-Aug-2025 12:03:36 Asia/Jakarta] PHP Warning:  require(/home/goar5289/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/goar5289/public_html/index.php on line 14
+[09-Aug-2025 12:03:36 Asia/Jakarta] PHP Warning:  require(/home/goar5289/public_html/../vendor/autoload.php): Failed to open stream: No such file or directory in /home/goar5289/public_html/index.php on line 14
+[09-Aug-2025 12:03:36 Asia/Jakarta] PHP Fatal error:  Uncaught Error: Failed opening required '/home/goar5289/public_html/../vendor/autoload.php' (include_path='.:/opt/alt/php82/usr/share/pear:/opt/alt/php82/usr/share/php:/usr/share/pear:/usr/share/php') in /home/goar5289/public_html/index.php:14
+Stack trace:
+#0 {main}
+  thrown in /home/goar5289/public_html/index.php on line 14

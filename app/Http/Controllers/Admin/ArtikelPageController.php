@@ -26,6 +26,7 @@ class ArtikelPageController extends Controller
             'isi_konten' => 'required|string',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120', // 5MB
             'is_featured' => 'boolean',
+            'is_visible' => 'boolean',
             'published_at' => 'nullable|date'
         ]);
 
@@ -57,6 +58,7 @@ class ArtikelPageController extends Controller
             'isi_konten' => $request->isi_konten,
             'gambar_path' => $gambarPath,
             'is_featured' => $request->is_featured ?? false,
+            'is_visible' => $request->is_visible ?? true,
             'published_at' => $request->published_at ?? now()
         ]);
 
@@ -70,6 +72,7 @@ class ArtikelPageController extends Controller
             'isi_konten' => 'required|string',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
             'is_featured' => 'boolean',
+            'is_visible' => 'boolean',
             'published_at' => 'nullable|date'
         ]);
 
@@ -81,6 +84,7 @@ class ArtikelPageController extends Controller
             'judul' => $request->judul,
             'isi_konten' => $request->isi_konten,
             'is_featured' => $request->is_featured ?? false,
+            'is_visible' => $request->is_visible ?? $artikel->is_visible,
             'published_at' => $request->published_at ?? $artikel->published_at
         ];
 
@@ -158,6 +162,17 @@ class ArtikelPageController extends Controller
             $artikel->update(['is_featured' => false]);
             $message = 'Status featured artikel berhasil dihapus!';
         }
+
+        return redirect()->back()->with('success', $message);
+    }
+
+    public function toggleVisibility(Artikel $artikel)
+    {
+        $artikel->update(['is_visible' => !$artikel->is_visible]);
+        
+        $message = $artikel->is_visible 
+            ? 'Artikel berhasil ditampilkan!' 
+            : 'Artikel berhasil disembunyikan!';
 
         return redirect()->back()->with('success', $message);
     }

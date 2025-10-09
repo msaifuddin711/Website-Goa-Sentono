@@ -103,6 +103,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/galeri/{galeri}', [GaleriPageController::class, 'destroy'])->name('galeri.destroy');
         Route::post('/galeri/reorder', [GaleriPageController::class, 'reorder'])->name('galeri.reorder');
         Route::post('/galeri/bulk-delete', [GaleriPageController::class, 'bulkDelete'])->name('galeri.bulk-delete');
+        Route::post('/galeri/{galeri}/toggle-visibility', [GaleriPageController::class, 'toggleVisibility'])->name('galeri.toggleVisibility');
 
         Route::get('/artikel', [ArtikelPageController::class, 'index'])->name('artikel.index');
         Route::post('/artikel', [ArtikelPageController::class, 'store'])->name('artikel.store');

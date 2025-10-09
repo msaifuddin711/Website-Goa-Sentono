@@ -9,7 +9,7 @@ class GaleriController extends Controller
 {
     public function index()
     {
-        $galeriItems = GaleriItem::latest()->paginate(6);
+        $galeriItems = GaleriItem::visible()->latest()->paginate(6);
 
         // Tambahkan data untuk JavaScript (dibutuhkan untuk gallery modal di search results)
         $initialGalleryData = [
@@ -20,7 +20,7 @@ class GaleriController extends Controller
 
         return view('galeri', [
             'galeriItems' => $galeriItems,
-            'initialGalleryData' => $initialGalleryData, // Tambahkan ini
+            'initialGalleryData' => $initialGalleryData, 
         ]);
     }
 
@@ -30,7 +30,7 @@ class GaleriController extends Controller
         $perPage = $request->get('per_page', 6);
         $search = $request->get('search');
         
-        $query = GaleriItem::latest();
+        $query = GaleriItem::visible()->latest();
         
         // Jika ada parameter search, gunakan scope search dari model
         if ($search) {

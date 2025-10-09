@@ -9,7 +9,7 @@
 @section('content')
 <div class="space-y-8">
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-soft-cream rounded-xl flex items-center justify-center">
@@ -18,6 +18,30 @@
                 <div>
                     <p class="text-accent-green text-sm">Total Artikel</p>
                     <p class="text-2xl font-bold text-primary-dark">{{ $artikels->total() }}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-eye text-green-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-green-600 text-sm">Ditampilkan</p>
+                    <p class="text-2xl font-bold text-primary-dark">{{ $artikels->where('is_visible', true)->count() }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-eye-slash text-red-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-red-600 text-sm">Disembunyikan</p>
+                    <p class="text-2xl font-bold text-primary-dark">{{ $artikels->where('is_visible', false)->count() }}</p>
                 </div>
             </div>
         </div>
@@ -33,27 +57,15 @@
                 </div>
             </div>
         </div>
-        
-        <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
-            <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-warm-beige rounded-xl flex items-center justify-center">
-                    <i class="fas fa-calendar text-primary-green text-xl"></i>
-                </div>
-                <div>
-                    <p class="text-accent-green text-sm">Hari Ini</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $artikels->where('created_at', '>=', today())->count() }}</p>
-                </div>
-            </div>
-        </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-light-beige rounded-xl flex items-center justify-center">
-                    <i class="fas fa-clock text-sage-green text-xl"></i>
+                    <i class="fas fa-calendar text-sage-green text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-accent-green text-sm">Minggu Ini</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $artikels->where('created_at', '>=', now()->startOfWeek())->count() }}</p>
+                    <p class="text-accent-green text-sm">Hari Ini</p>
+                    <p class="text-2xl font-bold text-primary-dark">{{ $artikels->where('created_at', '>=', today())->count() }}</p>
                 </div>
             </div>
         </div>
@@ -108,7 +120,7 @@
             @if($artikels->count() > 0)
                 <div id="artikel-container" class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     @foreach($artikels as $item)
-                        <div class="bg-soft-cream rounded-xl overflow-hidden card-hover artikel-item border-l-4 {{ $item->is_featured ? 'border-l-medium-brown' : 'border-l-light-beige' }} border border-light-beige" 
+                        <div class="bg-soft-cream rounded-xl overflow-hidden card-hover artikel-item border-l-4 {{ $item->is_featured ? 'border-l-medium-brown' : 'border-l-light-beige' }} border border-light-beige {{ !$item->is_visible ? 'opacity-60' : '' }}" 
                              data-id="{{ $item->id }}" 
                              data-search="{{ strtolower($item->judul . ' ' . strip_tags($item->isi_konten)) }}">
                             <div class="relative">
@@ -116,9 +128,16 @@
                                      alt="{{ $item->judul }}" 
                                      class="w-full h-48 object-cover">
                                 
+                                <!-- Visibility Badge -->
+                                @if($item->is_visible)
+                                    <span class="status-badge absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">Ditampilkan</span>
+                                @else
+                                    <span class="status-badge absolute top-2 left-2 bg-gray-500 text-white text-xs font-bold px-2 py-1 rounded-full">Disembunyikan</span>
+                                @endif
+
                                 <!-- Featured Badge -->
                                 @if($item->is_featured)
-                                <div class="absolute top-2 left-2 bg-medium-brown text-cream rounded-lg px-2 py-1 text-xs font-semibold">
+                                <div class="absolute top-2 left-24 bg-medium-brown text-cream rounded-lg px-2 py-1 text-xs font-semibold">
                                     <i class="fas fa-star mr-1"></i>UNGGULAN
                                 </div>
                                 @endif
@@ -139,11 +158,17 @@
                                     <span>{{ $item->created_at->format('H:i') }}</span>
                                 </div>
                                 
-                                <div class="flex space-x-2">
+                                <div class="flex space-x-2 mb-2">
+                                    <button class="flex-1 {{ $item->is_visible ? 'bg-yellow-100 hover:bg-yellow-200 text-yellow-800' : 'bg-green-100 hover:bg-green-200 text-green-800' }} px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
+                                            onclick="toggleVisibility({{ $item->id }})">
+                                        <i class="fas {{ $item->is_visible ? 'fa-eye-slash' : 'fa-eye' }} mr-1"></i>{{ $item->is_visible ? 'Sembunyikan' : 'Tampilkan' }}
+                                    </button>
                                     <button class="flex-1 bg-light-sage hover:bg-sage-green text-cream px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
                                             onclick="toggleFeatured({{ $item->id }}, {{ $item->is_featured ? 'false' : 'true' }})">
                                         <i class="fas fa-star mr-1"></i>{{ $item->is_featured ? 'Tidak Unggulan' : 'Unggulan' }}
                                     </button>
+                                </div>
+                                <div class="flex space-x-2">
                                     <button class="flex-1 bg-warm-beige hover:bg-light-beige text-primary-dark px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
                                             onclick="showEditArtikelPopup({{ $item->toJson() }})">
                                         <i class="fas fa-edit mr-1"></i>Edit
@@ -193,7 +218,8 @@ window.adminArtikelRoutes = {
     update: "{{ route('admin.artikel.update', ['artikel' => ':id']) }}",
     delete: "{{ route('admin.artikel.destroy', ['artikel' => ':id']) }}",
     bulkDelete: "{{ route('admin.artikel.bulk-delete') }}",
-    toggleFeatured: "{{ route('admin.artikel.toggle-featured', ['artikel' => ':id']) }}"
+    toggleFeatured: "{{ route('admin.artikel.toggle-featured', ['artikel' => ':id']) }}",
+    toggleVisibility: "{{ route('admin.artikel.toggleVisibility', ['artikel' => ':id']) }}"
 };
 </script>
 @endsection

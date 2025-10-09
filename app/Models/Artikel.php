@@ -19,12 +19,14 @@ class Artikel extends Model
         'isi_konten',
         'gambar_path',
         'is_featured',
+        'is_visible',
         'published_at',
     ];
 
     // Mengubah tipe data kolom agar mudah digunakan
     protected $casts = [
         'is_featured' => 'boolean',
+        'is_visible' => 'boolean',
         'published_at' => 'datetime',
     ];
 

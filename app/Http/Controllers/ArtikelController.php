@@ -14,6 +14,7 @@ class ArtikelController extends Controller
     {
         // Ambil artikel yang ditandai sebagai 'featured' - yang terbaru berdasarkan published_at
         $featuredArtikel = Artikel::where('is_featured', true)
+                                  ->where('is_visible', true)
                                   ->whereNotNull('published_at')
                                   ->where('published_at', '<=', now())
                                   ->orderBy('published_at', 'desc')
@@ -21,7 +22,8 @@ class ArtikelController extends Controller
 
         // Ambil artikel lainnya dengan paginasi, KECUALI yang sudah jadi featured
         // Urutkan berdasarkan published_at (terbaru dulu)
-        $query = Artikel::whereNotNull('published_at')
+        $query = Artikel::where('is_visible', true)
+                        ->whereNotNull('published_at')
                         ->where('published_at', '<=', now())
                         ->orderBy('published_at', 'desc');
 
@@ -41,12 +43,14 @@ class ArtikelController extends Controller
     public function show($slug)
     {
         $artikel = Artikel::where('slug', $slug)
+                          ->where('is_visible', true)
                           ->whereNotNull('published_at')
                           ->where('published_at', '<=', now())
                           ->firstOrFail(); // Gagal jika tidak ditemukan
 
         // Artikel terkait (3 artikel terbaru, exclude artikel saat ini)
         $relatedArtikels = Artikel::where('id', '!=', $artikel->id)
+                                 ->where('is_visible', true)
                                  ->whereNotNull('published_at')
                                  ->where('published_at', '<=', now())
                                  ->orderBy('published_at', 'desc')

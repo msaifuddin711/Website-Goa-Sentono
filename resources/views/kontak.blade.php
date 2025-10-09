@@ -333,6 +333,7 @@
     </section>
 
     <!-- Anggota KKN Section -->
+    @if(false)
     <section class="py-12 sm:py-16 lg:py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -370,7 +371,7 @@
             @endif
         </div>
     </section>
-
+    @endif
 <script>
 function toggleFAQ(faqId) {
     const content = document.getElementById(faqId + '-content');

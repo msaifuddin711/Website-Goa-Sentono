@@ -111,6 +111,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/artikel/{artikel}', [ArtikelPageController::class, 'destroy'])->name('artikel.destroy');
         Route::post('/artikel/bulk-delete', [ArtikelPageController::class, 'bulkDelete'])->name('artikel.bulk-delete');
         Route::put('/artikel/{artikel}/toggle-featured', [ArtikelPageController::class, 'toggleFeatured'])->name('artikel.toggle-featured');
+        Route::post('/artikel/{artikel}/toggle-visibility', [ArtikelPageController::class, 'toggleVisibility'])->name('artikel.toggleVisibility');
 
         Route::get('/kontak', [KontakPageController::class, 'index'])->name('kontak.index');
         

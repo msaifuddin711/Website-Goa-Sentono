@@ -1,77 +1,84 @@
 // public/script/admin-artikel-script.js
 
-$(document).ready(function() {
+$(document).ready(function () {
     // File preview functionality
-    $(document).on('change', 'input[type="file"]', function() {
+    $(document).on("change", 'input[type="file"]', function () {
         const file = this.files[0];
         if (file) {
             const reader = new FileReader();
-            const previewContainer = $(this).closest('.popup-content, form').find('#image_preview');
-            const previewImg = previewContainer.find('img');
-            
-            reader.onload = function(e) {
-                previewContainer.removeClass('hidden').addClass('animate-fade-in');
-                previewImg.attr('src', e.target.result);
+            const previewContainer = $(this)
+                .closest(".popup-content, form")
+                .find("#image_preview");
+            const previewImg = previewContainer.find("img");
+
+            reader.onload = function (e) {
+                previewContainer
+                    .removeClass("hidden")
+                    .addClass("animate-fade-in");
+                previewImg.attr("src", e.target.result);
             };
             reader.readAsDataURL(file);
         }
     });
 
     // Select all functionality
-    $('#select-all').on('change', function() {
-        const isChecked = $(this).is(':checked');
-        $('.item-checkbox').prop('checked', isChecked);
+    $("#select-all").on("change", function () {
+        const isChecked = $(this).is(":checked");
+        $(".item-checkbox").prop("checked", isChecked);
         updateBulkDeleteButton();
     });
 
     // Individual checkbox change
-    $(document).on('change', '.item-checkbox', function() {
+    $(document).on("change", ".item-checkbox", function () {
         updateBulkDeleteButton();
         updateSelectAllState();
     });
 
     // Search functionality
-    $('#search-input').on('input', function() {
+    $("#search-input").on("input", function () {
         filterArtikelItems();
     });
 
     // Enhanced form validation
-    $(document).on('submit', 'form', function(e) {
+    $(document).on("submit", "form", function (e) {
         const $form = $(this);
         const $submitBtn = $form.find('button[type="submit"]');
-        
+
         if (!validateArtikelForm(this)) {
             e.preventDefault();
             return false;
         }
-        
+
         // Sync TinyMCE content before submit
-        if (typeof tinymce !== 'undefined') {
+        if (typeof tinymce !== "undefined") {
             tinymce.triggerSave();
         }
-        
+
         // Add loading state
-        $submitBtn.prop('disabled', true);
+        $submitBtn.prop("disabled", true);
         const originalText = $submitBtn.html();
-        $submitBtn.html('<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...');
-        
+        $submitBtn.html(
+            '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...'
+        );
+
         // Re-enable after timeout as fallback
         setTimeout(() => {
-            $submitBtn.prop('disabled', false);
+            $submitBtn.prop("disabled", false);
             $submitBtn.html(originalText);
         }, 5000);
     });
 
     // Close popup on overlay click
-    $(document).on('click', '#popup-overlay', function(e) {
+    $(document).on("click", "#popup-overlay", function (e) {
         if (e.target === this) {
             closePopup();
         }
     });
 
     // Escape key to close popup
-    $(document).on('keydown', function(e) {
-        if (e.which === 27) { // ESC key
+    $(document).on("keydown", function (e) {
+        if (e.which === 27) {
+            // ESC key
             closePopup();
         }
     });
@@ -79,8 +86,8 @@ $(document).ready(function() {
 
 // Initialize TinyMCE Editor
 function initializeTinyMCE(selector) {
-    if (typeof tinymce === 'undefined') {
-        console.warn('TinyMCE not loaded');
+    if (typeof tinymce === "undefined") {
+        console.warn("TinyMCE not loaded");
         return;
     }
 
@@ -89,14 +96,29 @@ function initializeTinyMCE(selector) {
         height: 400,
         menubar: false,
         plugins: [
-            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
-            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
-            'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            "advlist",
+            "autolink",
+            "lists",
+            "link",
+            "image",
+            "charmap",
+            "preview",
+            "anchor",
+            "searchreplace",
+            "visualblocks",
+            "code",
+            "fullscreen",
+            "insertdatetime",
+            "media",
+            "table",
+            "help",
+            "wordcount",
         ],
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist | ' +
-            'removeformat | code | help',
+        toolbar:
+            "undo redo | blocks | " +
+            "bold italic backcolor | alignleft aligncenter " +
+            "alignright alignjustify | bullist numlist | " +
+            "removeformat | code | help",
         content_style: `
             body { 
                 font-family: Georgia, serif; 
@@ -126,71 +148,75 @@ function initializeTinyMCE(selector) {
         `,
         formats: {
             // Format untuk paragraf tanpa indent
-            'no-indent': {
-                selector: 'p',
-                classes: 'no-indent'
-            }
+            "no-indent": {
+                selector: "p",
+                classes: "no-indent",
+            },
         },
         style_formats: [
             {
-                title: 'Paragraf',
+                title: "Paragraf",
                 items: [
-                    {title: 'Normal (dengan indent)', format: 'p'},
-                    {title: 'Tanpa indent', format: 'no-indent'}
-                ]
-            }
+                    { title: "Normal (dengan indent)", format: "p" },
+                    { title: "Tanpa indent", format: "no-indent" },
+                ],
+            },
         ],
         setup: function (editor) {
-            editor.on('change', function () {
+            editor.on("change", function () {
                 editor.save();
             });
-            
+
             // Add custom button for toggle indent
-            editor.ui.registry.addToggleButton('toggleindent', {
-                text: 'Toggle Indent',
-                tooltip: 'Aktifkan/Nonaktifkan indent baris pertama',
+            editor.ui.registry.addToggleButton("toggleindent", {
+                text: "Toggle Indent",
+                tooltip: "Aktifkan/Nonaktifkan indent baris pertama",
                 onAction: function () {
                     var node = editor.selection.getNode();
-                    if (node.tagName === 'P') {
-                        if (editor.dom.hasClass(node, 'no-indent')) {
-                            editor.dom.removeClass(node, 'no-indent');
+                    if (node.tagName === "P") {
+                        if (editor.dom.hasClass(node, "no-indent")) {
+                            editor.dom.removeClass(node, "no-indent");
                         } else {
-                            editor.dom.addClass(node, 'no-indent');
+                            editor.dom.addClass(node, "no-indent");
                         }
                     }
                 },
                 onSetup: function (api) {
                     var nodeChangeHandler = function () {
                         var node = editor.selection.getNode();
-                        api.setActive(node.tagName === 'P' && editor.dom.hasClass(node, 'no-indent'));
+                        api.setActive(
+                            node.tagName === "P" &&
+                                editor.dom.hasClass(node, "no-indent")
+                        );
                     };
-                    editor.on('NodeChange', nodeChangeHandler);
+                    editor.on("NodeChange", nodeChangeHandler);
                     return function () {
-                        editor.off('NodeChange', nodeChangeHandler);
+                        editor.off("NodeChange", nodeChangeHandler);
                     };
-                }
+                },
             });
         },
-        toolbar: 'undo redo | blocks | ' +
-            'bold italic backcolor | alignleft aligncenter ' +
-            'alignright alignjustify | bullist numlist | ' +
-            'toggleindent | removeformat | code | help',
-        language: 'id',
-        
+        toolbar:
+            "undo redo | blocks | " +
+            "bold italic backcolor | alignleft aligncenter " +
+            "alignright alignjustify | bullist numlist | " +
+            "toggleindent | removeformat | code | help",
+        language: "id",
+
         // Prevent TinyMCE from adding unwanted formatting
         keep_styles: false,
-        
+
         // Clean up paste content
-        paste_preprocess: function(plugin, args) {
+        paste_preprocess: function (plugin, args) {
             // Remove any existing text-indent styles from pasted content
-            args.content = args.content.replace(/text-indent:[^;]*;?/g, '');
-        }
+            args.content = args.content.replace(/text-indent:[^;]*;?/g, "");
+        },
     });
 }
 
 // Destroy TinyMCE instances
 function destroyTinyMCE() {
-    if (typeof tinymce !== 'undefined') {
+    if (typeof tinymce !== "undefined") {
         tinymce.remove();
     }
 }
@@ -212,8 +238,12 @@ function showAddArtikelPopup() {
                     </button>
                 </div>
             </div>
-            <form action="${window.adminArtikelRoutes.store}" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+            <form action="${
+                window.adminArtikelRoutes.store
+            }" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="_token" value="${$(
+                    'meta[name="csrf-token"]'
+                ).attr("content")}">
                 <div class="p-6 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
@@ -242,16 +272,27 @@ function showAddArtikelPopup() {
                             </label>
                             <input type="datetime-local" 
                                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200" 
-                                   id="published_at" name="published_at" value="${new Date().toISOString().slice(0, 16)}">
+                                   id="published_at" name="published_at" value="${new Date()
+                                       .toISOString()
+                                       .slice(0, 16)}">
                         </div>
                         
                         <div class="flex items-end">
-                            <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="is_featured" name="is_featured" value="1" 
-                                       class="w-5 h-5 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-yellow-500">
-                                <label for="is_featured" class="text-sm font-semibold text-gray-700">
-                                    <i class="fas fa-star text-yellow-500 mr-2"></i>Jadikan Artikel Utama
-                                </label>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="is_featured" name="is_featured" value="1" 
+                                           class="w-5 h-5 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-yellow-500">
+                                    <label for="is_featured" class="text-sm font-semibold text-gray-700">
+                                        <i class="fas fa-star text-yellow-500 mr-2"></i>Jadikan Artikel Utama
+                                    </label>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="is_visible" name="is_visible" value="1" checked
+                                           class="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
+                                    <label for="is_visible" class="text-sm font-semibold text-gray-700">
+                                        <i class="fas fa-eye text-green-500 mr-2"></i>Tampilkan di Halaman Artikel
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -286,22 +327,24 @@ function showAddArtikelPopup() {
             </form>
         </div>
     `;
-    
+
     showPopup(popupContent);
-    
+
     // Initialize TinyMCE after popup is shown
     setTimeout(() => {
-        initializeTinyMCE('#isi_konten');
+        initializeTinyMCE("#isi_konten");
     }, 100);
 }
 
 // Show Edit Artikel Popup
 function showEditArtikelPopup(item) {
-    const updateUrl = window.adminArtikelRoutes.update.replace(':id', item.id);
-    
+    const updateUrl = window.adminArtikelRoutes.update.replace(":id", item.id);
+
     // Format datetime for input
-    const publishedDate = new Date(item.published_at).toISOString().slice(0, 16);
-    
+    const publishedDate = new Date(item.published_at)
+        .toISOString()
+        .slice(0, 16);
+
     const popupContent = `
         <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto popup-content">
             <div class="bg-primary-green px-6 py-4 sticky top-0 z-10">
@@ -318,7 +361,9 @@ function showEditArtikelPopup(item) {
                 </div>
             </div>
             <form action="${updateUrl}" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="_token" value="${$('meta[name="csrf-token"]').attr('content')}">
+                <input type="hidden" name="_token" value="${$(
+                    'meta[name="csrf-token"]'
+                ).attr("content")}">
                 <input type="hidden" name="_method" value="PUT">
                 <div class="p-6 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -328,7 +373,9 @@ function showEditArtikelPopup(item) {
                             </label>
                             <input type="text" 
                                    class="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-all duration-200" 
-                                   id="edit_judul" name="judul" required value="${item.judul || ''}">
+                                   id="edit_judul" name="judul" required value="${
+                                       item.judul || ""
+                                   }">
                         </div>
                         
                         <div>
@@ -352,13 +399,23 @@ function showEditArtikelPopup(item) {
                         </div>
                         
                         <div class="flex items-end">
-                            <div class="flex items-center space-x-3">
-                                <input type="checkbox" id="edit_is_featured" name="is_featured" value="1" 
-                                       ${item.is_featured ? 'checked' : ''}
-                                       class="w-5 h-5 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-yellow-500">
-                                <label for="edit_is_featured" class="text-sm font-semibold text-gray-700">
-                                    <i class="fas fa-star text-yellow-500 mr-2"></i>Jadikan Artikel Utama
-                                </label>
+                            <div class="space-y-3">
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="edit_is_featured" name="is_featured" value="1" 
+                                           ${item.is_featured ? "checked" : ""}
+                                           class="w-5 h-5 text-yellow-600 bg-gray-100 border-gray-300 rounded focus:ring-yellow-500">
+                                    <label for="edit_is_featured" class="text-sm font-semibold text-gray-700">
+                                        <i class="fas fa-star text-yellow-500 mr-2"></i>Jadikan Artikel Utama
+                                    </label>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    <input type="checkbox" id="edit_is_visible" name="is_visible" value="1" 
+                                           ${item.is_visible ? "checked" : ""}
+                                           class="w-5 h-5 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500">
+                                    <label for="edit_is_visible" class="text-sm font-semibold text-gray-700">
+                                        <i class="fas fa-eye text-green-500 mr-2"></i>Tampilkan di Halaman Artikel
+                                    </label>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -368,7 +425,9 @@ function showEditArtikelPopup(item) {
                             <i class="fas fa-align-left text-purple-500 mr-2"></i>Isi Konten
                         </label>
                         <textarea class="w-full" 
-                                  id="edit_isi_konten" name="isi_konten" required>${item.isi_konten || ''}</textarea>
+                                  id="edit_isi_konten" name="isi_konten" required>${
+                                      item.isi_konten || ""
+                                  }</textarea>
                         <p class="text-xs text-gray-500 mt-2">
                             <i class="fas fa-info-circle mr-1"></i>Gunakan toolbar editor untuk formatting text
                         </p>
@@ -378,7 +437,9 @@ function showEditArtikelPopup(item) {
                         <p class="text-xs text-gray-500 mt-2">Kosongkan jika tidak ingin mengubah gambar</p>
                         <div id="current_image_preview" class="mt-3">
                             <div class="relative inline-block">
-                                <img src="${item.gambar_url || ''}" class="max-w-64 h-40 object-cover rounded-lg shadow-sm">
+                                <img src="${
+                                    item.gambar_url || ""
+                                }" class="max-w-64 h-40 object-cover rounded-lg shadow-sm">
                                 <div class="absolute inset-0 bg-black bg-opacity-50 rounded-lg flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity duration-200">
                                     <p class="text-white text-xs text-center px-2">Gambar saat ini<br>Kosongkan jika tidak ingin mengubah</p>
                                 </div>
@@ -400,49 +461,55 @@ function showEditArtikelPopup(item) {
             </form>
         </div>
     `;
-    
+
     showPopup(popupContent);
-    
+
     // Initialize TinyMCE after popup is shown
     setTimeout(() => {
-        initializeTinyMCE('#edit_isi_konten');
+        initializeTinyMCE("#edit_isi_konten");
     }, 100);
 }
 
 // Show popup function
 function showPopup(content) {
-    const overlay = $('#popup-overlay');
-    const contentContainer = $('#popup-content');
-    
+    const overlay = $("#popup-overlay");
+    const contentContainer = $("#popup-content");
+
     contentContainer.html(content);
-    overlay.removeClass('hidden');
-    
+    overlay.removeClass("hidden");
+
     // Animate in
     setTimeout(() => {
-        overlay.addClass('opacity-100');
-        contentContainer.find('.popup-content').removeClass('scale-95').addClass('scale-100');
+        overlay.addClass("opacity-100");
+        contentContainer
+            .find(".popup-content")
+            .removeClass("scale-95")
+            .addClass("scale-100");
     }, 10);
-    
+
     // Prevent body scroll
-    $('body').addClass('overflow-hidden');
+    $("body").addClass("overflow-hidden");
 }
 
 // Close popup function
 function closePopup() {
-    const overlay = $('#popup-overlay');
-    const contentContainer = $('#popup-content');
-    
+    const overlay = $("#popup-overlay");
+    const contentContainer = $("#popup-content");
+
     // Destroy TinyMCE instances before closing
     destroyTinyMCE();
-    
+
     // Animate out
-    overlay.removeClass('opacity-100');
-    contentContainer.find('.popup-content').removeClass('scale-100').addClass('scale-95');
-    
+    overlay.removeClass("opacity-100");
+    contentContainer
+        .find(".popup-content")
+        .removeClass("scale-100")
+        .addClass("scale-95");
+
     setTimeout(() => {
-        overlay.addClass('hidden');
-        contentContainer.html('');
-        $('body').removeClass('overflow-hidden');
+        overlay.addClass("hidden");
+        contentContainer.html("");
+        $("body").removeClass("overflow-hidden");
     }, 300);
 }
 
@@ -476,46 +543,50 @@ function deleteArtikel(id) {
             </div>
         </div>
     `;
-    
-    $('body').append(confirmModal);
+
+    $("body").append(confirmModal);
 }
 
 // Confirm single delete
 function confirmDeleteArtikel(id) {
-    const deleteUrl = window.adminArtikelRoutes.delete.replace(':id', id);
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    
-    const form = $('<form>', {
-        method: 'POST',
+    const deleteUrl = window.adminArtikelRoutes.delete.replace(":id", id);
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
+
+    const form = $("<form>", {
+        method: "POST",
         action: deleteUrl,
-        style: 'display:none;'
+        style: "display:none;",
     });
-    
-    form.append($('<input>', {type: 'hidden', name: '_token', value: csrfToken}));
-    form.append($('<input>', {type: 'hidden', name: '_method', value: 'DELETE'}));
-    
-    $('body').append(form);
-    
-    showNotification('Menghapus artikel...', 'info');
+
+    form.append(
+        $("<input>", { type: "hidden", name: "_token", value: csrfToken })
+    );
+    form.append(
+        $("<input>", { type: "hidden", name: "_method", value: "DELETE" })
+    );
+
+    $("body").append(form);
+
+    showNotification("Menghapus artikel...", "info");
     form.submit();
-    
-    $('#deleteConfirmModal').remove();
+
+    $("#deleteConfirmModal").remove();
 }
 
 // Bulk delete function
 function bulkDelete() {
     const selectedIds = [];
-    $('.item-checkbox:checked').each(function() {
+    $(".item-checkbox:checked").each(function () {
         selectedIds.push($(this).val());
     });
-    
+
     if (selectedIds.length === 0) {
-        showNotification('Pilih minimal satu artikel untuk dihapus', 'warning');
+        showNotification("Pilih minimal satu artikel untuk dihapus", "warning");
         return;
     }
-    
+
     const count = selectedIds.length;
-    
+
     const confirmModal = `
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" id="bulkDeleteConfirmModal">
             <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform animate-scale-in">
@@ -544,117 +615,153 @@ function bulkDelete() {
             </div>
         </div>
     `;
-    
-    $('body').append(confirmModal);
+
+    $("body").append(confirmModal);
 }
 
 // Confirm bulk delete
 function confirmBulkDelete() {
     const selectedIds = [];
-    $('.item-checkbox:checked').each(function() {
+    $(".item-checkbox:checked").each(function () {
         selectedIds.push($(this).val());
     });
-    
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    
-    const form = $('<form>', {
-        method: 'POST',
+
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
+
+    const form = $("<form>", {
+        method: "POST",
         action: window.adminArtikelRoutes.bulkDelete,
-        style: 'display:none;'
+        style: "display:none;",
     });
-    
-    form.append($('<input>', {type: 'hidden', name: '_token', value: csrfToken}));
-    
-    selectedIds.forEach(id => {
-        form.append($('<input>', {type: 'hidden', name: 'ids[]', value: id}));
+
+    form.append(
+        $("<input>", { type: "hidden", name: "_token", value: csrfToken })
+    );
+
+    selectedIds.forEach((id) => {
+        form.append($("<input>", { type: "hidden", name: "ids[]", value: id }));
     });
-    
-    $('body').append(form);
-    
-    showNotification(`Menghapus ${selectedIds.length} artikel...`, 'info');
+
+    $("body").append(form);
+
+    showNotification(`Menghapus ${selectedIds.length} artikel...`, "info");
     form.submit();
-    
-    $('#bulkDeleteConfirmModal').remove();
+
+    $("#bulkDeleteConfirmModal").remove();
 }
 
 // Toggle featured status
 function toggleFeatured(id, setFeatured) {
-    const toggleUrl = window.adminArtikelRoutes.toggleFeatured.replace(':id', id);
-    const csrfToken = $('meta[name="csrf-token"]').attr('content');
-    
-    const form = $('<form>', {
-        method: 'POST',
+    const toggleUrl = window.adminArtikelRoutes.toggleFeatured.replace(
+        ":id",
+        id
+    );
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
+
+    const form = $("<form>", {
+        method: "POST",
         action: toggleUrl,
-        style: 'display:none;'
+        style: "display:none;",
     });
-    
-    form.append($('<input>', {type: 'hidden', name: '_token', value: csrfToken}));
-    form.append($('<input>', {type: 'hidden', name: '_method', value: 'PUT'}));
-    
-    $('body').append(form);
-    
-    const message = setFeatured === 'true' ? 'Mengubah status featured...' : 'Menghapus status featured...';
-    showNotification(message, 'info');
+
+    form.append(
+        $("<input>", { type: "hidden", name: "_token", value: csrfToken })
+    );
+    form.append(
+        $("<input>", { type: "hidden", name: "_method", value: "PUT" })
+    );
+
+    $("body").append(form);
+
+    const message =
+        setFeatured === "true"
+            ? "Mengubah status featured..."
+            : "Menghapus status featured...";
+    showNotification(message, "info");
+    form.submit();
+}
+
+// Toggle visibility status
+function toggleVisibility(id) {
+    const toggleUrl = window.adminArtikelRoutes.toggleVisibility.replace(
+        ":id",
+        id
+    );
+    const csrfToken = $('meta[name="csrf-token"]').attr("content");
+
+    const form = $("<form>", {
+        method: "POST",
+        action: toggleUrl,
+        style: "display:none;",
+    });
+
+    form.append(
+        $("<input>", { type: "hidden", name: "_token", value: csrfToken })
+    );
+
+    $("body").append(form);
+
+    showNotification("Mengubah status visibilitas...", "info");
     form.submit();
 }
 
 // Update bulk delete button visibility
 function updateBulkDeleteButton() {
-    const selectedCount = $('.item-checkbox:checked').length;
-    const $bulkBtn = $('#bulk-delete-btn');
-    
+    const selectedCount = $(".item-checkbox:checked").length;
+    const $bulkBtn = $("#bulk-delete-btn");
+
     if (selectedCount > 0) {
-        $bulkBtn.removeClass('hidden').addClass('animate-fade-in');
-        $bulkBtn.find('span').text(`Hapus ${selectedCount} Terpilih`);
+        $bulkBtn.removeClass("hidden").addClass("animate-fade-in");
+        $bulkBtn.find("span").text(`Hapus ${selectedCount} Terpilih`);
     } else {
-        $bulkBtn.addClass('hidden').removeClass('animate-fade-in');
+        $bulkBtn.addClass("hidden").removeClass("animate-fade-in");
     }
 }
 
 // Update select all state
 function updateSelectAllState() {
-    const totalCheckboxes = $('.item-checkbox').length;
-    const checkedCheckboxes = $('.item-checkbox:checked').length;
-    const $selectAll = $('#select-all');
-    
+    const totalCheckboxes = $(".item-checkbox").length;
+    const checkedCheckboxes = $(".item-checkbox:checked").length;
+    const $selectAll = $("#select-all");
+
     if (checkedCheckboxes === 0) {
-        $selectAll.prop('indeterminate', false);
-        $selectAll.prop('checked', false);
+        $selectAll.prop("indeterminate", false);
+        $selectAll.prop("checked", false);
     } else if (checkedCheckboxes === totalCheckboxes) {
-        $selectAll.prop('indeterminate', false);
-        $selectAll.prop('checked', true);
+        $selectAll.prop("indeterminate", false);
+        $selectAll.prop("checked", true);
     } else {
-        $selectAll.prop('indeterminate', true);
+        $selectAll.prop("indeterminate", true);
     }
 }
 
 // Filter artikel items
 function filterArtikelItems() {
-    const searchQuery = $('#search-input').val().toLowerCase();
-    
-    $('.artikel-item').each(function() {
+    const searchQuery = $("#search-input").val().toLowerCase();
+
+    $(".artikel-item").each(function () {
         const $item = $(this);
-        const itemSearch = $item.data('search');
-        
+        const itemSearch = $item.data("search");
+
         let showItem = true;
-        
+
         // Filter by search only
         if (searchQuery && !itemSearch.includes(searchQuery)) {
             showItem = false;
         }
-        
+
         if (showItem) {
-            $item.removeClass('hidden').addClass('animate-fade-in');
+            $item.removeClass("hidden").addClass("animate-fade-in");
         } else {
-            $item.addClass('hidden').removeClass('animate-fade-in');
+            $item.addClass("hidden").removeClass("animate-fade-in");
         }
     });
-    
+
     // Update empty state
-    const visibleItems = $('.artikel-item:not(.hidden)').length;
+    const visibleItems = $(".artikel-item:not(.hidden)").length;
     if (visibleItems === 0) {
-        if ($('#no-results').length === 0) {
-            $('#artikel-container').append(`
+        if ($("#no-results").length === 0) {
+            $("#artikel-container").append(`
                 <div id="no-results" class="col-span-full text-center py-12">
                     <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                         <i class="fas fa-search text-4xl text-gray-400"></i>
@@ -665,7 +772,7 @@ function filterArtikelItems() {
             `);
         }
     } else {
-        $('#no-results').remove();
+        $("#no-results").remove();
     }
 }
 
@@ -673,85 +780,93 @@ function filterArtikelItems() {
 function validateArtikelForm(form) {
     let isValid = true;
     const errors = [];
-    
+
     // Check required fields
-    const requiredFields = form.querySelectorAll('[required]');
-    requiredFields.forEach(field => {
+    const requiredFields = form.querySelectorAll("[required]");
+    requiredFields.forEach((field) => {
         if (!field.value.trim()) {
-            const fieldName = field.getAttribute('name') || field.getAttribute('id');
-            errors.push(`${ucfirst(fieldName.replace('_', ' '))} wajib diisi`);
+            const fieldName =
+                field.getAttribute("name") || field.getAttribute("id");
+            errors.push(`${ucfirst(fieldName.replace("_", " "))} wajib diisi`);
             isValid = false;
-            field.classList.add('border-red-400', 'ring-red-400');
+            field.classList.add("border-red-400", "ring-red-400");
         } else {
-            field.classList.remove('border-red-400', 'ring-red-400');
+            field.classList.remove("border-red-400", "ring-red-400");
         }
     });
-    
+
     // Check TinyMCE content
-    const editorId = form.querySelector('textarea[name="isi_konten"]')?.getAttribute('id');
-    if (editorId && typeof tinymce !== 'undefined') {
+    const editorId = form
+        .querySelector('textarea[name="isi_konten"]')
+        ?.getAttribute("id");
+    if (editorId && typeof tinymce !== "undefined") {
         const editor = tinymce.get(editorId);
         if (editor && editor.getContent().trim().length < 50) {
-            errors.push('Isi konten minimal 50 karakter');
+            errors.push("Isi konten minimal 50 karakter");
             isValid = false;
         }
     }
-    
+
     // Check file size
     const fileInput = form.querySelector('input[type="file"]');
     if (fileInput && fileInput.files.length > 0) {
         const file = fileInput.files[0];
         const maxSize = 5 * 1024 * 1024; // 5MB
-        
+
         if (file.size > maxSize) {
-            errors.push('Ukuran file tidak boleh lebih dari 5MB');
+            errors.push("Ukuran file tidak boleh lebih dari 5MB");
             isValid = false;
         }
-        
+
         // Check file type
-        const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
+        const allowedTypes = [
+            "image/jpeg",
+            "image/png",
+            "image/jpg",
+            "image/webp",
+        ];
         if (!allowedTypes.includes(file.type)) {
-            errors.push('Format file harus JPG, PNG, atau WEBP');
+            errors.push("Format file harus JPG, PNG, atau WEBP");
             isValid = false;
         }
     }
-    
+
     // Show errors if any
     if (!isValid) {
-        showNotification(errors.join('. '), 'error');
+        showNotification(errors.join(". "), "error");
         // Focus on first invalid field
-        const firstInvalid = form.querySelector('.border-red-400');
+        const firstInvalid = form.querySelector(".border-red-400");
         if (firstInvalid) {
             firstInvalid.focus();
         }
     }
-    
+
     return isValid;
 }
 
 // Notification function
-function showNotification(message, type = 'info') {
+function showNotification(message, type = "info") {
     const icons = {
-        success: 'fas fa-check-circle',
-        error: 'fas fa-exclamation-circle',
-        info: 'fas fa-info-circle',
-        warning: 'fas fa-exclamation-triangle'
+        success: "fas fa-check-circle",
+        error: "fas fa-exclamation-circle",
+        info: "fas fa-info-circle",
+        warning: "fas fa-exclamation-triangle",
     };
-    
+
     const colors = {
-        success: 'bg-green-50 border-green-200 text-green-800',
-        error: 'bg-red-50 border-red-200 text-red-800',
-        info: 'bg-blue-50 border-blue-200 text-blue-800',
-        warning: 'bg-yellow-50 border-yellow-200 text-yellow-800'
+        success: "bg-green-50 border-green-200 text-green-800",
+        error: "bg-red-50 border-red-200 text-red-800",
+        info: "bg-blue-50 border-blue-200 text-blue-800",
+        warning: "bg-yellow-50 border-yellow-200 text-yellow-800",
     };
-    
+
     const iconColors = {
-        success: 'text-green-600',
-        error: 'text-red-600',
-        info: 'text-blue-600',
-        warning: 'text-yellow-600'
+        success: "text-green-600",
+        error: "text-red-600",
+        info: "text-blue-600",
+        warning: "text-yellow-600",
     };
-    
+
     const notificationId = `notification-${Date.now()}`;
     const notification = `
         <div class="fixed top-4 right-4 z-50 ${colors[type]} border rounded-xl p-4 shadow-lg transform animate-slide-in-right max-w-sm" id="${notificationId}">
@@ -764,11 +879,11 @@ function showNotification(message, type = 'info') {
             </div>
         </div>
     `;
-    
-    $('body').append(notification);
-    
+
+    $("body").append(notification);
+
     // Auto remove after 5 seconds
-    const timeout = type === 'warning' ? 8000 : 5000;
+    const timeout = type === "warning" ? 8000 : 5000;
     setTimeout(() => {
         removeNotification(notificationId);
     }, timeout);
@@ -776,89 +891,105 @@ function showNotification(message, type = 'info') {
 
 // Remove notification function
 function removeNotification(notificationId) {
-    $(`#${notificationId}`).fadeOut(300, function() {
+    $(`#${notificationId}`).fadeOut(300, function () {
         $(this).remove();
     });
 }
 
 // Utility function
 function ucfirst(str) {
-    if (!str) return '';
+    if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
 // Keyboard shortcuts
-$(document).keydown(function(e) {
+$(document).keydown(function (e) {
     // Ctrl/Cmd + S to save form
     if ((e.ctrlKey || e.metaKey) && e.which === 83) {
         e.preventDefault();
-        const $form = $('.popup-content form:visible').first();
+        const $form = $(".popup-content form:visible").first();
         if ($form.length) {
             // Sync TinyMCE content before validation
-            if (typeof tinymce !== 'undefined') {
+            if (typeof tinymce !== "undefined") {
                 tinymce.triggerSave();
             }
-            
+
             if (validateArtikelForm($form[0])) {
                 $form.submit();
-                showNotification('Form disimpan dengan shortcut keyboard!', 'success');
+                showNotification(
+                    "Form disimpan dengan shortcut keyboard!",
+                    "success"
+                );
             }
         }
     }
-    
+
     // Escape key to close popups and modals
     if (e.which === 27) {
         closePopup();
-        $('#deleteConfirmModal, #bulkDeleteConfirmModal').remove();
+        $("#deleteConfirmModal, #bulkDeleteConfirmModal").remove();
     }
-    
+
     // Ctrl/Cmd + A to select all
-    if ((e.ctrlKey || e.metaKey) && e.which === 65 && !$(e.target).is('input, textarea')) {
+    if (
+        (e.ctrlKey || e.metaKey) &&
+        e.which === 65 &&
+        !$(e.target).is("input, textarea")
+    ) {
         e.preventDefault();
-        $('#select-all').prop('checked', true).trigger('change');
-        showNotification('Semua artikel dipilih', 'info');
+        $("#select-all").prop("checked", true).trigger("change");
+        showNotification("Semua artikel dipilih", "info");
     }
 });
 
 // Enhanced drag and drop for file uploads
 function initializeDragDrop() {
-    $(document).on('dragover dragenter', 'input[type="file"]', function(e) {
+    $(document).on("dragover dragenter", 'input[type="file"]', function (e) {
         e.preventDefault();
-        $(this).closest('.form-group, div').addClass('border-green-400 bg-green-50');
+        $(this)
+            .closest(".form-group, div")
+            .addClass("border-green-400 bg-green-50");
     });
-    
-    $(document).on('dragleave dragend drop', 'input[type="file"]', function(e) {
-        e.preventDefault();
-        $(this).closest('.form-group, div').removeClass('border-green-400 bg-green-50');
-    });
-    
-    $(document).on('drop', 'input[type="file"]', function(e) {
+
+    $(document).on(
+        "dragleave dragend drop",
+        'input[type="file"]',
+        function (e) {
+            e.preventDefault();
+            $(this)
+                .closest(".form-group, div")
+                .removeClass("border-green-400 bg-green-50");
+        }
+    );
+
+    $(document).on("drop", 'input[type="file"]', function (e) {
         e.preventDefault();
         const files = e.originalEvent.dataTransfer.files;
         if (files.length > 0) {
             this.files = files;
-            $(this).trigger('change');
-            showNotification('File berhasil dipilih!', 'success');
+            $(this).trigger("change");
+            showNotification("File berhasil dipilih!", "success");
         }
     });
 }
 
 // Initialize enhanced features
-$(document).ready(function() {
+$(document).ready(function () {
     initializeDragDrop();
-    
+
     // Load TinyMCE CDN
     if (!document.querySelector('script[src*="tinymce"]')) {
-        const script = document.createElement('script');
-        script.src = 'https://cdn.tiny.cloud/1/ayawtiwyb62qnm0he2qcgukk953gqbugwhqbubxutll7agpp/tinymce/6/tinymce.min.js';
-        script.referrerPolicy = 'origin';
+        const script = document.createElement("script");
+        script.src =
+            "https://cdn.tiny.cloud/1/ayawtiwyb62qnm0he2qcgukk953gqbugwhqbubxutll7agpp/tinymce/6/tinymce.min.js";
+        script.referrerPolicy = "origin";
         document.head.appendChild(script);
     }
-    
+
     // Add custom CSS animations if not exists
-    if (!document.getElementById('artikelAnimations')) {
-        const style = document.createElement('style');
-        style.id = 'artikelAnimations';
+    if (!document.getElementById("artikelAnimations")) {
+        const style = document.createElement("style");
+        style.id = "artikelAnimations";
         style.textContent = `
             @keyframes fadeIn {
                 from { opacity: 0; }
@@ -962,11 +1093,12 @@ window.artikelAdminUtils = {
     deleteArtikel,
     bulkDelete,
     toggleFeatured,
+    toggleVisibility,
     filterArtikelItems,
     showNotification,
     validateArtikelForm,
     showPopup,
     closePopup,
     initializeTinyMCE,
-    destroyTinyMCE
+    destroyTinyMCE,
 };

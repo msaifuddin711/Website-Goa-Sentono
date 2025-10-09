@@ -7,8 +7,8 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"> {{-- Diubah menjadi 4 kolom --}}
+        {{-- Card Total --}}
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-soft-cream rounded-xl flex items-center justify-center">
@@ -21,26 +21,41 @@
             </div>
         </div>
         
+        {{-- CARD BARU: FOTO DITAMPILKAN --}}
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-cream rounded-xl flex items-center justify-center">
-                    <i class="fas fa-calendar text-accent-green text-xl"></i>
+                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-eye text-green-600 text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-accent-green text-sm">Hari Ini</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $galeriItems->where('created_at', '>=', today())->count() }}</p>
+                    <p class="text-green-600 text-sm">Ditampilkan</p>
+                    <p class="text-2xl font-bold text-primary-dark">{{ $totalVisible }}</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- CARD BARU: FOTO DISEMBUNYIKAN --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
+            <div class="flex items-center space-x-4">
+                <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
+                    <i class="fas fa-eye-slash text-red-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-red-600 text-sm">Disembunyikan</p>
+                    <p class="text-2xl font-bold text-primary-dark">{{ $totalHidden }}</p>
                 </div>
             </div>
         </div>
         
+        {{-- Card Hari Ini (Disederhanakan) --}}
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
-                <div class="w-12 h-12 bg-warm-beige rounded-xl flex items-center justify-center">
-                    <i class="fas fa-clock text-primary-green text-xl"></i>
+                <div class="w-12 h-12 bg-cream rounded-xl flex items-center justify-center">
+                    <i class="fas fa-calendar-day text-accent-green text-xl"></i>
                 </div>
                 <div>
-                    <p class="text-accent-green text-sm">Minggu Ini</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $galeriItems->where('created_at', '>=', now()->startOfWeek())->count() }}</p>
+                    <p class="text-accent-green text-sm">Upload Hari Ini</p>
+                    <p class="text-2xl font-bold text-primary-dark">{{ $galeriItems->where('created_at', '>=', today())->count() }}</p>
                 </div>
             </div>
         </div>
@@ -95,35 +110,41 @@
             @if($galeriItems->count() > 0)
                 <div id="galeri-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     @foreach($galeriItems as $item)
-                        <div class="bg-soft-cream rounded-xl overflow-hidden card-hover galeri-item border border-light-beige" 
+                        {{-- Tambahkan class opacity-60 jika tidak visible --}}
+                        <div class="bg-soft-cream rounded-xl overflow-hidden card-hover galeri-item border border-light-beige {{ !$item->is_visible ? 'opacity-60' : '' }}" 
                              data-id="{{ $item->id }}" 
                              data-search="{{ strtolower($item->judul . ' ' . $item->deskripsi) }}">
+                            
                             <div class="relative">
-                                <img src="{{ $item->gambar_url }}" 
-                                     alt="{{ $item->judul }}" 
-                                     class="w-full h-48 object-cover">
+                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-48 object-cover">
+                                
+                                {{-- Badge Status Visibilitas --}}
+                                @if($item->is_visible)
+                                    <span class="status-badge absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">Ditampilkan</span>
+                                @else
+                                    <span class="status-badge absolute top-2 left-2 bg-gray-500 text-white text-xs font-bold px-2 py-1 rounded-full">Disembunyikan</span>
+                                @endif
+
                                 <div class="absolute top-2 right-2">
-                                    <input type="checkbox" name="selected_items[]" value="{{ $item->id }}" 
-                                           class="w-4 h-4 text-accent-green bg-white border-gray-300 rounded focus:ring-accent-green item-checkbox">
+                                    <input type="checkbox" name="selected_items[]" value="{{ $item->id }}" class="item-checkbox ...">
                                 </div>
                             </div>
                             <div class="p-4">
                                 <h3 class="font-bold text-primary-dark mb-2 line-clamp-1">{{ $item->judul }}</h3>
-                                <p class="text-sm text-accent-green mb-3 line-clamp-2">{{ $item->deskripsi ?: 'Tidak ada deskripsi' }}</p>
-                                <div class="flex items-center justify-between text-xs text-accent-green mb-3">
-                                    <span>{{ $item->created_at->format('d M Y') }}</span>
-                                    @if($item->gambar_path && Storage::disk('public')->exists($item->gambar_path))
-                                        <span>{{ number_format(Storage::disk('public')->size($item->gambar_path) / 1024, 0) }} KB</span>
-                                    @else
-                                        <span>-</span>
-                                    @endif
-                                </div>
-                                <div class="flex space-x-2">
-                                    <button class="flex-1 bg-warm-beige hover:bg-light-beige text-primary-dark px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
-                                            onclick="showEditGaleriPopup({{ $item->toJson() }})">
+                                {{-- ... (info deskripsi, tanggal, ukuran file) ... --}}
+                                <div class="flex space-x-2 mt-4">
+                                    {{-- Tombol Toggle Visibility BARU --}}
+                                    <button class="flex-1 {{ $item->is_visible ? 'bg-yellow-100 hover:bg-yellow-200 text-yellow-800' : 'bg-green-100 hover:bg-green-200 text-green-800' }} px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
+                                            onclick="toggleVisibility({{ $item->id }})">
+                                        <i class="fas {{ $item->is_visible ? 'fa-eye-slash' : 'fa-eye' }} mr-1"></i>
+                                        <span class="toggle-text">{{ $item->is_visible ? 'Sembunyikan' : 'Tampilkan' }}</span>
+                                    </button>
+                                    <button class="bg-warm-beige hover:bg-light-beige ... " onclick="showEditGaleriPopup({{ $item->toJson() }})">
                                         <i class="fas fa-edit mr-1"></i>Edit
                                     </button>
-                                    <button class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
+                                </div>
+                                <div class="mt-2">
+                                    <button class="w-full bg-red-100 hover:bg-red-200 text-red-700 px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
                                             onclick="deleteGaleri({{ $item->id }})">
                                         <i class="fas fa-trash mr-1"></i>Hapus
                                     </button>
@@ -167,6 +188,7 @@ window.adminGaleriRoutes = {
     store: "{{ route('admin.galeri.store') }}",
     update: "{{ route('admin.galeri.update', ['galeri' => ':id']) }}",
     delete: "{{ route('admin.galeri.destroy', ['galeri' => ':id']) }}",
+    toggleVisibility: "{{ route('admin.galeri.toggleVisibility', ['galeri' => ':id']) }}",
     reorder: "{{ route('admin.galeri.reorder') }}",
     bulkDelete: "{{ route('admin.galeri.bulk-delete') }}"
 };

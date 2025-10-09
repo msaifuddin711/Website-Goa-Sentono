@@ -16,6 +16,11 @@ class GaleriItem extends Model
         'judul',
         'deskripsi',
         'gambar_path',
+        'is_visible',
+    ];
+
+    protected $casts = [
+        'is_visible' => 'boolean',
     ];
 
     protected $appends = ['gambar_url'];
@@ -39,6 +44,11 @@ class GaleriItem extends Model
         
         // Mengembalikan gambar placeholder jika file tidak ditemukan
         return asset('images/placeholder.jpg'); 
+    }
+
+    public function scopeVisible($query)
+    {
+        return $query->where('is_visible', true);
     }
 
     public function scopeSearch($query, $search)

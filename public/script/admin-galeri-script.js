@@ -80,6 +80,49 @@ $(document).ready(function() {
     });
 });
 
+function toggleVisibility(id) {
+    const url = window.adminGaleriRoutes.toggleVisibility.replace(':id', id);
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {
+            _token: csrfToken
+        },
+        success: function(data) {
+            if (data.success) {
+                showNotification(data.message, 'success');
+
+                const $itemElement = $(`.galeri-item[data-id='${id}']`);
+                const $statusBadge = $itemElement.find('.status-badge');
+                const $toggleButton = $itemElement.find('button[onclick^="toggleVisibility"]');
+                const $toggleText = $toggleButton.find('.toggle-text');
+                const $toggleIcon = $toggleButton.find('i');
+
+                if (data.is_visible) {
+                    $itemElement.removeClass('opacity-60');
+                    $statusBadge.text('Ditampilkan').removeClass('bg-gray-500').addClass('bg-green-500');
+                    
+                    $toggleButton.removeClass('bg-green-100 hover:bg-green-200 text-green-800').addClass('bg-yellow-100 hover:bg-yellow-200 text-yellow-800');
+                    $toggleText.text('Sembunyikan');
+                    $toggleIcon.removeClass('fa-eye').addClass('fa-eye-slash');
+                } else {
+                    $itemElement.addClass('opacity-60');
+                    $statusBadge.text('Disembunyikan').removeClass('bg-green-500').addClass('bg-gray-500');
+
+                    $toggleButton.removeClass('bg-yellow-100 hover:bg-yellow-200 text-yellow-800').addClass('bg-green-100 hover:bg-green-200 text-green-800');
+                    $toggleText.text('Tampilkan');
+                    $toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
+                }
+            }
+        },
+        error: function() {
+            showNotification('Terjadi kesalahan saat mengubah status.', 'error');
+        }
+    });
+}
+
 // Show Add Galeri Popup
 function showAddGaleriPopup() {
     const popupContent = `
@@ -135,6 +178,14 @@ function showAddGaleriPopup() {
                             <p class="text-xs" id="deskripsi_count">0/500</p>
                         </div>
                     </div>
+
+                    <div class="flex items-center space-x-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <input id="is_visible" name="is_visible" type="checkbox" value="1" class="h-5 w-5 rounded border-gray-300 text-primary-green focus:ring-primary-green" checked>
+                        <div>
+                            <label for="is_visible" class="font-medium text-gray-800">Tampilkan di Galeri</label>
+                            <p class="text-sm text-gray-500">Hilangkan centang untuk menyembunyikan foto ini dari galeri publik.</p>
+                        </div>
+                    </div>
                     
                     <div>
                         <p class="text-xs text-gray-500 mt-2">Format yang didukung: JPG, PNG, WEBP</p>
@@ -161,6 +212,7 @@ function showAddGaleriPopup() {
 // Show Edit Galeri Popup
 function showEditGaleriPopup(item) {
     const updateUrl = window.adminGaleriRoutes.update.replace(':id', item.id);
+    const isVisibleChecked = item.is_visible ? 'checked' : '';
     
     const popupContent = `
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto popup-content">
@@ -208,6 +260,14 @@ function showEditGaleriPopup(item) {
                         </div>
                     </div>
                     
+                    <div class="flex items-center space-x-3 p-4 bg-gray-50 rounded-xl border border-gray-200">
+                        <input id="edit_is_visible" name="is_visible" type="checkbox" value="1" class="h-5 w-5 rounded border-gray-300 text-primary-green focus:ring-primary-green" ${isVisibleChecked}>
+                        <div>
+                            <label for="edit_is_visible" class="font-medium text-gray-800">Tampilkan di Galeri</label>
+                            <p class="text-sm text-gray-500">Hilangkan centang untuk menyembunyikan foto ini dari galeri publik.</p>
+                        </div>
+                    </div>
+
                     <div>
                         <label for="edit_gambar" class="block text-sm font-semibold text-gray-700 mb-2">
                             <i class="fas fa-image text-amber-500 mr-2"></i>Foto Baru (opsional)
@@ -797,5 +857,6 @@ window.galeriAdminUtils = {
     updateCharCount,
     validateGaleriForm,
     showPopup,
-    closePopup
+    closePopup,
+    toggleVisibility 
 };

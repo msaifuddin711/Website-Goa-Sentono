@@ -7,18 +7,9 @@
 @section('keywords', 'Goa Sentono, wisata Blora, wisata Jawa Tengah, gua alam, situs bersejarah, wisata alam Indonesia, destinasi wisata Kradenan, tempat wisata Blora')
 
 @section('content')
-    <!-- Hero Section -->
-    <section class="hero-video text-white py-32 relative min-h-screen flex items-center">
-        <!-- Single video element -->
-        <video class="hero-video-element" muted playsinline loop autoplay>
-            <source src="/videos/landingpage-compressed.mp4" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-        
-        <!-- Video fallback for when video fails to load -->
-        <div class="video-fallback"></div>
-        
-        <!-- Container identik dengan Galeri -->
+    {{-- Hero Section (Tetap statis sesuai desain) --}}
+    <section class="hero-video text-white py-16 sm:py-24 lg:py-32 relative min-h-[60vh] sm:min-h-screen flex items-center bg-cover bg-center" style="background-image: url('{{ asset('images/IMG_3699x.jpg') }}');">
+        <div class="video-fallback opacity-0"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center space-y-2 hero-content animate-fade-in sm:text-left">
             <span class="text-base sm:text-xl md:text-2xl font-medium">
                 SELAMAT DATANG DI
@@ -42,7 +33,7 @@
                 @forelse($galeriItems as $item)
                     <div class="bg-white rounded-2xl md:rounded-3xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300">
                         <div class="block relative h-48 md:h-64 group cursor-pointer" onclick="openImageModal({{ $item->id }})">
-                            <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-full object-cover group-hover:opacity-90 transition-opacity duration-300">
+                            <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-full object-cover group-hover:opacity-90 transition-opacity duration-300" loading="lazy">
                         </div>
                         <div class="p-3 md:p-6 text-center">
                             <h3 class="text-sm md:text-2xl font-semibold text-primary truncate">{{ $item->judul }}</h3>
@@ -54,7 +45,7 @@
             </div>
             
             <div class="text-center">
-                <a href="{{ route('galeri') }}" class="inline-block bg-primary text-white px-8 md:px-12 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-opacity-90 transform hover:scale-105 transition duration-300 shadow-lg">
+                <a href="{{ route('galeri') }}" class="inline-block bg-primary text-white px-8 md:px-12 py-3 md:py-4 rounded-full text-sm md:text-base font-semibold hover:bg-opacity-90 transform hover:scale-105 transition duration-300 shadow-lg" loading="lazy">
                     Lihat Semua Galeri
                 </a>
             </div>
@@ -198,7 +189,7 @@
                     <img
                     src="${item.gambar_url}"
                     alt="${item.judul}"
-                    class="w-full h-full object-cover"
+                    class="w-full h-full object-cover" 
                     >
                     <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-4">
                     <h3 class="text-lg font-bold">${item.judul}</h3>

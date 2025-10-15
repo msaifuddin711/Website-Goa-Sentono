@@ -683,26 +683,59 @@ function toggleFeatured(id, setFeatured) {
 
 // Toggle visibility status
 function toggleVisibility(id) {
-    const toggleUrl = window.adminArtikelRoutes.toggleVisibility.replace(
-        ":id",
-        id
-    );
-    const csrfToken = $('meta[name="csrf-token"]').attr("content");
+    const url = window.adminArtikelRoutes.toggleVisibility.replace(':id', id);
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-    const form = $("<form>", {
-        method: "POST",
-        action: toggleUrl,
-        style: "display:none;",
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {
+            _token: csrfToken,
+        },
+        success: function(data) {
+            if (data.success) {
+                // Tampilkan notifikasi sukses
+                showNotification(data.message, 'success');
+
+                // Dapatkan elemen-elemen yang perlu diubah
+                const $itemElement = $(`.artikel-item[data-id='${id}']`);
+                const $statusBadge = $itemElement.find('.status-badge');
+                const $toggleButton = $itemElement.find(`button[onclick="toggleVisibility(${id})"]`);
+
+                if (data.is_visible) {
+                    // --- Ubah UI ke status DITAMPILKAN ---
+                    // 1. Hapus efek redup
+                    $itemElement.removeClass('opacity-60');
+                    
+                    // 2. Ubah badge status
+                    $statusBadge.text('Ditampilkan').removeClass('bg-gray-500').addClass('bg-green-500');
+                    
+                    // 3. Ubah tombol
+                    $toggleButton.removeClass('bg-green-100 hover:bg-green-200 text-green-800')
+                                 .addClass('bg-yellow-100 hover:bg-yellow-200 text-yellow-800');
+                    $toggleButton.html('<i class="fas fa-eye-slash mr-1"></i>Sembunyikan');
+
+                } else {
+                    // --- Ubah UI ke status DISEMBUNYIKAN ---
+                    // 1. Tambahkan efek redup
+                    $itemElement.addClass('opacity-60');
+
+                    // 2. Ubah badge status
+                    $statusBadge.text('Disembunyikan').removeClass('bg-green-500').addClass('bg-gray-500');
+                    
+                    // 3. Ubah tombol
+                    $toggleButton.removeClass('bg-yellow-100 hover:bg-yellow-200 text-yellow-800')
+                                 .addClass('bg-green-100 hover:bg-green-200 text-green-800');
+                    $toggleButton.html('<i class="fas fa-eye mr-1"></i>Tampilkan');
+                }
+            } else {
+                showNotification(data.message || 'Gagal mengubah status visibilitas.', 'error');
+            }
+        },
+        error: function() {
+            showNotification('Terjadi kesalahan. Silakan coba lagi.', 'error');
+        }
     });
-
-    form.append(
-        $("<input>", { type: "hidden", name: "_token", value: csrfToken })
-    );
-
-    $("body").append(form);
-
-    showNotification("Mengubah status visibilitas...", "info");
-    form.submit();
 }
 
 // Update bulk delete button visibility

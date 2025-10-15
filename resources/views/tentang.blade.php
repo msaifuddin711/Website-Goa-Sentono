@@ -39,7 +39,7 @@
                                 <div class="aspect-square">
                                     <img src="{{ $slide->gambar_url }}" 
                                         alt="{{ $slide->alt_text ?? 'Gambar Sejarah Goa Sentono' }}" 
-                                        class="w-full h-full object-cover rounded-2xl sm:rounded-3xl">
+                                        class="w-full h-full object-cover rounded-2xl sm:rounded-3xl" loading="lazy">
                                 </div>
                             </div>
                         @endforeach
@@ -98,7 +98,7 @@
                 <div class="p-4 sm:p-6 lg:p-8">
                     <p class="text-accent text-center leading-relaxed text-sm sm:text-base flex items-center justify-center">
                         <i class="fas fa-play-circle text-primary mr-2"></i>
-                        Saksikan perjalanan sejarah Goa Sentono melalui dokumenter visual
+                        Saksikan video profil Goa Sentono
                     </p>
                 </div>
             </div>
@@ -392,7 +392,7 @@
                                     @foreach($chunk as $item)
                                         <div class="bg-cream rounded-2xl md:rounded-3xl shadow-xl overflow-hidden flex flex-col h-full max-w-xs mx-auto">
                                             <div class="aspect-[4/3] overflow-hidden">
-                                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-full object-cover">
+                                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-full object-cover" loading="lazy">
                                             </div>
                                             <div class="p-3 sm:p-4 md:p-6 flex-1 flex flex-col">
                                                 <h3 class="text-sm sm:text-lg md:text-2xl font-bold text-primary mb-1 sm:mb-2 line-clamp-2 flex items-center">
@@ -440,7 +440,7 @@
                                     @foreach($chunk as $item)
                                         <div class="bg-white rounded-2xl md:rounded-3xl shadow-xl overflow-hidden flex flex-col h-full max-w-xs mx-auto">
                                             <div class="aspect-[4/3] overflow-hidden">
-                                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-full object-cover">
+                                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-full object-cover" loading="lazy">
                                             </div>
                                             <div class="p-3 sm:p-4 md:p-6 flex-1 flex flex-col">
                                                 <h3 class="text-sm sm:text-lg md:text-2xl font-bold text-primary mb-1 sm:mb-2 flex items-center">

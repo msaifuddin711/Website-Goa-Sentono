@@ -126,7 +126,7 @@
                             <div class="relative">
                                 <img src="{{ $item->gambar_url }}" 
                                      alt="{{ $item->judul }}" 
-                                     class="w-full h-48 object-cover">
+                                     class="w-full h-48 object-cover" loading="lazy">
                                 
                                 <!-- Visibility Badge -->
                                 @if($item->is_visible)

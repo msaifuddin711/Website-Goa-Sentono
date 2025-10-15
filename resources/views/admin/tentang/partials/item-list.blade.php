@@ -4,7 +4,7 @@
         @foreach($items as $item)
             <div class="col-md-4 mb-3" data-id="{{ $item->id }}">
                 <div class="card h-100">
-                    <img src="{{ $item->gambar_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ $item->judul }}">
+                    <img src="{{ $item->gambar_url }}" class="card-img-top" style="height: 200px; object-fit: cover;" alt="{{ $item->judul }}" loading="lazy">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title">{{ $item->judul }}</h5>
                         <p class="card-text flex-grow-1">{{ Str::limit($item->deskripsi, 100) }}</p>

@@ -126,7 +126,7 @@
                             <div class="relative">
                                 <img src="{{ $slider->gambar_url }}" 
                                      alt="{{ $slider->alt_text ?? 'Gambar Sejarah' }}" 
-                                     class="w-full h-48 object-cover">
+                                     class="w-full h-48 object-cover" loading="lazy">
                                 <div class="absolute top-2 right-2 bg-cream rounded-lg px-2 py-1 text-xs font-semibold text-primary-dark">
                                     #{{ $slider->urutan }}
                                 </div>
@@ -197,7 +197,7 @@
                     <div class="{{ $section['type'] }}-items grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         @foreach($section['items'] as $item)
                             <div class="bg-soft-cream rounded-xl overflow-hidden card-hover border border-light-beige">
-                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-40 object-cover">
+                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-40 object-cover" loading="lazy">
                                 <div class="p-4">
                                     <h3 class="font-bold text-primary-dark mb-2 line-clamp-1">{{ $item->judul }}</h3>
                                     <p class="text-sm text-accent-green mb-3 line-clamp-2">{{ $item->deskripsi }}</p>

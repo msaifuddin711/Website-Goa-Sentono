@@ -195,7 +195,7 @@
                             <div class="relative">
                                 <img src="{{ $member->photo_url }}" 
                                      alt="{{ $member->name }}" 
-                                     class="w-full h-48 object-cover">
+                                     class="w-full h-48 object-cover" loading="lazy">
                                 @if($member->is_dpl)
                                     <div class="absolute top-2 left-2 bg-medium-brown text-cream text-xs px-2 py-1 rounded-full font-semibold">
                                         DPL

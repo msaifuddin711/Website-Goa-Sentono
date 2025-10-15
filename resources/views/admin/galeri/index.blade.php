@@ -116,7 +116,7 @@
                              data-search="{{ strtolower($item->judul . ' ' . $item->deskripsi) }}">
                             
                             <div class="relative">
-                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-48 object-cover">
+                                <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-48 object-cover" loading="lazy">
                                 
                                 {{-- Badge Status Visibilitas --}}
                                 @if($item->is_visible)

@@ -349,7 +349,7 @@
             <div class="flex justify-center mb-8 sm:mb-10 lg:mb-12">
                 <div class="w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
                     <div class="bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-5 lg:p-6 text-center card-hover shadow-xl transform hover:scale-105 transition-transform duration-300">
-                        <img src="{{ $dpl->photo_url }}" alt="Foto {{ $dpl->name }}" class="w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-full mx-auto mb-3 sm:mb-4 border-4 border-primary shadow-md object-cover">
+                        <img src="{{ $dpl->photo_url }}" alt="Foto {{ $dpl->name }}" class="w-24 h-24 sm:w-32 sm:h-32 lg:w-36 lg:h-36 rounded-full mx-auto mb-3 sm:mb-4 border-4 border-primary shadow-md object-cover" loading="lazy">
                         <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-primary">{{ $dpl->name }}</h3>
                         <p class="text-sm sm:text-base lg:text-lg text-accent font-semibold">{{ $dpl->role }}</p>
                     </div>
@@ -362,7 +362,7 @@
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 @foreach($members as $member)
                 <div class="bg-cream rounded-2xl sm:rounded-3xl p-3 sm:p-4 lg:p-6 text-center card-hover shadow-lg">
-                    <img src="{{ $member->photo_url }}" alt="Foto {{ $member->name }}" class="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full mx-auto mb-2 sm:mb-3 lg:mb-4 border-4 border-primary object-cover">
+                    <img src="{{ $member->photo_url }}" alt="Foto {{ $member->name }}" class="w-20 h-20 sm:w-24 sm:h-24 lg:w-32 lg:h-32 rounded-full mx-auto mb-2 sm:mb-3 lg:mb-4 border-4 border-primary object-cover" loading="lazy">
                     <h3 class="text-xs sm:text-sm lg:text-lg font-bold text-primary truncate">{{ $member->name }}</h3>
                     <p class="text-xs sm:text-sm text-accent">{{ $member->role }}</p>
                 </div>

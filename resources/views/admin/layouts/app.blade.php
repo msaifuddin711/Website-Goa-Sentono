@@ -174,7 +174,7 @@
 
     <div id="loading-screen" class="fixed inset-0 flex flex-col items-center justify-center bg-white z-[1000]">
         <!-- Logo kecil -->
-        <img src="{{ asset('images/logofixfix-color.png') }}" alt="Logo" class="mb-2 h-24 w-24 animate-bounce-slow">
+        <img src="{{ asset('images/logofixfix-color.png') }}" alt="Logo" class="mb-2 h-24 w-24 animate-bounce-slow" loading="lazy">
 
         <!-- Gelombang titik -->
         <div class="flex space-x-2">
@@ -193,7 +193,7 @@
         <div class="flex items-center justify-between p-6" style="border-bottom: 1px solid rgba(136, 144, 99, 0.3);">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-cream-admin rounded-xl flex items-center justify-center p-1">
-                    <img src="{{ asset('images/logofixfix-color.png') }}" alt="Goa Sentono Logo" class="w-6 h-auto object-contain">
+                    <img src="{{ asset('images/logofixfix-color.png') }}" alt="Goa Sentono Logo" class="w-6 h-auto object-contain" loading="lazy">
                 </div>
                 <div>
                     <h1 class="text-xl font-bold text-cream-admin">Goa Sentono</h1>

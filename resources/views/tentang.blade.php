@@ -189,7 +189,7 @@
                 {{-- Model 3D Container --}}
                 <model-viewer 
                     id="map-3d-viewer"
-                    src="{{ asset('models/model-web.glb') }}"
+                    src="{{ asset('models/model-web-1.glb') }}"
                     alt="Model 3D Goa Sentono sebagai Peta"
                     camera-controls
                     enable-pan
@@ -201,8 +201,8 @@
                     max-camera-orbit="auto 90deg auto"
                     camera-orbit="45deg 75deg 5m"
                     field-of-view="30deg"
-                    min-field-of-view="10deg"
-                    max-field-of-view="90deg"
+                    min-field-of-view="5deg"
+                    max-field-of-view="20deg"
                     shadow-intensity="1"
                     shadow-softness="0.5"
                     exposure="1"

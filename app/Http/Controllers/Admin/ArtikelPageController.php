@@ -166,14 +166,26 @@ class ArtikelPageController extends Controller
         return redirect()->back()->with('success', $message);
     }
 
+    /**
+     * PERUBAHAN DI SINI
+     * Mengubah fungsi ini agar mengembalikan JSON, bukan redirect.
+     */
     public function toggleVisibility(Artikel $artikel)
     {
-        $artikel->update(['is_visible' => !$artikel->is_visible]);
+        // Ubah status visibilitas
+        $artikel->is_visible = !$artikel->is_visible;
+        $artikel->save();
         
+        // Siapkan pesan notifikasi
         $message = $artikel->is_visible 
-            ? 'Artikel berhasil ditampilkan!' 
-            : 'Artikel berhasil disembunyikan!';
+            ? 'Artikel sekarang ditampilkan.' 
+            : 'Artikel sekarang disembunyikan.';
 
-        return redirect()->back()->with('success', $message);
+        // Kembalikan respons dalam format JSON
+        return response()->json([
+            'success' => true, 
+            'message' => $message, 
+            'is_visible' => $artikel->is_visible
+        ]);
     }
 }

@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <p class="text-green-600 text-sm">Ditampilkan</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $artikels->where('is_visible', true)->count() }}</p>
+                    <p id="total-visible-count" class="text-2xl font-bold text-primary-dark">{{ $artikels->where('is_visible', true)->count() }}</p>
                 </div>
             </div>
         </div>
@@ -41,7 +41,7 @@
                 </div>
                 <div>
                     <p class="text-red-600 text-sm">Disembunyikan</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $artikels->where('is_visible', false)->count() }}</p>
+                    <p id="total-hidden-count" class="text-2xl font-bold text-primary-dark">{{ $artikels->where('is_visible', false)->count() }}</p>
                 </div>
             </div>
         </div>

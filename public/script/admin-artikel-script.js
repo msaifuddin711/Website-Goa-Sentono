@@ -728,6 +728,12 @@ function toggleVisibility(id) {
                                  .addClass('bg-green-100 hover:bg-green-200 text-green-800');
                     $toggleButton.html('<i class="fas fa-eye mr-1"></i>Tampilkan');
                 }
+
+                if (data.totalVisible !== undefined && data.totalHidden !== undefined) {
+                    $('#total-visible-count').text(data.totalVisible);
+                    $('#total-hidden-count').text(data.totalHidden);
+                }
+                
             } else {
                 showNotification(data.message || 'Gagal mengubah status visibilitas.', 'error');
             }

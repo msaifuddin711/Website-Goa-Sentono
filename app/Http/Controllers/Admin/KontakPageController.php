@@ -9,6 +9,11 @@ use App\Models\KknMember;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str; // Tambahkan ini untuk Str::slug
+
+// Import class untuk cara baru Intervention Image
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class KontakPageController extends Controller
 {
@@ -25,7 +30,7 @@ class KontakPageController extends Controller
     ];
 
     // Default order mapping for roles
-    private function getDefaultOrderByRole($role) 
+    private function getDefaultOrderByRole($role)
     {
         $roleOrder = [
             'Dosen Pembimbing Lapangan' => 0,
@@ -37,7 +42,6 @@ class KontakPageController extends Controller
             'Hubungan Masyarakat' => 6,
             'Logistik' => 7
         ];
-        
         return $roleOrder[$role] ?? 99;
     }
 
@@ -45,11 +49,10 @@ class KontakPageController extends Controller
     {
         $messages = Message::latest()->paginate(20);
         $kknMembers = KknMember::orderBy('is_dpl', 'desc')->orderBy('order', 'asc')->get();
-        
         return view('admin.kontak.index', compact('messages', 'kknMembers'));
     }
 
-    // Kelola Pesan
+    // Kelola Pesan (metode ini tidak melibatkan gambar, jadi tidak perlu diubah)
     public function destroyMessage(Message $message)
     {
         $message->delete();
@@ -59,13 +62,10 @@ class KontakPageController extends Controller
     public function bulkDeleteMessages(Request $request)
     {
         $ids = $request->input('ids');
-        
         if (empty($ids)) {
             return redirect()->back()->with('error', 'Pilih minimal satu pesan untuk dihapus.');
         }
-
         Message::whereIn('id', $ids)->delete();
-
         return redirect()->back()->with('success', count($ids) . ' pesan berhasil dihapus!');
     }
 
@@ -89,7 +89,7 @@ class KontakPageController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'role' => ['required', 'string', Rule::in($allowedRoles)],
-            'photo' => 'required|image|mimes:jpeg,png,jpg,webp',
+            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120', // Tambah webp
             'is_dpl' => 'boolean',
             'order' => 'nullable|integer|min:0'
         ], [
@@ -103,22 +103,31 @@ class KontakPageController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Auto-detect DPL based on role
         $isDpl = $request->role === 'Dosen Pembimbing Lapangan';
 
-        // Check if DPL already exists
         if ($isDpl && KknMember::where('is_dpl', true)->exists()) {
             return redirect()->back()->with('error', 'DPL sudah ada. Hanya boleh ada satu DPL.');
         }
 
-        $photoPath = $request->file('photo')->store('kkn-members', 'public');
+        $photoPath = null;
+        if ($request->hasFile('photo')) {
+            $file = $request->file('photo');
+            $fileName = Str::slug($request->name) . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'kkn-members/' . $fileName;
 
-        // Auto-assign order based on role if not provided
+            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            $image->scale(width: 800); // Lebar maksimal untuk foto anggota
+            $encodedImage = $image->toJpeg(80); // Kualitas 80%
+            Storage::disk('public')->put($filePath, $encodedImage);
+            $photoPath = $filePath;
+            // --- AKHIR OPTIMASI ---
+        }
+
         $order = $request->order;
         if (is_null($order)) {
             $order = $this->getDefaultOrderByRole($request->role);
-            
-            // Check if order already exists and increment
             while (KknMember::where('order', $order)->where('is_dpl', $isDpl)->exists()) {
                 $order++;
             }
@@ -142,7 +151,7 @@ class KontakPageController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'role' => ['required', 'string', Rule::in($allowedRoles)],
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Tambah webp
             'is_dpl' => 'boolean',
             'order' => 'nullable|integer|min:0'
         ], [
@@ -153,10 +162,8 @@ class KontakPageController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        // Auto-detect DPL based on role
         $isDpl = $request->role === 'Dosen Pembimbing Lapangan';
 
-        // Check if trying to set DPL when another DPL exists
         if ($isDpl && !$member->is_dpl && KknMember::where('is_dpl', true)->exists()) {
             return redirect()->back()->with('error', 'DPL sudah ada. Hanya boleh ada satu DPL.');
         }
@@ -168,11 +175,8 @@ class KontakPageController extends Controller
             'order' => $request->order ?? $member->order
         ];
 
-        // If role changed, update order to default for that role
         if ($request->role !== $member->role && is_null($request->order)) {
             $data['order'] = $this->getDefaultOrderByRole($request->role);
-            
-            // Check if order already exists and increment
             while (KknMember::where('order', $data['order'])
                             ->where('is_dpl', $isDpl)
                             ->where('id', '!=', $member->id)
@@ -186,7 +190,19 @@ class KontakPageController extends Controller
             if ($member->photo_path) {
                 Storage::disk('public')->delete($member->photo_path);
             }
-            $data['photo_path'] = $request->file('photo')->store('kkn-members', 'public');
+            
+            $file = $request->file('photo');
+            $fileName = Str::slug($request->name) . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'kkn-members/' . $fileName;
+
+            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            $image->scale(width: 800);
+            $encodedImage = $image->toJpeg(80);
+            Storage::disk('public')->put($filePath, $encodedImage);
+            $data['photo_path'] = $filePath;
+            // --- AKHIR OPTIMASI ---
         }
 
         $member->update($data);
@@ -199,21 +215,16 @@ class KontakPageController extends Controller
         if ($member->photo_path) {
             Storage::disk('public')->delete($member->photo_path);
         }
-        
         $member->delete();
-
         return redirect()->back()->with('success', 'Anggota KKN berhasil dihapus!');
     }
 
     public function reorderMembers(Request $request)
     {
         $items = $request->input('items');
-        
         foreach ($items as $item) {
             KknMember::where('id', $item['id'])->update(['order' => $item['order']]);
         }
-
         return response()->json(['success' => true, 'message' => 'Urutan anggota berhasil diperbarui']);
     }
-
 }

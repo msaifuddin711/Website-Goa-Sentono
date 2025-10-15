@@ -115,6 +115,11 @@ function toggleVisibility(id) {
                     $toggleText.text('Tampilkan');
                     $toggleIcon.removeClass('fa-eye-slash').addClass('fa-eye');
                 }
+
+                if (data.totalVisible !== undefined && data.totalHidden !== undefined) {
+                    $('#total-visible-count').text(data.totalVisible);
+                    $('#total-hidden-count').text(data.totalHidden);
+                }
             }
         },
         error: function() {

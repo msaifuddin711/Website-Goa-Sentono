@@ -29,7 +29,7 @@
                 </div>
                 <div>
                     <p class="text-green-600 text-sm">Ditampilkan</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $totalVisible }}</p>
+                    <p id="total-visible-count" class="text-2xl font-bold text-primary-dark">{{ $totalVisible }}</p>
                 </div>
             </div>
         </div>
@@ -42,7 +42,7 @@
                 </div>
                 <div>
                     <p class="text-red-600 text-sm">Disembunyikan</p>
-                    <p class="text-2xl font-bold text-primary-dark">{{ $totalHidden }}</p>
+                    <p id="total-hidden-count" class="text-2xl font-bold text-primary-dark">{{ $totalHidden }}</p>
                 </div>
             </div>
         </div>
@@ -139,7 +139,7 @@
                                         <i class="fas {{ $item->is_visible ? 'fa-eye-slash' : 'fa-eye' }} mr-1"></i>
                                         <span class="toggle-text">{{ $item->is_visible ? 'Sembunyikan' : 'Tampilkan' }}</span>
                                     </button>
-                                    <button class="bg-warm-beige hover:bg-light-beige ... " onclick="showEditGaleriPopup({{ $item->toJson() }})">
+                                    <button class="bg-warm-beige px-3 py-2 rounded-lg hover:bg-light-beige ... " onclick="showEditGaleriPopup({{ $item->toJson() }})">
                                         <i class="fas fa-edit mr-1"></i>Edit
                                     </button>
                                 </div>

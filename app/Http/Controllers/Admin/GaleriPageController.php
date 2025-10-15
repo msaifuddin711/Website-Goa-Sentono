@@ -7,16 +7,16 @@ use Illuminate\Http\Request;
 use App\Models\GaleriItem;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class GaleriPageController extends Controller
 {
     public function index()
     {
-        // Ambil semua item untuk admin
         $query = GaleriItem::latest();
         $galeriItems = $query->paginate(20);
-
-        // Tambahkan statistik visibilitas
         $totalVisible = GaleriItem::where('is_visible', true)->count();
         $totalHidden = GaleriItem::where('is_visible', false)->count();
 
@@ -28,24 +28,40 @@ class GaleriPageController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string|max:500',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,webp',
-            'is_visible' => 'nullable|boolean' // <-- Tambah validasi
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
+            'is_visible' => 'nullable'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $gambarPath = $request->file('gambar')->store('galeri', 'public');
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'galeri/' . $fileName;
+
+            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            // Untuk galeri, kita bisa pakai resolusi lebih besar
+            $image->scale(width: 1920); 
+            $encodedImage = $image->toJpeg(80); // Kualitas sedikit lebih tinggi
+            Storage::disk('public')->put($filePath, $encodedImage);
+            
+            $gambarPath = $filePath;
+            // --- AKHIR PERUBAHAN ---
+        }
 
         GaleriItem::create([
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
             'gambar_path' => $gambarPath,
-            'is_visible' => $request->has('is_visible') ? $request->is_visible : false // <-- Handle is_visible
+            'is_visible' => $request->has('is_visible') ? 1 : 0
         ]);
-
-        return response()->json(['success' => 'Foto galeri berhasil ditambahkan!']);
+        
+        return redirect()->route('admin.galeri.index')->with('success', 'Foto galeri berhasil ditambahkan!');
     }
 
     public function update(Request $request, GaleriItem $galeri)
@@ -54,29 +70,42 @@ class GaleriPageController extends Controller
             'judul' => 'required|string|max:255',
             'deskripsi' => 'nullable|string|max:500',
             'gambar' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
-            'is_visible' => 'nullable|boolean' // <-- Tambah validasi
+            'is_visible' => 'nullable'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $data = [
             'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
-            'is_visible' => $request->has('is_visible') ? $request->is_visible : false // <-- Handle is_visible
+            'is_visible' => $request->has('is_visible') ? 1 : 0
         ];
 
         if ($request->hasFile('gambar')) {
             if ($galeri->gambar_path) {
                 Storage::disk('public')->delete($galeri->gambar_path);
             }
-            $data['gambar_path'] = $request->file('gambar')->store('galeri', 'public');
+            
+            $file = $request->file('gambar');
+            $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'galeri/' . $fileName;
+
+            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            $image->scale(width: 1920);
+            $encodedImage = $image->toJpeg(80);
+            Storage::disk('public')->put($filePath, $encodedImage);
+
+            $data['gambar_path'] = $filePath;
+            // --- AKHIR PERUBAHAN ---
         }
 
         $galeri->update($data);
 
-        return response()->json(['success' => 'Foto galeri berhasil diperbarui!']);
+        return redirect()->route('admin.galeri.index')->with('success', 'Foto galeri berhasil diperbarui!');
     }
 
     // METHOD BARU UNTUK TOGGLE VISIBILITY
@@ -87,7 +116,17 @@ class GaleriPageController extends Controller
 
         $message = $galeri->is_visible ? 'Foto sekarang ditampilkan.' : 'Foto sekarang disembunyikan.';
         
-        return response()->json(['success' => true, 'message' => $message, 'is_visible' => $galeri->is_visible]);
+        // --- PERUBAHAN DI SINI: HITUNG ULANG TOTAL ---
+        $totalVisible = GaleriItem::where('is_visible', true)->count();
+        $totalHidden = GaleriItem::where('is_visible', false)->count();
+
+        return response()->json([
+            'success' => true, 
+            'message' => $message, 
+            'is_visible' => $galeri->is_visible,
+            'totalVisible' => $totalVisible, // Kirim total baru
+            'totalHidden' => $totalHidden   // Kirim total baru
+        ]);
     }
 
     public function destroy(GaleriItem $galeri)

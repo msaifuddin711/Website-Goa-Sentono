@@ -8,23 +8,27 @@ use App\Models\Artikel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ArtikelPageController extends Controller
 {
     public function index()
     {
-        // Urutkan berdasarkan published_at, kemudian created_at
         $artikels = Artikel::orderByRaw('published_at DESC, created_at DESC')->paginate(20);
+
+        $totalVisible = Artikel::where('is_visible', true)->count();
+        $totalHidden = Artikel::where('is_visible', false)->count();
         
         return view('admin.artikel.index', compact('artikels'));
     }
-
+    
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string|max:255',
             'isi_konten' => 'required|string',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120', // 5MB
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120',
             'is_featured' => 'boolean',
             'is_visible' => 'boolean',
             'published_at' => 'nullable|date'
@@ -33,21 +37,38 @@ class ArtikelPageController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        
+        $gambarPath = null;
+        if ($request->hasFile('gambar')) {
+            $file = $request->file('gambar');
+            $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'artikel/' . $fileName;
 
-        $gambarPath = $request->file('gambar')->store('artikel', 'public');
+            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
+            // 1. Buat Image Manager dengan driver GD
+            $manager = new ImageManager(new Driver());
 
-        // Generate slug from title
+            // 2. Baca gambar dari file yang diunggah
+            $image = $manager->read($file);
+
+            // 3. Ubah ukuran gambar agar lebar maksimal 1200px
+            $image->scale(width: 1200);
+
+            // 4. Encode gambar ke format Jpeg dengan kualitas 75% lalu simpan
+            $encodedImage = $image->toJpeg(75); 
+            Storage::disk('public')->put($filePath, $encodedImage);
+
+            $gambarPath = $filePath;
+            // --- AKHIR PERUBAHAN ---
+        }
+
         $slug = Str::slug($request->judul);
         $originalSlug = $slug;
         $counter = 1;
-        
-        // Ensure unique slug
         while (Artikel::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $counter;
-            $counter++;
+            $slug = $originalSlug . '-' . $counter++;
         }
 
-        // If is_featured is true, remove featured status from other articles
         if ($request->is_featured) {
             Artikel::where('is_featured', true)->update(['is_featured' => false]);
         }
@@ -80,39 +101,42 @@ class ArtikelPageController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $data = [
-            'judul' => $request->judul,
-            'isi_konten' => $request->isi_konten,
-            'is_featured' => $request->is_featured ?? false,
-            'is_visible' => $request->is_visible ?? $artikel->is_visible,
-            'published_at' => $request->published_at ?? $artikel->published_at
-        ];
+        $data = $request->except(['_token', '_method', 'gambar']);
+        $data['is_featured'] = $request->is_featured ?? false;
+        $data['is_visible'] = $request->is_visible ?? $artikel->is_visible;
 
-        // Update slug if title changed
+        if ($request->hasFile('gambar')) {
+            if ($artikel->gambar_path) {
+                Storage::disk('public')->delete($artikel->gambar_path);
+            }
+            
+            $file = $request->file('gambar');
+            $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
+            $filePath = 'artikel/' . $fileName;
+
+            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
+            $manager = new ImageManager(new Driver());
+            $image = $manager->read($file);
+            $image->scale(width: 1200);
+            $encodedImage = $image->toJpeg(75);
+            Storage::disk('public')->put($filePath, $encodedImage);
+            
+            $data['gambar_path'] = $filePath;
+            // --- AKHIR PERUBAHAN ---
+        }
+
         if ($request->judul !== $artikel->judul) {
             $slug = Str::slug($request->judul);
             $originalSlug = $slug;
             $counter = 1;
-            
             while (Artikel::where('slug', $slug)->where('id', '!=', $artikel->id)->exists()) {
-                $slug = $originalSlug . '-' . $counter;
-                $counter++;
+                $slug = $originalSlug . '-' . $counter++;
             }
-            
             $data['slug'] = $slug;
         }
 
-        // If is_featured is true, remove featured status from other articles
         if ($request->is_featured) {
             Artikel::where('is_featured', true)->where('id', '!=', $artikel->id)->update(['is_featured' => false]);
-        }
-
-        if ($request->hasFile('gambar')) {
-            // Delete old image
-            if ($artikel->gambar_path) {
-                Storage::disk('public')->delete($artikel->gambar_path);
-            }
-            $data['gambar_path'] = $request->file('gambar')->store('artikel', 'public');
         }
 
         $artikel->update($data);
@@ -181,11 +205,15 @@ class ArtikelPageController extends Controller
             ? 'Artikel sekarang ditampilkan.' 
             : 'Artikel sekarang disembunyikan.';
 
-        // Kembalikan respons dalam format JSON
+        $totalVisible = Artikel::where('is_visible', true)->count();
+        $totalHidden = Artikel::where('is_visible', false)->count();
+
         return response()->json([
-            'success' => true, 
-            'message' => $message, 
-            'is_visible' => $artikel->is_visible
+            'success' => true,
+            'message' => $message,
+            'is_visible' => $artikel->is_visible,
+            'totalVisible' => $totalVisible, 
+            'totalHidden' => $totalHidden   
         ]);
     }
 }

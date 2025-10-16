@@ -105,7 +105,6 @@
         </div>
     </section>
 
-    {{-- Peta Lokasi Dinamis --}}
 {{-- Peta Lokasi Dinamis dengan Enhanced 3D Controls --}}
 <section class="py-12 sm:py-16 lg:py-24 bg-white" id="peta-lokasi">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -119,6 +118,56 @@
         </div>
         
         <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
+            @php
+                // Definisikan gambar Anda di sini agar mudah dikelola
+                $locationImages = [
+                        ['url' => asset('images/render1.jpeg')],
+                        ['url' => asset('images/render2.jpeg')],
+                        ['url' => asset('images/render3.jpeg')],
+                        ['url' => asset('images/render4.jpeg')],
+                        ['url' => asset('images/render5.jpeg')],
+                        ['url' => asset('images/render6.jpeg')],
+                        ['url' => asset('images/render7.jpeg')],
+                ];
+                $imagesPerView = 4; // Jumlah gambar yang terlihat per slide
+            @endphp
+
+            <div class="p-4 md:p-6 lg:p-8">
+                <div id="peta-lokasi-carousel-container" class="relative">
+                    <div class="overflow-hidden rounded-xl md:rounded-2xl">
+                        {{-- Container ini akan memiliki lebar total semua gambar --}}
+                        <div id="peta-lokasi-carousel-track" class="flex transition-transform duration-500 ease-in-out">
+                            @foreach($locationImages as $image)
+                                {{-- Setiap item gambar memiliki lebar 1/4 dari viewport --}}
+                                <div class="flex-shrink-0 w-1/4 p-2">
+                                    <div class="aspect-video rounded-md overflow-hidden shadow-md">
+                                        <img src="{{ $image['url'] }}" class="w-full h-full object-cover" loading="lazy">
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    {{-- Tombol Navigasi --}}
+                    <button id="peta-lokasi-carousel-prev" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-10 h-10 flex items-center justify-center shadow-md transition z-10">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="peta-lokasi-carousel-next" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-10 h-10 flex items-center justify-center shadow-md transition z-10">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+
+                    {{-- Indikator Titik (Dots) --}}
+                    <div id="peta-lokasi-carousel-dots" class="flex justify-center space-x-2 mt-4">
+                        @for ($i = 0; $i < ceil(count($locationImages) / $imagesPerView); $i++)
+                            <button data-slide-to="{{ $i }}" class="peta-carousel-dot h-3 w-3 rounded-full transition {{ $i == 0 ? 'bg-primary' : 'bg-gray-300' }}"></button>
+                        @endfor
+                    </div>
+                </div>
+            </div>
+
+            {{-- Pemisah Visual --}}
+            <div class="border-t border-gray-200 mx-6 lg:mx-8"></div>
+            
             {{-- 3D Model Viewer dengan Enhanced Controls --}}
             <div class="relative bg-gradient-to-b from-blue-50 to-green-50">
                 {{-- Control Panel Overlay --}}
@@ -355,7 +404,7 @@
                 <!-- Container Gambar Peta -->
                 <div class="relative overflow-auto max-h-[80vh]" id="peta-container">
                     <img id="peta-image" 
-                         src="{{ asset('images/peta_2d.png') }}" 
+                         src="{{ asset('images/peta_2d_new.png') }}" 
                          alt="Peta 2D Goa Sentono" 
                          class="w-full h-auto"
                          draggable="false">
@@ -736,6 +785,64 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     console.log('Enhanced 3D Map controls initialized');
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const carouselContainer = document.getElementById('peta-lokasi-carousel-container');
+    if (carouselContainer) {
+        const track = document.getElementById('peta-lokasi-carousel-track');
+        const prevBtn = document.getElementById('peta-lokasi-carousel-prev');
+        const nextBtn = document.getElementById('peta-lokasi-carousel-next');
+        const dotsContainer = document.getElementById('peta-lokasi-carousel-dots');
+        
+        const totalImages = {{ count($locationImages) }};
+        const imagesPerView = {{ $imagesPerView }};
+        const totalPages = Math.ceil(totalImages / imagesPerView);
+        
+        let currentPage = 0;
+
+        function updateCarousel() {
+            // Pergeseran didasarkan pada lebar viewport (100%)
+            const offset = currentPage * 100;
+            track.style.transform = `translateX(-${offset}%)`;
+
+            // Update dots
+            Array.from(dotsContainer.children).forEach((dot, index) => {
+                dot.classList.toggle('bg-primary', index === currentPage);
+                dot.classList.toggle('bg-gray-300', index !== currentPage);
+            });
+
+            // Tampilkan/sembunyikan tombol prev/next
+            prevBtn.style.display = currentPage === 0 ? 'none' : 'flex';
+            nextBtn.style.display = currentPage === totalPages - 1 ? 'none' : 'flex';
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                updateCarousel();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                updateCarousel();
+            }
+        });
+
+        dotsContainer.addEventListener('click', (e) => {
+            if (e.target.matches('[data-slide-to]')) {
+                currentPage = parseInt(e.target.dataset.slideTo);
+                updateCarousel();
+            }
+        });
+
+        // Panggil saat pertama kali dimuat untuk mengatur status tombol
+        updateCarousel();
+    }
 });
 </script>
 

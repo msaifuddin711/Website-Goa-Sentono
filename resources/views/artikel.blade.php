@@ -3,6 +3,9 @@
 @extends('layouts.app')
 
 @section('title', 'Artikel - Goa Sentono')
+@section('description', 'Baca artikel, berita, dan informasi terbaru seputar Situs Goa Sentono. Dapatkan wawasan tentang sejarah, keunikan, dan acara yang diselenggarakan.')
+@section('keywords', 'artikel Goa Sentono, berita Goa Sentono, blog wisata Blora, sejarah Goa Sentono')
+
 
 @section('content')
     <!-- Hero Section untuk Artikel -->

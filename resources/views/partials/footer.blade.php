@@ -58,6 +58,12 @@
                             Artikel
                         </a>
                     </li>
+                    <li>
+                        <a href="{{ route('reservasi') }}" class="text-white text-opacity-90 hover:text-opacity-100 hover:text-cream transition duration-300 flex items-center justify-center sm:justify-start group text-sm sm:text-base">
+                            <span class="w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white bg-opacity-40 rounded-full mr-2 sm:mr-3 group-hover:bg-cream transition duration-300"></span>
+                            Reservasi
+                        </a>
+                    </li>
                     @if(false)
                     <li>
                         <a href="{{ route('kontak') }}" class="text-white text-opacity-90 hover:text-opacity-100 hover:text-cream transition duration-300 flex items-center justify-center sm:justify-start group text-sm sm:text-base">

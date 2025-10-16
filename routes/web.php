@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\GaleriPageController;
 use App\Http\Controllers\Admin\KontakPageController;
 use App\Http\Controllers\Admin\ArtikelPageController;
 use App\Http\Controllers\Admin\TentangPageController;
+use App\Http\Controllers\ReservasiController;
 
 require __DIR__.'/auth.php';
 
@@ -23,6 +24,7 @@ Route::get('/artikel', [ArtikelController::class, 'index'])->name('artikel');
 Route::get('/artikel/{slug}', [ArtikelController::class, 'show'])->name('artikel.show');
 Route::get('/kontak', [KontakController::class, 'index'])->name('kontak');
 Route::post('/kontak', [KontakController::class, 'store'])->name('kontak.store');
+Route::get('/reservasi', [ReservasiController::class, 'reservasi'])->name('reservasi');
 
 Route::get('/search', [SearchController::class, 'index'])->name('search');
 Route::get('/search/suggestions', [SearchController::class, 'suggestions'])->name('search.suggestions');

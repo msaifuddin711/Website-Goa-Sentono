@@ -1,9 +1,10 @@
 {{-- resources\views\galeri.blade.php --}}
+
 @extends('layouts.app')
 
-@section('title', 'Kontak Kami - Goa Sentono')
-@section('description', 'Hubungi tim Goa Sentono untuk informasi wisata, reservasi, dan pertanyaan lainnya. Kami siap membantu perjalanan wisata Anda ke Blora.')
-@section('keywords', 'kontak Goa Sentono, hubungi wisata Blora, informasi wisata, reservasi Goa Sentono')
+@section('title', 'Galeri - Goa Sentono')
+@section('description', 'Jelajahi koleksi foto menakjubkan dari keindahan alam dan situs bersejarah Goa Sentono. Lihat momen-momen terbaik yang diabadikan di destinasi wisata Blora ini.')
+@section('keywords', 'galeri Goa Sentono, foto Goa Sentono, wisata Blora, keindahan alam, situs bersejarah')
 
 
 @section('description', 'Lihat koleksi foto-foto menakjubkan dari Goa Sentono. Galeri lengkap keindahan alam dan situs bersejarah di Blora, Jawa Tengah.')

@@ -33,12 +33,14 @@
                 class="nav-link text-white {{ $current === 'artikel' ? 'active' : '' }}">
                     ARTIKEL
                 </a>
-                @if(false)
+                <a href="{{ route('reservasi') }}"
+                class="nav-link text-white {{ $current === 'reservasi' ? 'active' : '' }}">
+                    RESERVASI
+                </a>
                 <a href="{{ route('kontak') }}"
                 class="nav-link text-white {{ $current === 'kontak' ? 'active' : '' }}">
                     KONTAK
                 </a>
-                @endif
                 
                 <!-- Desktop Search -->
                 <div class="search-container">
@@ -88,12 +90,14 @@
                 class="mobile-nav-link {{ $current === 'artikel' ? 'active' : '' }}">
                     ARTIKEL
                 </a>
-                @if(false)
+                <a href="{{ route('reservasi') }}"
+                class="mobile-nav-link {{ $current === 'reservasi' ? 'active' : '' }}">
+                    RESERVASI
+                </a>
                 <a href="{{ route('kontak') }}"
                 class="mobile-nav-link {{ $current === 'kontak' ? 'active' : '' }}">
                     KONTAK
                 </a>
-                @endif
                 
             </div>
         </div>

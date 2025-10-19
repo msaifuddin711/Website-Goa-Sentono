@@ -1,7 +1,4 @@
-// public/script/admin-script.js
-
 $(document).ready(function() {
-    // Initialize sortable for sejarah slider with enhanced visual feedback
     if (document.getElementById('sejarah-sortable')) {
         new Sortable(document.getElementById('sejarah-sortable'), {
             animation: 200,
@@ -18,10 +15,8 @@ $(document).ready(function() {
                     items.push($(this).data('id'));
                 });
                 
-                // Get CSRF token from meta tag
                 const csrfToken = $('meta[name="csrf-token"]').attr('content');
                 
-                // Show loading notification
                 showNotification('Menyimpan urutan...', 'info');
                 
                 $.post(window.adminRoutes.sejarahReorder, {
@@ -36,7 +31,6 @@ $(document).ready(function() {
         });
     }
 
-    // Edit sejarah slider - UPDATED TO USE POPUP
     $('.edit-sejarah-btn').click(function() {
         const id = $(this).data('id');
         const alt = $(this).data('alt');
@@ -45,7 +39,6 @@ $(document).ready(function() {
         showEditSejarahPopup(id, alt, urutan);
     });
 
-    // Enhanced file input preview
     $(document).on('change', 'input[type="file"]', function() {
         const file = this.files[0];
         if (file) {
@@ -69,18 +62,15 @@ $(document).ready(function() {
         }
     });
 
-    // Enhanced form validation with character limit check
     $(document).on('submit', 'form', function(e) {
         const $form = $(this);
         const $submitBtn = $form.find('button[type="submit"]');
         
-        // Validate form before submission
         if (!validateForm(this)) {
             e.preventDefault();
             return false;
         }
         
-        // Check description character limit
         const $deskripsi = $form.find('textarea[maxlength="90"]');
         if ($deskripsi.length && $deskripsi.val().length > 90) {
             e.preventDefault();
@@ -89,18 +79,15 @@ $(document).ready(function() {
             return false;
         }
         
-        // Add loading state
         $submitBtn.prop('disabled', true);
         $submitBtn.html('<i class="fas fa-spinner fa-spin mr-2"></i>');
         
-        // Re-enable after 3 seconds as fallback
         setTimeout(() => {
             $submitBtn.prop('disabled', false);
             $submitBtn.html('<i class="fas fa-save mr-2"></i>Simpan');
         }, 3000);
     });
 
-    // Initialize character counters on page load
     $('textarea[maxlength]').each(function() {
         const counterId = $(this).attr('oninput')?.match(/updateCharCount\(this,\s*'([^']+)'\)/)?.[1];
         if (counterId) {
@@ -108,13 +95,11 @@ $(document).ready(function() {
         }
     });
 
-    // Real-time validation for textarea inputs
     $('textarea[maxlength="90"]').on('input', function() {
         const $textarea = $(this);
         const currentLength = $textarea.val().length;
         const maxLength = 90;
         
-        // Visual feedback for character limit
         if (currentLength > maxLength) {
             $textarea.addClass('border-red-400 ring-red-400');
             $textarea.removeClass('border-gray-200 border-orange-400 ring-orange-400');
@@ -128,22 +113,19 @@ $(document).ready(function() {
         }
     });
 
-    // Close popup on overlay click
     $(document).on('click', '#popup-overlay', function(e) {
         if (e.target === this) {
             closePopup();
         }
     });
 
-    // Escape key to close popup
     $(document).on('keydown', function(e) {
-        if (e.which === 27) { // ESC key
+        if (e.which === 27) {
             closePopup();
         }
     });
 });
 
-// Show popup function (same as galeri)
 function showPopup(content) {
     const overlay = $('#popup-overlay');
     const contentContainer = $('#popup-content');
@@ -151,22 +133,18 @@ function showPopup(content) {
     contentContainer.html(content);
     overlay.removeClass('hidden');
     
-    // Animate in
     setTimeout(() => {
         overlay.addClass('opacity-100');
         contentContainer.find('.popup-content').removeClass('scale-95').addClass('scale-100');
     }, 10);
     
-    // Prevent body scroll
     $('body').addClass('overflow-hidden');
 }
 
-// Close popup function (same as galeri)
 function closePopup() {
     const overlay = $('#popup-overlay');
     const contentContainer = $('#popup-content');
     
-    // Animate out
     overlay.removeClass('opacity-100');
     contentContainer.find('.popup-content').removeClass('scale-100').addClass('scale-95');
     
@@ -177,9 +155,7 @@ function closePopup() {
     }, 300);
 }
 
-// NEW: Delete Sejarah Slider with Popup Confirmation
 function deleteSejarahSlider(id) {
-    // Create custom confirmation modal
     const confirmModal = `
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" id="deleteConfirmModal">
             <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform animate-scale-in">
@@ -212,7 +188,6 @@ function deleteSejarahSlider(id) {
     $('body').append(confirmModal);
 }
 
-// NEW: Confirm delete sejarah function
 function confirmDeleteSejarah(id) {
     const deleteUrl = window.adminRoutes.sejarahDelete.replace(':id', id);
 
@@ -222,7 +197,6 @@ function confirmDeleteSejarah(id) {
         style: 'display:none;'
     });
     
-    // Get CSRF token from meta tag
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
     
     form.append($('<input>', {type: 'hidden', name: '_token', value: csrfToken}));
@@ -230,16 +204,13 @@ function confirmDeleteSejarah(id) {
     
     $('body').append(form);
     
-    // Show loading notification
     showNotification('Menghapus gambar...', 'info');
     
     form.submit();
     
-    // Remove confirmation modal
     $('#deleteConfirmModal').remove();
 }
 
-// UPDATED: Show Add Sejarah Popup
 function showAddSejarahPopup() {
     const popupContent = `
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto popup-content">
@@ -309,13 +280,11 @@ function showAddSejarahPopup() {
     
     showPopup(popupContent);
     
-    // Initialize character count
     setTimeout(() => {
         updateCharCount(document.getElementById('alt_text'), 'alt_text_count');
     }, 100);
 }
 
-// UPDATED: Show Edit Sejarah Popup
 function showEditSejarahPopup(id, alt, urutan) {
     const updateUrl = window.adminRoutes.sejarahUpdate.replace(':id', id);
     
@@ -388,13 +357,11 @@ function showEditSejarahPopup(id, alt, urutan) {
     
     showPopup(popupContent);
     
-    // Initialize character count for edit form
     setTimeout(() => {
         updateCharCount(document.getElementById('edit_alt_text'), 'edit_alt_text_count');
     }, 100);
 }
 
-// Item modal functions with enhanced UX and validation - UPDATED TO USE POPUP
 function openItemModal(type, item = null) {
     if (item) {
         showEditItemPopup(type, item);
@@ -403,7 +370,6 @@ function openItemModal(type, item = null) {
     }
 }
 
-// UPDATED: Show Add Item Popup
 function showAddItemPopup(type) {
     const titles = {
         'keunikan': 'Keunikan Situs',
@@ -511,13 +477,11 @@ function showAddItemPopup(type) {
     
     showPopup(popupContent);
     
-    // Initialize character count
     setTimeout(() => {
         updateCharCount(document.getElementById('item_deskripsi'), 'item_deskripsi_count');
     }, 100);
 }
 
-// UPDATED: Show Edit Item Popup
 function showEditItemPopup(type, item) {
     const titles = {
         'keunikan': 'Keunikan Situs',
@@ -635,20 +599,16 @@ function showEditItemPopup(type, item) {
     
     showPopup(popupContent);
     
-    // Initialize character count for edit form
     setTimeout(() => {
         updateCharCount(document.getElementById('edit_item_deskripsi'), 'edit_item_deskripsi_count');
     }, 100);
 }
 
-// Enhanced edit item function - UPDATED
 function editItem(type, itemJson) {
     showEditItemPopup(type, itemJson);
 }
 
-// Enhanced delete function with better confirmation
 function deleteItem(id) {
-    // Create custom confirmation modal
     const confirmModal = `
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" id="deleteConfirmModal">
             <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full transform animate-scale-in">
@@ -681,7 +641,6 @@ function deleteItem(id) {
     $('body').append(confirmModal);
 }
 
-// Confirm delete function
 function confirmDelete(id) {
     const deleteUrl = window.adminRoutes.itemDelete.replace(':id', id);
 
@@ -691,7 +650,6 @@ function confirmDelete(id) {
         style: 'display:none;'
     });
     
-    // Get CSRF token from meta tag
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
     
     form.append($('<input>', {type: 'hidden', name: '_token', value: csrfToken}));
@@ -699,22 +657,18 @@ function confirmDelete(id) {
     
     $('body').append(form);
     
-    // Show loading notification
     showNotification('Menghapus item...', 'info');
     
     form.submit();
     
-    // Remove confirmation modal
     $('#deleteConfirmModal').remove();
 }
 
-// Utility functions
 function ucfirst(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Enhanced notification system with more types
 function showNotification(message, type = 'info') {
     const icons = {
         success: 'fas fa-check-circle',
@@ -752,21 +706,18 @@ function showNotification(message, type = 'info') {
     
     $('body').append(notification);
     
-    // Auto remove after 5 seconds (longer for warnings)
     const timeout = type === 'warning' ? 8000 : 5000;
     setTimeout(() => {
         removeNotification(notificationId);
     }, timeout);
 }
 
-// Remove notification function
 function removeNotification(notificationId) {
     $(`#${notificationId}`).fadeOut(300, function() {
         $(this).remove();
     });
 }
 
-// Enhanced character count function with better feedback
 function updateCharCount(element, counterId) {
     if (!element || !counterId) return;
     
@@ -777,7 +728,6 @@ function updateCharCount(element, counterId) {
     if (counter) {
         const remaining = maxLength - currentLength;
         
-        // Update counter display
         let counterClass = 'text-gray-500';
         if (currentLength > maxLength) {
             counterClass = 'text-red-600 font-bold';
@@ -789,7 +739,6 @@ function updateCharCount(element, counterId) {
         
         counter.innerHTML = `<span class="${counterClass}">${currentLength}</span><span class="text-gray-400">/${maxLength}</span>`;
         
-        // Add visual feedback to textarea border
         element.classList.remove('border-red-400', 'ring-red-400', 'border-orange-400', 'ring-orange-400', 'border-gray-200');
         
         if (currentLength > maxLength) {
@@ -800,12 +749,10 @@ function updateCharCount(element, counterId) {
             element.classList.add('border-gray-200');
         }
         
-        // Show notification for overlimit
         if (currentLength > maxLength && !element.dataset.notificationShown) {
             showNotification(`Deskripsi melebihi batas! ${currentLength - maxLength} karakter berlebih`, 'warning');
             element.dataset.notificationShown = 'true';
             
-            // Reset notification flag after 3 seconds
             setTimeout(() => {
                 delete element.dataset.notificationShown;
             }, 3000);
@@ -813,18 +760,15 @@ function updateCharCount(element, counterId) {
     }
 }
 
-// Character count handler for input events
 $(document).on('input', 'textarea[data-counter]', function() {
     const counterId = $(this).data('counter');
     updateCharCount(this, counterId);
 });
 
-// Enhanced form validation with detailed character checks
 function validateForm(form) {
     let isValid = true;
     const errors = [];
     
-    // Check all textarea with maxlength
     const textareas = form.querySelectorAll('textarea[maxlength="90"]');
     textareas.forEach(textarea => {
         const currentLength = textarea.value.length;
@@ -845,10 +789,8 @@ function validateForm(form) {
         }
     });
     
-    // Show errors if any
     if (!isValid) {
         showNotification(errors.join('. '), 'error');
-        // Focus on first invalid field
         const firstInvalid = form.querySelector('textarea.border-red-400');
         if (firstInvalid) {
             firstInvalid.focus();
@@ -858,7 +800,6 @@ function validateForm(form) {
     return isValid;
 }
 
-// Enhanced search functionality (if needed in future)
 function initializeSearch() {
     const searchInput = $('#searchInput');
     if (searchInput.length) {
@@ -878,7 +819,6 @@ function initializeSearch() {
     }
 }
 
-// Debounce function for search
 function debounce(func, wait) {
     let timeout;
     return function executedFunction(...args) {
@@ -891,7 +831,6 @@ function debounce(func, wait) {
     };
 }
 
-// Enhanced drag and drop for file uploads
 function initializeDragDrop() {
     $(document).on('dragover dragenter', 'input[type="file"]', function(e) {
         e.preventDefault();
@@ -914,12 +853,10 @@ function initializeDragDrop() {
     });
 }
 
-// Initialize all enhanced features when document is ready
 $(document).ready(function() {
     initializeSearch();
     initializeDragDrop();
     
-    // Add custom CSS animations
     if (!document.getElementById('customAnimations')) {
         const style = document.createElement('style');
         style.id = 'customAnimations';
@@ -1044,7 +981,6 @@ $(document).ready(function() {
         document.head.appendChild(style);
     }
     
-    // Enhanced tooltip functionality
     $(document).on('mouseenter', '[title]', function() {
         const title = $(this).attr('title');
         $(this).data('tipText', title).removeAttr('title');
@@ -1063,9 +999,7 @@ $(document).ready(function() {
     });
 });
 
-// Keyboard shortcuts
 $(document).keydown(function(e) {
-    // Ctrl/Cmd + S to save form
     if ((e.ctrlKey || e.metaKey) && e.which === 83) {
         e.preventDefault();
         const $form = $('.popup-content form:visible, form:visible').first();
@@ -1077,20 +1011,17 @@ $(document).keydown(function(e) {
         }
     }
     
-    // Escape key to close modals and popups
     if (e.which === 27) {
         closePopup();
         $('#deleteConfirmModal').remove();
     }
 });
 
-// Enhanced error handling for AJAX requests
 $(document).ajaxError(function(event, xhr, settings, thrownError) {
     console.error('AJAX Error:', thrownError);
     showNotification('Terjadi kesalahan pada server. Silakan coba lagi.', 'error');
 });
 
-// Page load performance monitoring
 $(window).on('load', function() {
     const loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
     console.log(`Page loaded in ${loadTime}ms`);
@@ -1100,7 +1031,6 @@ $(window).on('load', function() {
     }
 });
 
-// Responsive table handling
 function makeTablesResponsive() {
     $('table').each(function() {
         if (!$(this).parent().hasClass('table-responsive')) {
@@ -1109,12 +1039,10 @@ function makeTablesResponsive() {
     });
 }
 
-// Initialize responsive tables
 $(document).ready(function() {
     makeTablesResponsive();
 });
 
-// Export functions for global use
 window.adminUtils = {
     showNotification,
     openItemModal,

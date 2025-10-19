@@ -25,10 +25,6 @@ class GaleriItem extends Model
 
     protected $appends = ['gambar_url'];
     
-    /**
-     * Accessor untuk mendapatkan URL lengkap dari gambar.
-     * Ini memungkinkan kita memanggil $item->gambar_url di view.
-     */
     public function getGambarUrlAttribute(): string
     {
         $path = $this->gambar_path;
@@ -37,12 +33,10 @@ class GaleriItem extends Model
             return $path;
         }
 
-        // Gunakan asset() untuk membuat URL
         if ($this->gambar_path && Storage::disk('public')->exists($this->gambar_path)) {
             return asset('storage/' . $this->gambar_path);
         }
         
-        // Mengembalikan gambar placeholder jika file tidak ditemukan
         return asset('images/placeholder.jpg'); 
     }
 

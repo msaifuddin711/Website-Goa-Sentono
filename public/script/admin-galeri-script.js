@@ -1,7 +1,4 @@
-// public/script/admin-galeri-script.js
-
 $(document).ready(function() {
-    // File preview functionality
     $(document).on('change', 'input[type="file"]', function() {
         const file = this.files[0];
         if (file) {
@@ -17,25 +14,21 @@ $(document).ready(function() {
         }
     });
 
-    // Select all functionality
     $('#select-all').on('change', function() {
         const isChecked = $(this).is(':checked');
         $('.item-checkbox').prop('checked', isChecked);
         updateBulkDeleteButton();
     });
 
-    // Individual checkbox change
     $(document).on('change', '.item-checkbox', function() {
         updateBulkDeleteButton();
         updateSelectAllState();
     });
 
-    // Search functionality
     $('#search-input').on('input', function() {
         filterGaleriItems();
     });
 
-    // Initialize character counters
     $(document).on('input', 'textarea[maxlength]', function() {
         const counterId = $(this).data('counter');
         if (counterId) {
@@ -43,7 +36,6 @@ $(document).ready(function() {
         }
     });
 
-    // Enhanced form validation
     $(document).on('submit', 'form', function(e) {
         const $form = $(this);
         const $submitBtn = $form.find('button[type="submit"]');
@@ -53,28 +45,24 @@ $(document).ready(function() {
             return false;
         }
         
-        // Add loading state
         $submitBtn.prop('disabled', true);
         const originalText = $submitBtn.html();
         $submitBtn.html('<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...');
         
-        // Re-enable after timeout as fallback
         setTimeout(() => {
             $submitBtn.prop('disabled', false);
             $submitBtn.html(originalText);
         }, 5000);
     });
 
-    // Close popup on overlay click
     $(document).on('click', '#popup-overlay', function(e) {
         if (e.target === this) {
             closePopup();
         }
     });
 
-    // Escape key to close popup
     $(document).on('keydown', function(e) {
-        if (e.which === 27) { // ESC key
+        if (e.which === 27) {
             closePopup();
         }
     });
@@ -128,7 +116,6 @@ function toggleVisibility(id) {
     });
 }
 
-// Show Add Galeri Popup
 function showAddGaleriPopup() {
     const popupContent = `
         <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto popup-content">
@@ -214,7 +201,6 @@ function showAddGaleriPopup() {
     showPopup(popupContent);
 }
 
-// Show Edit Galeri Popup
 function showEditGaleriPopup(item) {
     const updateUrl = window.adminGaleriRoutes.update.replace(':id', item.id);
     const isVisibleChecked = item.is_visible ? 'checked' : '';
@@ -308,13 +294,11 @@ function showEditGaleriPopup(item) {
     
     showPopup(popupContent);
     
-    // Initialize character count for edit form
     setTimeout(() => {
         updateCharCount(document.getElementById('edit_deskripsi'), 'edit_deskripsi_count');
     }, 100);
 }
 
-// Show popup function
 function showPopup(content) {
     const overlay = $('#popup-overlay');
     const contentContainer = $('#popup-content');
@@ -322,22 +306,18 @@ function showPopup(content) {
     contentContainer.html(content);
     overlay.removeClass('hidden');
     
-    // Animate in
     setTimeout(() => {
         overlay.addClass('opacity-100');
         contentContainer.find('.popup-content').removeClass('scale-95').addClass('scale-100');
     }, 10);
     
-    // Prevent body scroll
     $('body').addClass('overflow-hidden');
 }
 
-// Close popup function
 function closePopup() {
     const overlay = $('#popup-overlay');
     const contentContainer = $('#popup-content');
     
-    // Animate out
     overlay.removeClass('opacity-100');
     contentContainer.find('.popup-content').removeClass('scale-100').addClass('scale-95');
     
@@ -348,12 +328,10 @@ function closePopup() {
     }, 300);
 }
 
-// Legacy function to maintain compatibility
 function editGaleri(item) {
     showEditGaleriPopup(item);
 }
 
-// Delete galeri function
 function deleteGaleri(id) {
     const confirmModal = `
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" id="deleteConfirmModal">
@@ -387,7 +365,6 @@ function deleteGaleri(id) {
     $('body').append(confirmModal);
 }
 
-// Confirm single delete - NEW FUNCTION
 function confirmDeleteGaleri(id) {
     const deleteUrl = window.adminGaleriRoutes.delete.replace(':id', id);
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -409,7 +386,6 @@ function confirmDeleteGaleri(id) {
     $('#deleteConfirmModal').remove();
 }
 
-// Bulk delete function - CORRECTED VERSION
 function confirmBulkDelete() {
     const selectedIds = [];
     $('.item-checkbox:checked').each(function() {
@@ -422,33 +398,27 @@ function confirmBulkDelete() {
         return;
     }
     
-    // Create form for bulk delete
     const form = $('<form>', {
         method: 'POST',
         action: window.adminGaleriRoutes.bulkDelete,
         style: 'display:none;'
     });
     
-    // Add CSRF token
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
     form.append($('<input>', {type: 'hidden', name: '_token', value: csrfToken}));
     
-    // Add selected IDs
     selectedIds.forEach(id => {
         form.append($('<input>', {type: 'hidden', name: 'ids[]', value: id}));
     });
     
-    // Append form to body and submit
     $('body').append(form);
     
     showNotification(`Menghapus ${selectedIds.length} foto...`, 'info');
     form.submit();
     
-    // Remove confirmation modal
     $('#bulkDeleteConfirmModal').remove();
 }
 
-// CORRECTED - Update bulk delete button state
 function updateBulkDeleteButton() {
     const selectedCount = $('.item-checkbox:checked').length;
     const $bulkDeleteBtn = $('#bulk-delete-btn');
@@ -464,7 +434,6 @@ function updateBulkDeleteButton() {
     }
 }
 
-// ALSO UPDATE the existing bulkDelete function to make sure the count variable is properly defined
 function bulkDelete() {
     const selectedIds = [];
     $('.item-checkbox:checked').each(function() {
@@ -476,7 +445,6 @@ function bulkDelete() {
         return;
     }
     
-    const count = selectedIds.length; // Make sure this is defined
     
     const confirmModal = `
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" id="bulkDeleteConfirmModal">
@@ -510,7 +478,6 @@ function bulkDelete() {
     $('body').append(confirmModal);
 }
 
-// Update select all state
 function updateSelectAllState() {
     const totalCheckboxes = $('.item-checkbox').length;
     const checkedCheckboxes = $('.item-checkbox:checked').length;
@@ -527,7 +494,6 @@ function updateSelectAllState() {
     }
 }
 
-// Filter galeri items (simplified without kategori)
 function filterGaleriItems() {
     const searchQuery = $('#search-input').val().toLowerCase();
     
@@ -537,7 +503,6 @@ function filterGaleriItems() {
         
         let showItem = true;
         
-        // Filter by search only
         if (searchQuery && !itemSearch.includes(searchQuery)) {
             showItem = false;
         }
@@ -549,7 +514,6 @@ function filterGaleriItems() {
         }
     });
     
-    // Update empty state
     const visibleItems = $('.galeri-item:not(.hidden)').length;
     if (visibleItems === 0) {
         if ($('#no-results').length === 0) {
@@ -568,12 +532,10 @@ function filterGaleriItems() {
     }
 }
 
-// Enhanced form validation (simplified)
 function validateGaleriForm(form) {
     let isValid = true;
     const errors = [];
     
-    // Check required fields
     const requiredFields = form.querySelectorAll('[required]');
     requiredFields.forEach(field => {
         if (!field.value.trim()) {
@@ -586,12 +548,10 @@ function validateGaleriForm(form) {
         }
     });
     
-    // Check file size
     const fileInput = form.querySelector('input[type="file"]');
     if (fileInput && fileInput.files.length > 0) {
         const file = fileInput.files[0];
         
-        // Check file type
         const allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/webp'];
         if (!allowedTypes.includes(file.type)) {
             errors.push('Format file harus JPG, PNG, atau WEBP');
@@ -599,7 +559,6 @@ function validateGaleriForm(form) {
         }
     }
     
-    // Check textarea character limit
     const textareas = form.querySelectorAll('textarea[maxlength]');
     textareas.forEach(textarea => {
         const maxLength = parseInt(textarea.getAttribute('maxlength'));
@@ -613,10 +572,8 @@ function validateGaleriForm(form) {
         }
     });
     
-    // Show errors if any
     if (!isValid) {
         showNotification(errors.join('. '), 'error');
-        // Focus on first invalid field
         const firstInvalid = form.querySelector('.border-red-400');
         if (firstInvalid) {
             firstInvalid.focus();
@@ -626,7 +583,6 @@ function validateGaleriForm(form) {
     return isValid;
 }
 
-// Character count function (reused from admin-script.js)
 function updateCharCount(element, counterId) {
     const maxLength = parseInt(element.getAttribute('maxlength')) || 500;
     const currentLength = element.value.length;
@@ -646,7 +602,6 @@ function updateCharCount(element, counterId) {
         
         counter.innerHTML = `<span class="${counterClass}">${currentLength}</span><span class="text-gray-400">/${maxLength}</span>`;
         
-        // Add visual feedback to textarea border
         element.classList.remove('border-red-400', 'ring-red-400', 'border-orange-400', 'ring-orange-400', 'border-gray-200');
         
         if (currentLength > maxLength) {
@@ -659,7 +614,6 @@ function updateCharCount(element, counterId) {
     }
 }
 
-// Notification function (reused from admin-script.js)
 function showNotification(message, type = 'info') {
     const icons = {
         success: 'fas fa-check-circle',
@@ -697,29 +651,24 @@ function showNotification(message, type = 'info') {
     
     $('body').append(notification);
     
-    // Auto remove after 5 seconds
     const timeout = type === 'warning' ? 8000 : 5000;
     setTimeout(() => {
         removeNotification(notificationId);
     }, timeout);
 }
 
-// Remove notification function
 function removeNotification(notificationId) {
     $(`#${notificationId}`).fadeOut(300, function() {
         $(this).remove();
     });
 }
 
-// Utility function
 function ucfirst(str) {
     if (!str) return '';
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Keyboard shortcuts
 $(document).keydown(function(e) {
-    // Ctrl/Cmd + S to save form
     if ((e.ctrlKey || e.metaKey) && e.which === 83) {
         e.preventDefault();
         const $form = $('.popup-content form:visible').first();
@@ -731,13 +680,11 @@ $(document).keydown(function(e) {
         }
     }
     
-    // Escape key to close popups and modals
     if (e.which === 27) {
         closePopup();
         $('#deleteConfirmModal, #bulkDeleteConfirmModal').remove();
     }
     
-    // Ctrl/Cmd + A to select all
     if ((e.ctrlKey || e.metaKey) && e.which === 65 && !$(e.target).is('input, textarea')) {
         e.preventDefault();
         $('#select-all').prop('checked', true).trigger('change');
@@ -745,7 +692,6 @@ $(document).keydown(function(e) {
     }
 });
 
-// Enhanced drag and drop for file uploads
 function initializeDragDrop() {
     $(document).on('dragover dragenter', 'input[type="file"]', function(e) {
         e.preventDefault();
@@ -768,11 +714,9 @@ function initializeDragDrop() {
     });
 }
 
-// Initialize enhanced features
 $(document).ready(function() {
     initializeDragDrop();
     
-    // Add custom CSS animations if not exists
     if (!document.getElementById('galeriAnimations')) {
         const style = document.createElement('style');
         style.id = 'galeriAnimations';
@@ -850,7 +794,6 @@ $(document).ready(function() {
     }
 });
 
-// Export functions for global use
 window.galeriAdminUtils = {
     showAddGaleriPopup,
     showEditGaleriPopup,

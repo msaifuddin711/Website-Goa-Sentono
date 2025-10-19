@@ -7,7 +7,6 @@
 <div class="min-h-screen bg-gray-50 pt-20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24">
         
-        <!-- Search Header -->
         <div class="text-center mb-12 sm:mb-14 lg:mb-16">
             <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-primary mb-4 sm:mb-6">Hasil Pencarian</h1>
             <p class="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
@@ -15,7 +14,6 @@
             </p>
         </div>
 
-        <!-- Articles Section -->
         @if($articles->count() > 0)
         <div class="mb-16 sm:mb-20 lg:mb-24">
             <div class="flex items-center mb-12 sm:mb-14 lg:mb-16">
@@ -49,14 +47,12 @@
                 @endforeach
             </div>
 
-            <!-- Articles Pagination -->
             <div class="flex justify-center">
                 {{ $articles->appends(['q' => $query])->links() }}
             </div>
         </div>
         @endif
 
-        <!-- Gallery Section -->
         @if($galleryItems->count() > 0)
         <div class="mb-16 sm:mb-20 lg:mb-24">
             <div class="flex items-center mb-12 sm:mb-14 lg:mb-16">
@@ -91,14 +87,12 @@
                 @endforeach
             </div>
 
-            <!-- Gallery Pagination -->
             <div class="flex justify-center">
                 {{ $galleryItems->appends(['q' => $query])->links() }}
             </div>
         </div>
         @endif
 
-        <!-- No Results -->
         @if($articles->count() == 0 && $galleryItems->count() == 0)
         <div class="text-center py-16 sm:py-20 lg:py-24">
             <div class="max-w-md mx-auto">
@@ -114,7 +108,6 @@
         </div>
         @endif
 
-        <!-- Back to Home -->
         <div class="text-center mt-12 sm:mt-16 lg:mt-20">
             <a href="{{ route('home') }}" 
                class="inline-flex items-center px-8 md:px-12 py-3 md:py-4 bg-primary text-white font-semibold rounded-full text-sm md:text-base hover:bg-opacity-90 transform hover:scale-105 transition duration-300 shadow-lg">
@@ -127,27 +120,21 @@
     </div>
 </div>
 
-<!-- Image Modal (responsif) -->
 <div id="image-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-80 transition-opacity duration-300">
     <div class="w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-8" id="modal-backdrop">
         
-        <!-- Close Button yang Diperbaiki -->
         <button id="modal-close" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white hover:text-red-400 transition-all duration-300 z-30 group">
             <i class="fa-solid fa-circle-xmark fa-2xl"></i>
         </button>
         
-        <!-- Konten Gambar -->
         <div id="modal-content" class="w-full h-full flex justify-center items-center">
-            <!-- Gambar akan diisi oleh JavaScript -->
         </div>
     </div>
 </div>
 
 @push('scripts')
 <script>
-// Initialize gallery modal functionality
 document.addEventListener('DOMContentLoaded', function() {
-    // Gallery data for modal
     const galleryData = {
         @foreach($galleryItems as $item)
         {{ $item->id }}: {
@@ -168,7 +155,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const item = galleryData[itemId];
         if (!item) return;
 
-        // Check if mobile device
         const isMobile = window.innerWidth < 768;
         const modalWidth = isMobile ? 'w-full max-w-sm' : 'w-[800px]';
         const modalHeight = isMobile ? 'h-[400px]' : 'h-[600px]';

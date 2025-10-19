@@ -9,7 +9,7 @@ class GaleriItemsSeeder extends Seeder
 {
     public function run(): void
     {
-        GaleriItem::truncate(); // Hapus data lama
+        GaleriItem::truncate();
 
         $items = [
             ['judul' => 'Stalaktit Menawan', 'deskripsi' => 'Pemandangan stalaktit di dalam gua.','gambar_path' => 'public/seeders/galeri/1.jpg'],

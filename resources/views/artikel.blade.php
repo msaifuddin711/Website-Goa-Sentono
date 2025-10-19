@@ -8,7 +8,6 @@
 
 
 @section('content')
-    <!-- Hero Section untuk Artikel -->
     <section class="hero-video text-white py-32 relative min-h-screen flex items-center bg-cover bg-center" style="background-image: url('{{ asset('images/DJI_20250719165955_0104_D.jpg') }}');">
         <div class="video-fallback opacity-0"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center space-y-2 hero-content animate-fade-in sm:text-left">
@@ -17,19 +16,16 @@
         </div>
     </section>
 
-    <!-- Artikel Utama -->
     <section class="py-12 sm:py-16 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8 sm:mb-12 lg:mb-16">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 sm:mb-6">Artikel Utama</h2>
             </div>
 
-            <!-- Featured Article Dinamis -->
             @if($featuredArtikel)
             <div class="mb-8 sm:mb-12 lg:mb-16">
                 <div class="bg-cream rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
                     <div class="md:flex md:h-96 lg:h-[450px]">
-                        <!-- Gambar Featured - UKURAN TETAP -->
                         <div class="md:w-1/2 h-64 md:h-full">
                             <a href="{{ route('artikel.show', $featuredArtikel->slug) }}" class="block w-full h-full overflow-hidden relative">
                                 <img
@@ -37,14 +33,12 @@
                                     alt="{{ $featuredArtikel->judul }}"
                                     class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                                 >
-                                <!-- Label UNGGULAN -->
                                 <div class="absolute top-3 left-3 sm:top-4 sm:left-4 lg:top-6 lg:left-6 z-10">
                                     <span class="bg-red-500 text-white px-2 sm:px-3 lg:px-4 py-1 sm:py-1.5 lg:py-2 rounded-full font-bold text-xs sm:text-sm">UNGGULAN</span>
                                 </div>
                             </a>
                         </div>
 
-                        <!-- Konten Featured -->
                         <div class="md:w-1/2 p-4 sm:p-6 md:p-8 lg:p-12 flex flex-col justify-center">
                             <div class="flex items-center mb-3 sm:mb-4">
                                 <span class="text-xs sm:text-sm text-gray-500">{{ $featuredArtikel->published_at->format('d F Y') }}</span>
@@ -68,12 +62,10 @@
             </div>
             @endif
 
-            <!-- Grid Artikel Dinamis - Responsive Layout -->
             @if($artikels->isNotEmpty())
             <div class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
                 @foreach($artikels as $artikel)
                 <article class="bg-white rounded-2xl md:rounded-3xl shadow-xl overflow-hidden card-hover border border-gray-100 flex flex-col">
-                    <!-- Gambar Artikel Grid - UKURAN TETAP -->
                     <a href="{{ route('artikel.show', $artikel->slug) }}" class="block h-32 sm:h-40 md:h-48 lg:h-52 overflow-hidden">
                         <img src="{{ $artikel->gambar_url }}" alt="{{ $artikel->judul }}" class="w-full h-full object-cover transition duration-300 hover:scale-105">
                     </a>
@@ -99,7 +91,6 @@
             </div>
             @endif
 
-            <!-- Pagination Dinamis -->
             <div class="mt-8 sm:mt-12 lg:mt-16">
                 <div class="flex justify-center">
                     <div class="pagination-wrapper">

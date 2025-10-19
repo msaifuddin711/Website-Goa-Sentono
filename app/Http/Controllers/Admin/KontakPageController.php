@@ -9,15 +9,12 @@ use App\Models\KknMember;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Str; // Tambahkan ini untuk Str::slug
-
-// Import class untuk cara baru Intervention Image
+use Illuminate\Support\Str; 
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
 class KontakPageController extends Controller
 {
-    // Allowed roles for KKN members
     private $allowedRoles = [
         'Dosen Pembimbing Lapangan',
         'Ketua',
@@ -29,7 +26,6 @@ class KontakPageController extends Controller
         'Logistik'
     ];
 
-    // Default order mapping for roles
     private function getDefaultOrderByRole($role)
     {
         $roleOrder = [
@@ -52,7 +48,6 @@ class KontakPageController extends Controller
         return view('admin.kontak.index', compact('messages', 'kknMembers'));
     }
 
-    // Kelola Pesan (metode ini tidak melibatkan gambar, jadi tidak perlu diubah)
     public function destroyMessage(Message $message)
     {
         $message->delete();
@@ -81,7 +76,6 @@ class KontakPageController extends Controller
         return redirect()->back()->with('success', 'Pesan ditandai belum dibaca!');
     }
 
-    // Kelola Anggota KKN
     public function storeMember(Request $request)
     {
         $allowedRoles = $this->allowedRoles;
@@ -89,7 +83,6 @@ class KontakPageController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'role' => ['required', 'string', Rule::in($allowedRoles)],
-            'photo' => 'required|image|mimes:jpeg,png,jpg,webp|max:5120', // Tambah webp
             'is_dpl' => 'boolean',
             'order' => 'nullable|integer|min:0'
         ], [
@@ -115,14 +108,12 @@ class KontakPageController extends Controller
             $fileName = Str::slug($request->name) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'kkn-members/' . $fileName;
 
-            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
-            $image->scale(width: 800); // Lebar maksimal untuk foto anggota
-            $encodedImage = $image->toJpeg(80); // Kualitas 80%
+            $image->scale(width: 800); 
+            $encodedImage = $image->toJpeg(80);
             Storage::disk('public')->put($filePath, $encodedImage);
             $photoPath = $filePath;
-            // --- AKHIR OPTIMASI ---
         }
 
         $order = $request->order;
@@ -151,7 +142,7 @@ class KontakPageController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'role' => ['required', 'string', Rule::in($allowedRoles)],
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', // Tambah webp
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120', 
             'is_dpl' => 'boolean',
             'order' => 'nullable|integer|min:0'
         ], [
@@ -186,7 +177,6 @@ class KontakPageController extends Controller
         }
 
         if ($request->hasFile('photo')) {
-            // Hapus foto lama
             if ($member->photo_path) {
                 Storage::disk('public')->delete($member->photo_path);
             }
@@ -195,14 +185,12 @@ class KontakPageController extends Controller
             $fileName = Str::slug($request->name) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'kkn-members/' . $fileName;
 
-            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
             $image->scale(width: 800);
             $encodedImage = $image->toJpeg(80);
             Storage::disk('public')->put($filePath, $encodedImage);
             $data['photo_path'] = $filePath;
-            // --- AKHIR OPTIMASI ---
         }
 
         $member->update($data);

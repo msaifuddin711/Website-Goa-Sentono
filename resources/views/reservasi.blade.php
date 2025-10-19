@@ -21,7 +21,6 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12">
                 
-                {{-- Kolom Kiri: Form Input --}}
                 <div class="lg:col-span-3">
                     <div class="bg-white rounded-2xl shadow-lg p-6 md:p-10">
                         <div class="mb-8">
@@ -29,7 +28,6 @@
                             <p class="text-md text-accent mt-2">Lengkapi data kunjungan Anda di bawah ini.</p>
                         </div>
                         <form id="form-reservasi" class="space-y-6">
-                            {{-- Data Diri --}}
                             <div>
                                 <label for="nama" class="text-sm font-medium text-gray-700 mb-2 flex items-center"><i class="fas fa-user mr-2 text-primary"></i>Nama Pemesan (Perwakilan)</label>
                                 <input type="text" id="nama" name="nama" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" placeholder="Contoh: Budi Santoso" required>
@@ -43,7 +41,6 @@
                                 <input type="date" id="tanggal" name="tanggal" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-primary focus:border-primary" required>
                             </div>
 
-                            {{-- Pilihan Paket (Kartu Interaktif) --}}
                             <div class="pt-4">
                                 <label class="text-sm font-medium text-gray-700 mb-3 flex items-center"><i class="fas fa-box-open mr-2 text-primary"></i>Pilih Paket Kunjungan</label>
                                 <div id="paket-container" class="space-y-3">
@@ -72,7 +69,6 @@
                     </div>
                 </div>
 
-                {{-- Kolom Kanan: Rincian & Tombol Aksi --}}
                 <div class="lg:col-span-2">
                     <div class="sticky top-24">
                         <div class="bg-white rounded-2xl shadow-lg p-6 md:p-8">
@@ -110,7 +106,6 @@
 @endsection
 
 @push('scripts')
-{{-- Kode JavaScript Anda sudah benar dan tidak perlu diubah --}}
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const tombolKirim = document.getElementById('kirim-whatsapp');

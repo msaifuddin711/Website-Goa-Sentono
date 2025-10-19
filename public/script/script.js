@@ -1,6 +1,3 @@
-// public\script\script.js - CLEAN VERSION
-
-// ===== NAVBAR CONTROLLER (SINGLE SOURCE OF TRUTH) =====
 const NavbarController = {
     elements: {
         header: null,
@@ -21,7 +18,6 @@ const NavbarController = {
         activeSuggestions: null
     },
 
-    // Initialize navbar
     init() {
         if (this.state.isInitialized) {
             console.warn('Navbar already initialized');
@@ -37,7 +33,6 @@ const NavbarController = {
         console.log('✅ Navbar initialized successfully');
     },
 
-    // Cache DOM elements
     cacheElements() {
         this.elements.header = document.querySelector(".header");
         this.elements.mobileMenuBtn = document.getElementById("mobile-menu-btn");
@@ -57,12 +52,9 @@ const NavbarController = {
         });
     },
 
-    // Bind all events
     bindEvents() {
-        // Scroll event
         window.addEventListener("scroll", () => this.handleScroll());
         
-        // Mobile menu toggle
         if (this.elements.mobileMenuBtn) {
             this.elements.mobileMenuBtn.addEventListener("click", (e) => {
                 console.log('🍔 Hamburger clicked!');
@@ -72,7 +64,6 @@ const NavbarController = {
             });
         }
 
-        // Close mobile menu on link clicks
         if (this.elements.mobileMenu) {
             const mobileLinks = this.elements.mobileMenu.querySelectorAll(".mobile-nav-link");
             mobileLinks.forEach(link => {
@@ -82,7 +73,6 @@ const NavbarController = {
             });
         }
 
-        // Close mobile menu on outside click
         document.addEventListener("click", (e) => {
             if (this.state.isMenuOpen && 
                 this.elements.mobileMenu && 
@@ -92,7 +82,6 @@ const NavbarController = {
             }
         });
 
-        // Close mobile menu on escape key
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 if (this.state.isMenuOpen) {
@@ -102,7 +91,6 @@ const NavbarController = {
             }
         });
 
-        // Close menu on window resize to desktop
         window.addEventListener("resize", () => {
             if (window.innerWidth >= 768 && this.state.isMenuOpen) {
                 this.closeMobileMenu();
@@ -110,23 +98,19 @@ const NavbarController = {
         });
     },
 
-    // Initialize search functionality
     initializeSearch() {
         this.elements.searchInputs.forEach((input, index) => {
             const container = this.elements.searchContainers[index];
             
-            // Create suggestions dropdown
             const suggestionsEl = this.createSuggestionsElement();
             container.appendChild(suggestionsEl);
 
-            // Bind search events
             input.addEventListener("focus", () => {
                 input.style.transform = "scale(1.02)";
             });
 
             input.addEventListener("blur", (e) => {
                 input.style.transform = "scale(1)";
-                // Delay closing suggestions to allow clicks
                 setTimeout(() => {
                     if (!suggestionsEl.matches(':hover')) {
                         this.closeSuggestions();
@@ -134,13 +118,11 @@ const NavbarController = {
                 }, 150);
             });
 
-            // Handle input changes for suggestions
             input.addEventListener("input", (e) => {
                 const query = e.target.value.trim();
                 this.handleSearchInput(query, suggestionsEl);
             });
 
-            // Handle enter key for search
             input.addEventListener("keypress", (e) => {
                 if (e.key === "Enter") {
                     e.preventDefault();
@@ -151,23 +133,19 @@ const NavbarController = {
                 }
             });
 
-            // Handle arrow keys for suggestion navigation
             input.addEventListener("keydown", (e) => {
                 this.handleSuggestionNavigation(e, suggestionsEl);
             });
         });
     },
 
-    // Create suggestions dropdown element
     createSuggestionsElement() {
         const suggestions = document.createElement('div');
         suggestions.className = 'search-suggestions absolute top-full left-0 right-0 bg-white rounded-lg shadow-lg border mt-1 max-h-64 overflow-y-auto z-50 hidden';
         return suggestions;
     },
 
-    // Handle search input changes
     handleSearchInput(query, suggestionsEl) {
-        // Clear previous timeout
         if (this.state.searchTimeout) {
             clearTimeout(this.state.searchTimeout);
         }
@@ -177,13 +155,11 @@ const NavbarController = {
             return;
         }
 
-        // Debounce search requests
         this.state.searchTimeout = setTimeout(() => {
             this.fetchSuggestions(query, suggestionsEl);
         }, 300);
     },
 
-    // Fetch search suggestions
     async fetchSuggestions(query, suggestionsEl) {
         try {
             const response = await fetch(`/search/suggestions?q=${encodeURIComponent(query)}`);
@@ -197,7 +173,6 @@ const NavbarController = {
         }
     },
 
-    // Display search suggestions
     displaySuggestions(suggestions, suggestionsEl) {
         if (!suggestions || suggestions.length === 0) {
             this.closeSuggestions();
@@ -206,14 +181,12 @@ const NavbarController = {
 
         let html = '';
         
-        // Group suggestions by type
         const grouped = suggestions.reduce((acc, item) => {
             if (!acc[item.type]) acc[item.type] = [];
             acc[item.type].push(item);
             return acc;
         }, {});
 
-        // Render grouped suggestions
         Object.entries(grouped).forEach(([type, items]) => {
             const typeLabel = type === 'artikel' ? 'Artikel' : 'Galeri';
             html += `<div class="p-2 text-xs font-semibold text-gray-500 uppercase border-b">${typeLabel}</div>`;
@@ -242,7 +215,6 @@ const NavbarController = {
         this.state.activeSuggestions = suggestionsEl;
     },
 
-    // Handle suggestion navigation with arrow keys
     handleSuggestionNavigation(e, suggestionsEl) {
         const suggestions = suggestionsEl.querySelectorAll('.suggestion-item');
         if (suggestions.length === 0) return;
@@ -271,7 +243,6 @@ const NavbarController = {
         }
     },
 
-    // Highlight suggestion item
     highlightSuggestion(suggestions, index) {
         suggestions.forEach((item, i) => {
             if (i === index) {
@@ -282,32 +253,27 @@ const NavbarController = {
         });
     },
 
-    // Close suggestions dropdown
     closeSuggestions() {
         if (this.state.activeSuggestions) {
             this.state.activeSuggestions.classList.add('hidden');
             this.state.activeSuggestions = null;
         }
         
-        // Clear highlights from all suggestion dropdowns
         document.querySelectorAll('.search-suggestions .suggestion-item').forEach(item => {
             item.classList.remove('bg-gray-100');
         });
     },
 
-    // Perform search
     performSearch(query) {
         if (query.trim()) {
             window.location.href = `/search?q=${encodeURIComponent(query.trim())}`;
         }
     },
 
-    // Handle initial state
     handleInitialState() {
         this.handleScroll();
     },
 
-    // Handle scroll effects
     handleScroll() {
         if (!this.elements.header) return;
 
@@ -327,7 +293,6 @@ const NavbarController = {
         }
     },
 
-    // Set dark theme colors
     setDarkTheme() {
         this.elements.navLinks.forEach(link => {
             link.style.color = "var(--primary-dark)";
@@ -348,7 +313,6 @@ const NavbarController = {
         }
     },
 
-    // Set light theme colors
     setLightTheme() {
         this.elements.navLinks.forEach(link => {
             link.style.color = "#fff";
@@ -369,7 +333,6 @@ const NavbarController = {
         }
     },
 
-    // Toggle mobile menu
     toggleMobileMenu() {
         if (this.state.isMenuOpen) {
             this.closeMobileMenu();
@@ -378,7 +341,6 @@ const NavbarController = {
         }
     },
 
-    // Open mobile menu
     openMobileMenu() {
         if (!this.elements.mobileMenu || !this.elements.hamburger) return;
         
@@ -388,7 +350,6 @@ const NavbarController = {
         this.state.isMenuOpen = true;
     },
 
-    // Close mobile menu
     closeMobileMenu() {
         if (!this.elements.mobileMenu || !this.elements.hamburger) return;
         
@@ -396,11 +357,9 @@ const NavbarController = {
         this.elements.hamburger.classList.remove("active");
         document.body.style.overflow = "auto";
         this.state.isMenuOpen = false;
-        this.closeSuggestions(); // Also close search suggestions
     }
 };
 
-// ===== UTILITY FUNCTIONS =====
 function toggleClasses(el, remove, add) {
     el.classList.remove(remove);
     el.classList.add(add);
@@ -473,16 +432,13 @@ function initPageCarousel(carouselId, prevId, nextId) {
     updateCarousel();
 }
 
-// ===== MAIN INITIALIZATION =====
 document.addEventListener("DOMContentLoaded", function() {
     console.log('🚀 DOM Content Loaded - Starting initialization...');
     
-    // Initialize navbar FIRST and ONLY
     NavbarController.init();
     
     ensureFullViewport();
     
-    // Initialize other components
     initSejarahSlider();
     initVideoHandling();
     initSmoothScrolling();
@@ -521,7 +477,6 @@ window.heroVideoUtils = {
     ensureFullViewport: ensureFullViewport
 };
 
-// ===== STYLES =====
 function addNavbarStyles() {
     const style = document.createElement("style");
     style.textContent = `
@@ -619,7 +574,6 @@ function addSearchStyles() {
 
 addSearchStyles();
 
-// ===== OTHER COMPONENT FUNCTIONS =====
 function initSejarahSlider() {
     const container = document.getElementById("sejarah-images");
     const prevBtn = document.getElementById("sejarah-prev");
@@ -686,14 +640,11 @@ function initVideoHandling() {
     const heroSection = document.querySelector(".hero-video");
 
     if (video && fallback && heroSection) {
-        // Enhanced video sizing function
         function adjustVideoSize() {
             const containerWidth = window.innerWidth;
             const containerHeight = window.innerHeight;
-            const videoAspectRatio = 16 / 9; // Sesuaikan dengan aspect ratio video Anda
             const containerAspectRatio = containerWidth / containerHeight;
 
-            // Force video to cover entire viewport
             video.style.width = '100vw';
             video.style.height = '100vh';
             video.style.minWidth = '100vw';
@@ -701,29 +652,23 @@ function initVideoHandling() {
             video.style.objectFit = 'cover';
             video.style.objectPosition = 'center';
 
-            // Additional sizing based on aspect ratio
             if (containerAspectRatio > videoAspectRatio) {
-                // Container is wider than video - ensure width coverage
                 video.style.width = '100vw';
                 video.style.height = 'auto';
                 video.style.minHeight = '100vh';
             } else {
-                // Container is taller than video - ensure height coverage
                 video.style.height = '100vh';
                 video.style.width = 'auto';
                 video.style.minWidth = '100vw';
             }
 
-            // Ensure hero section matches viewport
             heroSection.style.width = '100vw';
             heroSection.style.minHeight = '100vh';
         }
 
-        // Enhanced video loading with better error handling
         function loadVideo() {
             video.src = "/videos/landingpage-compressed.mp4";
             
-            // Set initial properties
             video.muted = true;
             video.playsInline = true;
             video.loop = true;
@@ -731,11 +676,9 @@ function initVideoHandling() {
             
             adjustVideoSize();
             
-            // Load the video
             video.load();
         }
 
-        // Event listeners with improved handling
         video.addEventListener("error", function(e) {
             console.log("Video failed to load, showing fallback:", e);
             fallback.style.display = "block";
@@ -748,7 +691,6 @@ function initVideoHandling() {
             video.style.display = "block";
             adjustVideoSize();
             
-            // Try to play the video
             const playPromise = video.play();
             if (playPromise !== undefined) {
                 playPromise
@@ -757,7 +699,6 @@ function initVideoHandling() {
                     })
                     .catch(error => {
                         console.log("Video autoplay failed:", error);
-                        // Show fallback if autoplay fails
                         fallback.style.display = "block";
                     });
             }
@@ -774,12 +715,10 @@ function initVideoHandling() {
         });
 
         video.addEventListener("ended", function() {
-            // Ensure seamless loop
             video.currentTime = 0;
             video.play().catch(e => console.log("Video replay failed:", e));
         });
 
-        // Handle resize events
         let resizeTimeout;
         window.addEventListener('resize', function() {
             clearTimeout(resizeTimeout);
@@ -788,19 +727,16 @@ function initVideoHandling() {
             }, 100);
         });
 
-        // Handle orientation change on mobile
         window.addEventListener('orientationchange', function() {
             setTimeout(() => {
                 adjustVideoSize();
             }, 500);
         });
 
-        // Initialize video loading
         loadVideo();
 
-        // Fallback timeout - if video doesn't load within 10 seconds
         setTimeout(() => {
-            if (video.readyState < 2) { // HAVE_CURRENT_DATA
+            if (video.readyState < 2) { 
                 console.log("Video loading timeout, showing fallback");
                 fallback.style.display = "block";
                 video.style.display = "none";
@@ -812,7 +748,6 @@ function initVideoHandling() {
 function ensureFullViewport() {
     const heroVideo = document.querySelector('.hero-video');
     if (heroVideo) {
-        // Force full viewport coverage
         heroVideo.style.width = '100vw';
         heroVideo.style.minHeight = '100vh';
         heroVideo.style.position = 'relative';
@@ -822,7 +757,6 @@ function ensureFullViewport() {
         heroVideo.style.marginRight = '-50vw';
     }
     
-    // Prevent horizontal scroll
     document.body.style.overflowX = 'hidden';
 }
 

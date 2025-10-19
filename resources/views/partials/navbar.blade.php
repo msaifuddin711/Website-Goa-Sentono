@@ -7,7 +7,6 @@
 <header class="header {{ $isSolidHeader ? 'header-solid' : '' }}">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16">
-            <!-- LOGO -->
             <div class="flex-shrink-0">
                 <a href="{{ route('home') }}" class="flex items-center space-x-2">
                     <img id="logo-img" src="{{ asset('images/logofix.png') }}" alt="Logo Goa Sentono" class="h-8 w-auto transition-all duration-300">
@@ -15,7 +14,6 @@
                 </a>
             </div>
 
-            <!-- Desktop Navigation -->
             <nav class="desktop-nav hidden md:flex items-center space-x-8">
                 <a href="{{ route('home') }}"
                 class="nav-link text-white {{ $current === 'home' ? 'active' : '' }}">
@@ -42,7 +40,6 @@
                     RESERVASI
                 </a>
                 
-                <!-- Desktop Search -->
                 <div class="search-container">
                     <div class="relative">
                         <input type="text" placeholder="CARI..." class="search-input bg-transparent border border-white/30 text-white placeholder-white/80 px-4 py-2 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/10 w-32 focus:w-48 transition-all duration-300">
@@ -53,7 +50,6 @@
                 </div>
             </nav>
 
-            <!-- Mobile menu button -->
             <div class="hamburger md:hidden" id="mobile-menu-btn">
                 <span></span>
                 <span></span>
@@ -61,10 +57,8 @@
             </div>
         </div>
 
-        <!-- Mobile Navigation -->
         <div class="mobile-menu" id="mobile-menu">
             <div class="mobile-menu-content">
-                <!-- Mobile Search -->
                 <div class="mobile-search-container px-4">
                     <div class="relative">
                         <input type="text" placeholder="CARI..." class="mobile-search-input w-full bg-white/10 border border-white/30 text-white placeholder-white/80 px-4 py-3 mb-4 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-white/50 focus:bg-white/20">

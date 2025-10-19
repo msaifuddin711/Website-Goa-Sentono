@@ -7,14 +7,8 @@ use App\Models\TentangSetting;
 
 class TentangSettingsSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Hapus data lama untuk memastikan kebersihan data
-        // TentangSetting::truncate(); // Opsional, jika Anda ingin memulai dari nol setiap kali seeding
-
         TentangSetting::updateOrInsert(
             ['key' => 'sejarah_deskripsi'],
             [

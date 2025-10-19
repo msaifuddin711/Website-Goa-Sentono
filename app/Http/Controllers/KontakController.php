@@ -48,12 +48,10 @@ class KontakController extends Controller
                 ->withFragment('form-kontak');
         }
 
-        // Validasi kata terlarang
         $pesan = strtolower($request->pesan);
         $prohibitedWords = config('prohibited');
 
         foreach ($prohibitedWords as $kata) {
-            // Menggunakan word boundary untuk mendeteksi kata utuh
             if (preg_match('/\b' . preg_quote($kata, '/') . '\b/i', $pesan)) {
                 return redirect()->route('kontak')
                     ->withInput()

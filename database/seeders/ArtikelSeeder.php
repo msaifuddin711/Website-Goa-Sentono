@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Artikel; // Import model Artikel
-use Illuminate\Support\Str; // Import Str untuk membuat slug
+use App\Models\Artikel; 
+use Illuminate\Support\Str; 
 
 class ArtikelSeeder extends Seeder
 {
@@ -14,16 +14,14 @@ class ArtikelSeeder extends Seeder
      */
     public function run(): void
     {
-        // 1. Hapus data lama untuk memastikan tidak ada duplikasi saat seeder dijalankan lagi
         Artikel::truncate();
 
-        // 2. Siapkan data artikel dalam bentuk array
         $artikels = [
             [
                 'judul' => 'Panduan Lengkap Eksplorasi Goa Sentono untuk Pemula',
                 'isi_konten' => 'Memasuki dunia bawah tanah yang menakjubkan di Goa Sentono memerlukan persiapan yang matang. Artikel ini akan memandu Anda dari persiapan awal, seperti peralatan yang harus dibawa, hingga tips keselamatan yang wajib diketahui setiap pengunjung. Pelajari rute terbaik, spot foto paling ikonik, dan cara menghormati ekosistem gua yang rapuh.Kami juga akan membahas sejarah geologis singkat tentang bagaimana gua ini terbentuk jutaan tahun yang lalu. Dengan panduan ini, petualangan Anda di Goa Sentono akan menjadi pengalaman yang aman, berkesan, dan tak terlupakan.',
                 'gambar_path' => 'public/seeders/artikel/featured.jpg',
-                'is_featured' => true, // Artikel ini akan menjadi artikel utama
+                'is_featured' => true, 
                 'published_at' => now()->subDays(1),
             ],
             [
@@ -112,14 +110,13 @@ class ArtikelSeeder extends Seeder
             ],
         ];
 
-        // 3. Looping melalui array dan membuat data di database
         foreach ($artikels as $artikel) {
             Artikel::create([
                 'judul' => $artikel['judul'],
-                'slug' => Str::slug($artikel['judul']), // Membuat slug secara otomatis
+                'slug' => Str::slug($artikel['judul']),
                 'isi_konten' => $artikel['isi_konten'],
                 'gambar_path' => $artikel['gambar_path'],
-                'is_featured' => $artikel['is_featured'] ?? false, // Default is_featured ke false jika tidak di-set
+                'is_featured' => $artikel['is_featured'] ?? false, 
                 'published_at' => $artikel['published_at'],
             ]);
         }

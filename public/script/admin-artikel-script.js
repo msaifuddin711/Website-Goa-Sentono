@@ -1,7 +1,4 @@
-// public/script/admin-artikel-script.js
-
 $(document).ready(function () {
-    // File preview functionality
     $(document).on("change", 'input[type="file"]', function () {
         const file = this.files[0];
         if (file) {
@@ -21,25 +18,21 @@ $(document).ready(function () {
         }
     });
 
-    // Select all functionality
     $("#select-all").on("change", function () {
         const isChecked = $(this).is(":checked");
         $(".item-checkbox").prop("checked", isChecked);
         updateBulkDeleteButton();
     });
 
-    // Individual checkbox change
     $(document).on("change", ".item-checkbox", function () {
         updateBulkDeleteButton();
         updateSelectAllState();
     });
 
-    // Search functionality
     $("#search-input").on("input", function () {
         filterArtikelItems();
     });
 
-    // Enhanced form validation
     $(document).on("submit", "form", function (e) {
         const $form = $(this);
         const $submitBtn = $form.find('button[type="submit"]');
@@ -49,42 +42,35 @@ $(document).ready(function () {
             return false;
         }
 
-        // Sync TinyMCE content before submit
         if (typeof tinymce !== "undefined") {
             tinymce.triggerSave();
         }
 
-        // Add loading state
         $submitBtn.prop("disabled", true);
         const originalText = $submitBtn.html();
         $submitBtn.html(
             '<i class="fas fa-spinner fa-spin mr-2"></i>Menyimpan...'
         );
 
-        // Re-enable after timeout as fallback
         setTimeout(() => {
             $submitBtn.prop("disabled", false);
             $submitBtn.html(originalText);
         }, 5000);
     });
 
-    // Close popup on overlay click
     $(document).on("click", "#popup-overlay", function (e) {
         if (e.target === this) {
             closePopup();
         }
     });
 
-    // Escape key to close popup
     $(document).on("keydown", function (e) {
         if (e.which === 27) {
-            // ESC key
             closePopup();
         }
     });
 });
 
-// Initialize TinyMCE Editor
 function initializeTinyMCE(selector) {
     if (typeof tinymce === "undefined") {
         console.warn("TinyMCE not loaded");
@@ -147,7 +133,6 @@ function initializeTinyMCE(selector) {
             }
         `,
         formats: {
-            // Format untuk paragraf tanpa indent
             "no-indent": {
                 selector: "p",
                 classes: "no-indent",
@@ -167,7 +152,6 @@ function initializeTinyMCE(selector) {
                 editor.save();
             });
 
-            // Add custom button for toggle indent
             editor.ui.registry.addToggleButton("toggleindent", {
                 text: "Toggle Indent",
                 tooltip: "Aktifkan/Nonaktifkan indent baris pertama",
@@ -203,25 +187,20 @@ function initializeTinyMCE(selector) {
             "toggleindent | removeformat | code | help",
         language: "id",
 
-        // Prevent TinyMCE from adding unwanted formatting
         keep_styles: false,
 
-        // Clean up paste content
         paste_preprocess: function (plugin, args) {
-            // Remove any existing text-indent styles from pasted content
             args.content = args.content.replace(/text-indent:[^;]*;?/g, "");
         },
     });
 }
 
-// Destroy TinyMCE instances
 function destroyTinyMCE() {
     if (typeof tinymce !== "undefined") {
         tinymce.remove();
     }
 }
 
-// Show Add Artikel Popup
 function showAddArtikelPopup() {
     const popupContent = `
         <div class="bg-white rounded-2xl shadow-2xl max-w-5xl w-full max-h-[95vh] overflow-y-auto popup-content">
@@ -330,17 +309,14 @@ function showAddArtikelPopup() {
 
     showPopup(popupContent);
 
-    // Initialize TinyMCE after popup is shown
     setTimeout(() => {
         initializeTinyMCE("#isi_konten");
     }, 100);
 }
 
-// Show Edit Artikel Popup
 function showEditArtikelPopup(item) {
     const updateUrl = window.adminArtikelRoutes.update.replace(":id", item.id);
 
-    // Format datetime for input
     const publishedDate = new Date(item.published_at)
         .toISOString()
         .slice(0, 16);
@@ -464,13 +440,11 @@ function showEditArtikelPopup(item) {
 
     showPopup(popupContent);
 
-    // Initialize TinyMCE after popup is shown
     setTimeout(() => {
         initializeTinyMCE("#edit_isi_konten");
     }, 100);
 }
 
-// Show popup function
 function showPopup(content) {
     const overlay = $("#popup-overlay");
     const contentContainer = $("#popup-content");
@@ -478,7 +452,6 @@ function showPopup(content) {
     contentContainer.html(content);
     overlay.removeClass("hidden");
 
-    // Animate in
     setTimeout(() => {
         overlay.addClass("opacity-100");
         contentContainer
@@ -487,19 +460,15 @@ function showPopup(content) {
             .addClass("scale-100");
     }, 10);
 
-    // Prevent body scroll
     $("body").addClass("overflow-hidden");
 }
 
-// Close popup function
 function closePopup() {
     const overlay = $("#popup-overlay");
     const contentContainer = $("#popup-content");
 
-    // Destroy TinyMCE instances before closing
     destroyTinyMCE();
 
-    // Animate out
     overlay.removeClass("opacity-100");
     contentContainer
         .find(".popup-content")
@@ -513,7 +482,6 @@ function closePopup() {
     }, 300);
 }
 
-// Delete artikel function
 function deleteArtikel(id) {
     const confirmModal = `
         <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4" id="deleteConfirmModal">
@@ -547,7 +515,6 @@ function deleteArtikel(id) {
     $("body").append(confirmModal);
 }
 
-// Confirm single delete
 function confirmDeleteArtikel(id) {
     const deleteUrl = window.adminArtikelRoutes.delete.replace(":id", id);
     const csrfToken = $('meta[name="csrf-token"]').attr("content");
@@ -573,7 +540,6 @@ function confirmDeleteArtikel(id) {
     $("#deleteConfirmModal").remove();
 }
 
-// Bulk delete function
 function bulkDelete() {
     const selectedIds = [];
     $(".item-checkbox:checked").each(function () {
@@ -619,7 +585,6 @@ function bulkDelete() {
     $("body").append(confirmModal);
 }
 
-// Confirm bulk delete
 function confirmBulkDelete() {
     const selectedIds = [];
     $(".item-checkbox:checked").each(function () {
@@ -650,7 +615,6 @@ function confirmBulkDelete() {
     $("#bulkDeleteConfirmModal").remove();
 }
 
-// Toggle featured status
 function toggleFeatured(id, setFeatured) {
     const toggleUrl = window.adminArtikelRoutes.toggleFeatured.replace(
         ":id",
@@ -681,7 +645,6 @@ function toggleFeatured(id, setFeatured) {
     form.submit();
 }
 
-// Toggle visibility status
 function toggleVisibility(id) {
     const url = window.adminArtikelRoutes.toggleVisibility.replace(':id', id);
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -694,36 +657,26 @@ function toggleVisibility(id) {
         },
         success: function(data) {
             if (data.success) {
-                // Tampilkan notifikasi sukses
                 showNotification(data.message, 'success');
 
-                // Dapatkan elemen-elemen yang perlu diubah
                 const $itemElement = $(`.artikel-item[data-id='${id}']`);
                 const $statusBadge = $itemElement.find('.status-badge');
                 const $toggleButton = $itemElement.find(`button[onclick="toggleVisibility(${id})"]`);
 
                 if (data.is_visible) {
-                    // --- Ubah UI ke status DITAMPILKAN ---
-                    // 1. Hapus efek redup
                     $itemElement.removeClass('opacity-60');
                     
-                    // 2. Ubah badge status
                     $statusBadge.text('Ditampilkan').removeClass('bg-gray-500').addClass('bg-green-500');
                     
-                    // 3. Ubah tombol
                     $toggleButton.removeClass('bg-green-100 hover:bg-green-200 text-green-800')
                                  .addClass('bg-yellow-100 hover:bg-yellow-200 text-yellow-800');
                     $toggleButton.html('<i class="fas fa-eye-slash mr-1"></i>Sembunyikan');
 
                 } else {
-                    // --- Ubah UI ke status DISEMBUNYIKAN ---
-                    // 1. Tambahkan efek redup
                     $itemElement.addClass('opacity-60');
 
-                    // 2. Ubah badge status
                     $statusBadge.text('Disembunyikan').removeClass('bg-green-500').addClass('bg-gray-500');
                     
-                    // 3. Ubah tombol
                     $toggleButton.removeClass('bg-yellow-100 hover:bg-yellow-200 text-yellow-800')
                                  .addClass('bg-green-100 hover:bg-green-200 text-green-800');
                     $toggleButton.html('<i class="fas fa-eye mr-1"></i>Tampilkan');
@@ -744,7 +697,6 @@ function toggleVisibility(id) {
     });
 }
 
-// Update bulk delete button visibility
 function updateBulkDeleteButton() {
     const selectedCount = $(".item-checkbox:checked").length;
     const $bulkBtn = $("#bulk-delete-btn");
@@ -757,7 +709,6 @@ function updateBulkDeleteButton() {
     }
 }
 
-// Update select all state
 function updateSelectAllState() {
     const totalCheckboxes = $(".item-checkbox").length;
     const checkedCheckboxes = $(".item-checkbox:checked").length;
@@ -774,7 +725,6 @@ function updateSelectAllState() {
     }
 }
 
-// Filter artikel items
 function filterArtikelItems() {
     const searchQuery = $("#search-input").val().toLowerCase();
 
@@ -784,7 +734,6 @@ function filterArtikelItems() {
 
         let showItem = true;
 
-        // Filter by search only
         if (searchQuery && !itemSearch.includes(searchQuery)) {
             showItem = false;
         }
@@ -796,7 +745,6 @@ function filterArtikelItems() {
         }
     });
 
-    // Update empty state
     const visibleItems = $(".artikel-item:not(.hidden)").length;
     if (visibleItems === 0) {
         if ($("#no-results").length === 0) {
@@ -815,12 +763,10 @@ function filterArtikelItems() {
     }
 }
 
-// Enhanced form validation
 function validateArtikelForm(form) {
     let isValid = true;
     const errors = [];
 
-    // Check required fields
     const requiredFields = form.querySelectorAll("[required]");
     requiredFields.forEach((field) => {
         if (!field.value.trim()) {
@@ -834,7 +780,6 @@ function validateArtikelForm(form) {
         }
     });
 
-    // Check TinyMCE content
     const editorId = form
         .querySelector('textarea[name="isi_konten"]')
         ?.getAttribute("id");
@@ -846,18 +791,15 @@ function validateArtikelForm(form) {
         }
     }
 
-    // Check file size
     const fileInput = form.querySelector('input[type="file"]');
     if (fileInput && fileInput.files.length > 0) {
         const file = fileInput.files[0];
-        const maxSize = 5 * 1024 * 1024; // 5MB
 
         if (file.size > maxSize) {
             errors.push("Ukuran file tidak boleh lebih dari 5MB");
             isValid = false;
         }
 
-        // Check file type
         const allowedTypes = [
             "image/jpeg",
             "image/png",
@@ -870,10 +812,8 @@ function validateArtikelForm(form) {
         }
     }
 
-    // Show errors if any
     if (!isValid) {
         showNotification(errors.join(". "), "error");
-        // Focus on first invalid field
         const firstInvalid = form.querySelector(".border-red-400");
         if (firstInvalid) {
             firstInvalid.focus();
@@ -883,7 +823,6 @@ function validateArtikelForm(form) {
     return isValid;
 }
 
-// Notification function
 function showNotification(message, type = "info") {
     const icons = {
         success: "fas fa-check-circle",
@@ -921,34 +860,28 @@ function showNotification(message, type = "info") {
 
     $("body").append(notification);
 
-    // Auto remove after 5 seconds
     const timeout = type === "warning" ? 8000 : 5000;
     setTimeout(() => {
         removeNotification(notificationId);
     }, timeout);
 }
 
-// Remove notification function
 function removeNotification(notificationId) {
     $(`#${notificationId}`).fadeOut(300, function () {
         $(this).remove();
     });
 }
 
-// Utility function
 function ucfirst(str) {
     if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-// Keyboard shortcuts
 $(document).keydown(function (e) {
-    // Ctrl/Cmd + S to save form
     if ((e.ctrlKey || e.metaKey) && e.which === 83) {
         e.preventDefault();
         const $form = $(".popup-content form:visible").first();
         if ($form.length) {
-            // Sync TinyMCE content before validation
             if (typeof tinymce !== "undefined") {
                 tinymce.triggerSave();
             }
@@ -963,13 +896,11 @@ $(document).keydown(function (e) {
         }
     }
 
-    // Escape key to close popups and modals
     if (e.which === 27) {
         closePopup();
         $("#deleteConfirmModal, #bulkDeleteConfirmModal").remove();
     }
 
-    // Ctrl/Cmd + A to select all
     if (
         (e.ctrlKey || e.metaKey) &&
         e.which === 65 &&
@@ -981,7 +912,6 @@ $(document).keydown(function (e) {
     }
 });
 
-// Enhanced drag and drop for file uploads
 function initializeDragDrop() {
     $(document).on("dragover dragenter", 'input[type="file"]', function (e) {
         e.preventDefault();
@@ -1012,11 +942,9 @@ function initializeDragDrop() {
     });
 }
 
-// Initialize enhanced features
 $(document).ready(function () {
     initializeDragDrop();
 
-    // Load TinyMCE CDN
     if (!document.querySelector('script[src*="tinymce"]')) {
         const script = document.createElement("script");
         script.src =
@@ -1025,7 +953,6 @@ $(document).ready(function () {
         document.head.appendChild(script);
     }
 
-    // Add custom CSS animations if not exists
     if (!document.getElementById("artikelAnimations")) {
         const style = document.createElement("style");
         style.id = "artikelAnimations";
@@ -1125,7 +1052,6 @@ $(document).ready(function () {
     }
 });
 
-// Export functions for global use
 window.artikelAdminUtils = {
     showAddArtikelPopup,
     showEditArtikelPopup,

@@ -6,35 +6,29 @@
 @section('description', $artikel->ringkasan_potong)
 @section('keywords', 'Goa Sentono, ' . $artikel->judul . ', wisata Blora, artikel wisata, ' . ($artikel->tags ?? 'wisata alam'))
 
-{{-- Open Graph untuk artikel --}}
 @section('og_type', 'article')
 @section('og_title', $artikel->judul)
 @section('og_description', $artikel->ringkasan_potong)
 @section('og_image', $artikel->gambar_url)
 @section('og_image_alt', $artikel->judul)
 
-{{-- Twitter Card untuk artikel --}}
 @section('twitter_title', $artikel->judul)
 @section('twitter_description', $artikel->ringkasan_potong)
 @section('twitter_image', $artikel->gambar_url)
 @section('twitter_image_alt', $artikel->judul)
 
-{{-- Article meta tags --}}
 @section('article_published_time', $artikel->published_at->toISOString())
 @section('article_modified_time', $artikel->updated_at->toISOString())
 @section('article_author', 'Goa Sentono')
 @section('article_section', 'Wisata')
 
 @section('content')
-<!-- Toast Notification -->
 <div id="toast"
      class="fixed bottom-5 right-5 bg-gray-800 text-white text-sm px-4 py-2 rounded-lg shadow-lg opacity-0 pointer-events-none transition-opacity duration-300 z-50">
 </div>
 
-<!-- Header Article Section -->
 <section class="pt-24 pb-8 bg-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumb -->
         <nav class="mb-6">
             <ol class="flex items-center space-x-2 text-sm text-gray-500">
                 <li><a href="{{ route('home') }}" class="hover:text-primary transition duration-300">Beranda</a></li>
@@ -45,21 +39,17 @@
             </ol>
         </nav>
 
-        <!-- Article Header -->
         <header class="mb-8">
-            <!-- Category & Featured Badge -->
             <div class="flex items-center gap-3 mb-4">
                 @if($artikel->is_featured)
                 <span class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">UNGGULAN</span>
                 @endif
             </div>
 
-            <!-- Article Title -->
             <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-6">
                 {{ $artikel->judul }}
             </h1>
 
-            <!-- Article Meta -->
             <div class="flex items-center justify-between border-b border-gray-200 pb-6">
                 <div class="flex items-center space-x-6 text-gray-600">
                     <div class="flex items-center space-x-2">
@@ -76,11 +66,9 @@
                     </div>
                 </div>
 
-                <!-- Quick Share -->
                 <div class="flex items-center space-x-3">
                     <span class="text-sm text-gray-600 hidden sm:block">Bagikan:</span>
                 
-                    <!-- WhatsApp -->
                     <a href="javascript:void(0);" 
                         onclick="shareWhatsApp('https://wa.me/?text={{ urlencode($artikel->judul . ' - ' . request()->fullUrl()) }}')" 
                         class="text-gray-400 hover:text-green-500 transition duration-300">
@@ -89,7 +77,6 @@
                         </svg>
                     </a>
                 
-                    <!-- Salin Link -->
                     <button onclick="copyToClipboard()" 
                             class="text-gray-400 hover:text-gray-700 transition duration-300">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -104,7 +91,6 @@
     </div>
 </section>
 
-<!-- Featured Image -->
 <section class="pb-12 bg-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="rounded-2xl overflow-hidden shadow-lg">
@@ -115,20 +101,16 @@
     </div>
 </section>
 
-<!-- Main Article Content -->
 <article class="pb-16 bg-white">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Article Body -->
         <div class="article-content max-w-none">
             <div class="text-gray-800 prose prose-lg max-w-none">
                 {!! $artikel->isi_konten !!}
             </div>
         </div>
 
-        <!-- Article Footer -->
         <footer class="mt-8 sm:mt-10 lg:mt-12 pt-6 sm:pt-8 border-t border-gray-200">
 
-            <!-- Share Section -->
             <div class="mb-6 sm:mb-8">
                 <h4 class="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Bagikan melalui:</h4>
                 <div class="grid grid-cols-2 sm:flex sm:flex-wrap gap-2 sm:gap-3">
@@ -152,7 +134,6 @@
                 </div>
             </div>
 
-            <!-- Navigation -->
             <div class="flex flex-row justify-between items-center gap-3 sm:gap-4 pt-6 sm:pt-8 border-t border-gray-200">
                 <button onclick="smartGoBack()" 
                         class="flex-1 sm:flex-none inline-flex items-center justify-center px-4 sm:px-6 py-2 sm:py-3 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition duration-300 text-sm sm:text-base">
@@ -174,7 +155,6 @@
     </div>
 </article>
 
-<!-- Related Articles -->
 <section class="py-12 sm:py-14 lg:py-16 bg-gray-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center mb-8 sm:mb-10 lg:mb-12">
@@ -228,7 +208,6 @@
 <script>
 function copyToClipboard() {
     navigator.clipboard.writeText(window.location.href).then(function() {
-        // Show success message
         const button = event.target.closest('button');
         const originalText = button.innerHTML;
         button.innerHTML = '<svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>Tersalin!';
@@ -245,26 +224,20 @@ function copyToClipboard() {
 </script>
 <script>
 function smartGoBack() {
-    // Cek apakah ada history sebelumnya
     if (window.history.length > 1 && document.referrer) {
-        // Cek apakah referrer dari domain yang sama
         const referrerHost = new URL(document.referrer).hostname;
         const currentHost = window.location.hostname;
         
         if (referrerHost === currentHost) {
-            // Kembali ke halaman sebelumnya
             window.history.back();
             return;
         }
     }
     
-    // Fallback ke halaman artikel jika tidak ada history yang valid
     window.location.href = "{{ route('artikel') }}";
 }
 
-// Optional: Update session storage untuk tracking
 if (typeof(Storage) !== "undefined") {
-    // Simpan current URL ke storage saat halaman dimuat
     sessionStorage.setItem('previousPage', document.referrer || "{{ route('artikel') }}");
 }
 </script>

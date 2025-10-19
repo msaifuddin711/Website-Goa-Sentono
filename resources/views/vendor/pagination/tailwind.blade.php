@@ -34,9 +34,7 @@
             @endif
         </div>
 
-        <!-- Desktop Version -->
         <div class="hidden sm:flex sm:flex-col sm:items-center sm:space-y-6">
-            <!-- Info Text -->
             <div class="text-center">
                 <p class="text-sm text-accent font-medium leading-5">
                     Menampilkan
@@ -53,9 +51,7 @@
                 </p>
             </div>
 
-            <!-- Pagination Buttons -->
             <div class="flex items-center space-x-2">
-                {{-- Previous Page Link --}}
                 @if ($paginator->onFirstPage())
                     <span aria-disabled="true" aria-label="{{ __('pagination.previous') }}" class="relative inline-flex items-center justify-center w-12 h-12 text-gray-400 bg-gray-100 border-2 border-gray-200 cursor-default rounded-full transition-all duration-300">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -70,16 +66,13 @@
                     </a>
                 @endif
 
-                {{-- Pagination Elements --}}
                 @foreach ($elements as $element)
-                    {{-- "Three Dots" Separator --}}
                     @if (is_string($element))
                         <span aria-disabled="true" class="relative inline-flex items-center justify-center w-12 h-12 text-accent font-bold bg-white border-2 border-gray-200 cursor-default rounded-full">
                             {{ $element }}
                         </span>
                     @endif
 
-                    {{-- Array Of Links --}}
                     @if (is_array($element))
                         @foreach ($element as $page => $url)
                             @if ($page == $paginator->currentPage())
@@ -95,7 +88,6 @@
                     @endif
                 @endforeach
 
-                {{-- Next Page Link --}}
                 @if ($paginator->hasMorePages())
                     <a href="{{ $paginator->nextPageUrl() }}" rel="next" class="relative inline-flex items-center justify-center w-12 h-12 text-white bg-primary border-2 border-primary rounded-full hover:bg-opacity-90 hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 active:scale-95" aria-label="{{ __('pagination.next') }}">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">

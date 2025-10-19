@@ -8,29 +8,18 @@ use Illuminate\Support\Facades\DB;
 
 class KknMemberSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     *
-     * @return void
-     */
     public function run(): void
     {
-        // 1. Kosongkan tabel terlebih dahulu untuk menghindari duplikasi data
-        //    jika seeder dijalankan lebih dari sekali.
         DB::table('kkn_members')->truncate();
 
-        // 2. Definisikan data anggota dalam bentuk array.
-        //    Ini membuatnya mudah untuk dikelola.
         $members = [
-            // Dosen Pembimbing Lapangan
             [
                 'name' => 'Dr. Nama Dosen, S.T., M.Eng.',
                 'role' => 'Dosen Pembimbing Lapangan',
-                'photo_path' => 'kkn-photos/dpl.jpg', // Ganti dengan path foto asli
+                'photo_path' => 'kkn-photos/dpl.jpg', 
                 'is_dpl' => true,
-                'order' => 0, // DPL selalu di urutan pertama
+                'order' => 0, 
             ],
-            // Anggota Tim KKN
             [
                 'name' => 'Budi Santoso',
                 'role' => 'Ketua',
@@ -82,7 +71,6 @@ class KknMemberSeeder extends Seeder
             ],
         ];
 
-        // 3. Loop melalui array dan masukkan setiap anggota ke dalam database.
         foreach ($members as $member) {
             KknMember::create($member);
         }

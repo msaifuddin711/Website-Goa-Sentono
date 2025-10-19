@@ -7,12 +7,8 @@ use App\Models\SejarahSlider;
 
 class SejarahSlidersSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Hapus data lama untuk menghindari duplikasi saat seeding ulang
         SejarahSlider::truncate();
 
         $sliders = [

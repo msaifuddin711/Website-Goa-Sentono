@@ -44,22 +44,16 @@ class ArtikelPageController extends Controller
             $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'artikel/' . $fileName;
 
-            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
-            // 1. Buat Image Manager dengan driver GD
             $manager = new ImageManager(new Driver());
 
-            // 2. Baca gambar dari file yang diunggah
             $image = $manager->read($file);
 
-            // 3. Ubah ukuran gambar agar lebar maksimal 1200px
             $image->scale(width: 1200);
 
-            // 4. Encode gambar ke format Jpeg dengan kualitas 75% lalu simpan
             $encodedImage = $image->toJpeg(75); 
             Storage::disk('public')->put($filePath, $encodedImage);
 
             $gambarPath = $filePath;
-            // --- AKHIR PERUBAHAN ---
         }
 
         $slug = Str::slug($request->judul);
@@ -114,7 +108,6 @@ class ArtikelPageController extends Controller
             $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'artikel/' . $fileName;
 
-            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
             $image->scale(width: 1200);
@@ -122,7 +115,6 @@ class ArtikelPageController extends Controller
             Storage::disk('public')->put($filePath, $encodedImage);
             
             $data['gambar_path'] = $filePath;
-            // --- AKHIR PERUBAHAN ---
         }
 
         if ($request->judul !== $artikel->judul) {
@@ -178,7 +170,6 @@ class ArtikelPageController extends Controller
     public function toggleFeatured(Artikel $artikel)
     {
         if (!$artikel->is_featured) {
-            // Remove featured status from other articles
             Artikel::where('is_featured', true)->update(['is_featured' => false]);
             $artikel->update(['is_featured' => true]);
             $message = 'Artikel berhasil dijadikan featured!';
@@ -196,11 +187,9 @@ class ArtikelPageController extends Controller
      */
     public function toggleVisibility(Artikel $artikel)
     {
-        // Ubah status visibilitas
         $artikel->is_visible = !$artikel->is_visible;
         $artikel->save();
         
-        // Siapkan pesan notifikasi
         $message = $artikel->is_visible 
             ? 'Artikel sekarang ditampilkan.' 
             : 'Artikel sekarang disembunyikan.';

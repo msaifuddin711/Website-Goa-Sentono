@@ -8,7 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" href="{{ asset('images/logofix.png') }}" />
     <link rel="stylesheet" href="{{ asset('styles/style.css') }}">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         .login-background {
@@ -128,7 +127,6 @@
             color: #bbf7d0;
         }
 
-        /* Font Awesome icon styling */
         .fa-icon {
             transition: all 0.3s ease;
         }
@@ -139,7 +137,6 @@
     </style>
 </head>
 <body class="min-h-screen login-background flex items-center justify-center p-4">
-    <!-- Floating Cave Elements -->
     <div class="floating-cave" style="top: 10%; left: 10%; width: 60px; height: 60px;">
         <i class="fas fa-mountain text-white text-4xl fa-icon"></i>
     </div>
@@ -152,23 +149,17 @@
         <i class="fas fa-gem text-white text-3xl fa-icon"></i>
     </div>
 
-    <!-- Main Login Container -->
     <div class="w-full max-w-md slide-up">
-        <!-- Header Section -->
         <div class="text-center mb-8">
-            <!-- Logo/Icon -->
             <div class="cave-icon w-20 h-20 mx-auto rounded-full flex items-center justify-center mb-6 pulse-glow">
                 <img src="{{ asset('images/logofix.png') }}" alt="Logo Goa Sentono" class="w-12 h-12 object-contain">
             </div>
             
-            <!-- Title -->
             <h2 class="text-xl font-semibold text-white mb-2">Situs Goa Sentono</h2>
             <p class="text-white text-opacity-80">Masuk untuk mengelola konten website</p>
         </div>
 
-        <!-- Login Form Card -->
         <div class="glass-card rounded-3xl p-8">
-            <!-- Session Status -->
             @if (session('status'))
                 <div class="success-message rounded-lg p-4 mb-6 flex items-center">
                     <i class="fas fa-check-circle text-lg mr-3"></i>
@@ -179,7 +170,6 @@
             <form method="POST" action="{{ route('login') }}" class="space-y-6">
                 @csrf
 
-                <!-- Email Address -->
                 <div class="space-y-2">
                     <label for="email" class="block text-white text-sm font-medium">
                         <i class="fas fa-envelope mr-2"></i>{{ __('Email') }}
@@ -204,7 +194,6 @@
                     @enderror
                 </div>
 
-                <!-- Password -->
                 <div class="space-y-2">
                     <label for="password" class="block text-white text-sm font-medium">
                         <i class="fas fa-lock mr-2"></i>{{ __('Password') }}
@@ -235,7 +224,6 @@
                     @enderror
                 </div>
 
-                <!-- Login Button -->
                 <button 
                     type="submit"
                     class="btn-primary w-full py-3 px-6 rounded-xl font-semibold text-lg transition duration-300 transform hover:scale-105"
@@ -266,7 +254,6 @@
             }
         }
 
-        // Enhanced input interactions
         const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
         inputs.forEach(input => {
             input.addEventListener('focus', function() {
@@ -278,7 +265,6 @@
             });
         });
 
-        // Form validation with visual feedback
         document.querySelector('form').addEventListener('submit', function(e) {
             const submitBtn = document.querySelector('button[type="submit"]');
             submitBtn.innerHTML = `
@@ -290,7 +276,6 @@
             submitBtn.disabled = true;
         });
 
-        // Add hover effects to Font Awesome icons
         document.querySelectorAll('.fa-icon').forEach(icon => {
             icon.addEventListener('mouseenter', function() {
                 this.style.transform = 'scale(1.2) rotate(10deg)';

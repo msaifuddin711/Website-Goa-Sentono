@@ -8,7 +8,6 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
@@ -71,7 +70,6 @@
         </div>
     </div>
 
-    <!-- Main Article Management Section -->
     <div class="bg-white rounded-2xl shadow-sm border border-light-beige overflow-hidden card-hover">
         <div class="bg-primary-green px-6 py-4">
             <div class="flex items-center justify-between">
@@ -100,7 +98,6 @@
         </div>
         
         <div class="p-6">
-            <!-- Filter and Search -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 space-y-4 md:space-y-0">
                 <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2">
@@ -128,21 +125,18 @@
                                      alt="{{ $item->judul }}" 
                                      class="w-full h-48 object-cover" loading="lazy">
                                 
-                                <!-- Visibility Badge -->
                                 @if($item->is_visible)
                                     <span class="status-badge absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">Ditampilkan</span>
                                 @else
                                     <span class="status-badge absolute top-2 left-2 bg-gray-500 text-white text-xs font-bold px-2 py-1 rounded-full">Disembunyikan</span>
                                 @endif
 
-                                <!-- Featured Badge -->
                                 @if($item->is_featured)
                                 <div class="absolute top-2 left-24 bg-medium-brown text-cream rounded-lg px-2 py-1 text-xs font-semibold">
                                     <i class="fas fa-star mr-1"></i>UNGGULAN
                                 </div>
                                 @endif
                                 
-                                <!-- Checkbox -->
                                 <div class="absolute top-2 right-2">
                                     <input type="checkbox" name="selected_items[]" value="{{ $item->id }}" 
                                            class="w-4 h-4 text-primary-green bg-white border-gray-300 rounded focus:ring-primary-green item-checkbox">
@@ -183,7 +177,6 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
                 <div class="mt-8">
                     {{ $artikels->links() }}
                 </div>
@@ -204,7 +197,6 @@
     </div>
 </div>
 
-<!-- Pop-up Overlay -->
 <div id="popup-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden opacity-0 transition-opacity duration-300">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div id="popup-content" class="transform scale-95 transition-transform duration-300"></div>

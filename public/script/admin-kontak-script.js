@@ -1,5 +1,3 @@
-// public/script/admin-kontak-script.js
-
 document.addEventListener('DOMContentLoaded', function() {
     initializeTabs();
     initializeMessageFilters();
@@ -7,7 +5,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSelectAll();
 });
 
-// Tab functionality
 function initializeTabs() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
@@ -16,14 +13,12 @@ function initializeTabs() {
         button.addEventListener('click', () => {
             const targetTab = button.getAttribute('data-tab');
 
-            // Remove active class from all buttons and contents
             tabButtons.forEach(btn => {
                 btn.classList.remove('active', 'border-blue-500', 'text-blue-600');
                 btn.classList.add('border-transparent', 'text-gray-500');
             });
             tabContents.forEach(content => content.classList.add('hidden'));
 
-            // Add active class to clicked button and show corresponding content
             button.classList.add('active', 'border-blue-500', 'text-blue-600');
             button.classList.remove('border-transparent', 'text-gray-500');
             document.getElementById(targetTab + '-tab').classList.remove('hidden');
@@ -31,7 +26,6 @@ function initializeTabs() {
     });
 }
 
-// Message filters
 function initializeMessageFilters() {
     const statusFilter = document.getElementById('status-filter');
     if (statusFilter) {
@@ -66,7 +60,6 @@ function filterMessages() {
     });
 }
 
-// Select all functionality
 function initializeSelectAll() {
     const selectAllMessages = document.getElementById('select-all-messages');
     if (selectAllMessages) {
@@ -79,11 +72,9 @@ function initializeSelectAll() {
     }
 }
 
-// Message Management Functions - Langsung Delete Tanpa Konfirmasi
 function deleteMessage(id) {
     const url = window.adminKontakRoutes.destroyMessage.replace(':id', id);
     
-    // Create form and submit directly
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = url;
@@ -113,7 +104,6 @@ function bulkDeleteMessages() {
         return;
     }
     
-    // Langsung delete tanpa konfirmasi
     const form = document.createElement('form');
     form.method = 'POST';
     form.action = window.adminKontakRoutes.bulkDeleteMessages;
@@ -147,7 +137,6 @@ function markAsUnread(id) {
     submitAction(url, 'PATCH');
 }
 
-// Member Management Functions - Langsung Delete Tanpa Konfirmasi
 function showAddMemberPopup() {
     const popupContent = `
         <div class="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
@@ -222,7 +211,6 @@ function showAddMemberPopup() {
 function checkNameLength(input) {
     const warning = input.parentElement.querySelector('#name-warning');
     if (input.value.length > 30) {
-        input.value = input.value.substring(0, 30); // Prevent typing beyond max
         if (warning) warning.classList.remove('hidden');
     } else {
         if (warning) warning.classList.add('hidden');
@@ -301,12 +289,10 @@ function showEditMemberPopup(member) {
 }
 
 function deleteMember(id) {
-    // Langsung delete tanpa konfirmasi
     const url = window.adminKontakRoutes.destroyMember.replace(':id', id);
     submitAction(url, 'DELETE');
 }
 
-// Utility Functions
 function showPopup(content) {
     const overlay = document.getElementById('popup-overlay');
     const popupContent = document.getElementById('popup-content');
@@ -358,7 +344,6 @@ function submitAction(url, method) {
     form.submit();
 }
 
-// Close popup when clicking outside
 document.addEventListener('click', function(e) {
     const overlay = document.getElementById('popup-overlay');
     if (e.target === overlay) {
@@ -366,7 +351,6 @@ document.addEventListener('click', function(e) {
     }
 });
 
-// Handle role change to auto-set DPL checkbox
 function handleRoleChange(selectElement) {
     const form = selectElement.closest('form');
     const isDplCheckbox = form.querySelector('input[name="is_dpl"]');
@@ -381,7 +365,6 @@ function handleRoleChange(selectElement) {
         isDplCheckbox.disabled = false;
     }
     
-    // Auto-set order based on role
     if (selectedRole && orderInput) {
         const defaultOrder = getDefaultOrderByRole(selectedRole);
         orderInput.value = defaultOrder;
@@ -389,7 +372,6 @@ function handleRoleChange(selectElement) {
     }
 }
 
-// Auto-assign order based on role
 function getDefaultOrderByRole(role) {
     const roleOrder = {
         'Dosen Pembimbing Lapangan': 0,

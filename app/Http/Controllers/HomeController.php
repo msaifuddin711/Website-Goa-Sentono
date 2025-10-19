@@ -10,10 +10,8 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Ambil 3 item galeri terbaru
         $galeriItems = GaleriItem::visible()->latest()->limit(6)->get();
 
-        // Ambil 3 artikel terbaru yang sudah dipublikasikan
         $artikels = Artikel::whereNotNull('published_at')
             ->where('is_visible', true)
             ->where('published_at', '<=', now())
@@ -21,7 +19,6 @@ class HomeController extends Controller
             ->limit(6)
             ->get();
 
-        // Kirim data ke view 'home'
         return view('home', compact('galeriItems', 'artikels'));
     }
 }

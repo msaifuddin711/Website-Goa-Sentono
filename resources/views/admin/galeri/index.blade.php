@@ -7,8 +7,7 @@
 
 @section('content')
 <div class="space-y-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"> {{-- Diubah menjadi 4 kolom --}}
-        {{-- Card Total --}}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"> 
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-soft-cream rounded-xl flex items-center justify-center">
@@ -21,7 +20,6 @@
             </div>
         </div>
         
-        {{-- CARD BARU: FOTO DITAMPILKAN --}}
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
@@ -34,7 +32,6 @@
             </div>
         </div>
 
-        {{-- CARD BARU: FOTO DISEMBUNYIKAN --}}
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center">
@@ -47,7 +44,6 @@
             </div>
         </div>
         
-        {{-- Card Hari Ini (Disederhanakan) --}}
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
                 <div class="w-12 h-12 bg-cream rounded-xl flex items-center justify-center">
@@ -61,7 +57,6 @@
         </div>
     </div>
 
-    <!-- Main Gallery Management Section -->
     <div class="bg-white rounded-2xl shadow-sm border border-light-beige overflow-hidden card-hover">
         <div class="bg-accent-green px-6 py-4">
             <div class="flex items-center justify-between">
@@ -90,7 +85,6 @@
         </div>
         
         <div class="p-6">
-            <!-- Filter and Search -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 space-y-4 md:space-y-0">
                 <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2">
@@ -110,7 +104,6 @@
             @if($galeriItems->count() > 0)
                 <div id="galeri-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                     @foreach($galeriItems as $item)
-                        {{-- Tambahkan class opacity-60 jika tidak visible --}}
                         <div class="bg-soft-cream rounded-xl overflow-hidden card-hover galeri-item border border-light-beige {{ !$item->is_visible ? 'opacity-60' : '' }}" 
                              data-id="{{ $item->id }}" 
                              data-search="{{ strtolower($item->judul . ' ' . $item->deskripsi) }}">
@@ -118,7 +111,6 @@
                             <div class="relative">
                                 <img src="{{ $item->gambar_url }}" alt="{{ $item->judul }}" class="w-full h-48 object-cover" loading="lazy">
                                 
-                                {{-- Badge Status Visibilitas --}}
                                 @if($item->is_visible)
                                     <span class="status-badge absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">Ditampilkan</span>
                                 @else
@@ -131,9 +123,7 @@
                             </div>
                             <div class="p-4">
                                 <h3 class="font-bold text-primary-dark mb-2 line-clamp-1">{{ $item->judul }}</h3>
-                                {{-- ... (info deskripsi, tanggal, ukuran file) ... --}}
                                 <div class="flex space-x-2 mt-4">
-                                    {{-- Tombol Toggle Visibility BARU --}}
                                     <button class="flex-1 {{ $item->is_visible ? 'bg-yellow-100 hover:bg-yellow-200 text-yellow-800' : 'bg-green-100 hover:bg-green-200 text-green-800' }} px-3 py-2 rounded-lg font-medium text-sm transition-colors duration-200"
                                             onclick="toggleVisibility({{ $item->id }})">
                                         <i class="fas {{ $item->is_visible ? 'fa-eye-slash' : 'fa-eye' }} mr-1"></i>
@@ -154,7 +144,6 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
                 <div class="mt-8">
                     {{ $galeriItems->links() }}
                 </div>
@@ -175,7 +164,6 @@
     </div>
 </div>
 
-<!-- Pop-up Overlay -->
 <div id="popup-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden opacity-0 transition-opacity duration-300">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div id="popup-content" class="transform scale-95 transition-transform duration-300"></div>
@@ -183,7 +171,6 @@
 </div>
 
 <script>
-// Define routes for JavaScript to use
 window.adminGaleriRoutes = {
     store: "{{ route('admin.galeri.store') }}",
     update: "{{ route('admin.galeri.update', ['galeri' => ':id']) }}",

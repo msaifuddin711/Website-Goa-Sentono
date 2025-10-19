@@ -11,10 +11,8 @@ class TentangController extends Controller
 {
     public function tentang()
     {
-        // Ambil setting dan ubah menjadi koleksi yang mudah diakses
         $settings = TentangSetting::all()->pluck('value', 'key');
 
-        // Ambil data lainnya dengan accessor URL gambar
         $sejarahSliders = SejarahSlider::orderBy('urutan')->get();
         $keunikanItems = Item::where('tipe', 'keunikan')->orderBy('urutan')->get();
         $fasilitasItems = Item::where('tipe', 'fasilitas')->orderBy('urutan')->get();

@@ -5,10 +5,8 @@
 @section('title', 'Kontak - Goa Sentono')
 
 @section('content')
-    <!-- Hero Section untuk Kontak -->
     <section class="hero-video text-white py-16 sm:py-24 lg:py-32 relative min-h-[60vh] sm:min-h-screen flex items-center bg-cover bg-center" style="background-image: url('{{ asset('images/IMG_3959.jpg') }}');">
         <div class="video-fallback opacity-0"></div>
-        <!-- Container identik dengan Home -->
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center space-y-2 hero-content animate-fade-in">
             <span class="text-base sm:text-xl md:text-2xl font-medium">
                 PERTANYAAN DAN MASUKAN
@@ -19,12 +17,10 @@
         </div>
     </section>
     
-<!-- Informasi Kontak & Form -->
     <section id="form-kontak" class="py-12 sm:py-16 lg:py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 sm:gap-12 lg:gap-16">
                 
-                <!-- Form Kontak - PINDAH KE ATAS UNTUK MOBILE -->
                 <div class="order-1 lg:order-2">
                     <div>
                         <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-primary mb-4 sm:mb-6 lg:mb-8">Informasi Kontak</h2>
@@ -35,7 +31,6 @@
                     <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 lg:p-8 xl:p-12 border border-gray-100">
                         <h3 class="text-xl sm:text-2xl lg:text-3xl font-bold text-primary mb-4 sm:mb-6 lg:mb-8">Kirim Pesan</h3>
 
-                        {{-- Notifikasi Sukses atau Error --}}
                         @if(session('success'))
                             <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-3 sm:p-4 mb-4 sm:mb-6 rounded-lg" role="alert">
                                 <p class="font-bold text-sm sm:text-base">Berhasil!</p>
@@ -51,7 +46,6 @@
                         
                         <form action="{{ route('kontak.store') }}" method="POST" class="space-y-4 sm:space-y-6">
                             @csrf
-                            <!-- Nama -->
                             <div>
                                 <label for="nama" class="block text-xs sm:text-sm font-semibold text-primary mb-1 sm:mb-2">Nama *</label>
                                 <input 
@@ -66,7 +60,6 @@
                                 @error('nama') <span class="text-red-500 text-xs sm:text-sm mt-1 block">{{ $message }}</span> @enderror
                             </div>
 
-                            <!-- Email -->
                             <div>
                                 <label for="email" class="block text-xs sm:text-sm font-semibold text-primary mb-1 sm:mb-2">Email *</label>
                                 <input 
@@ -81,7 +74,6 @@
                                 @error('email') <span class="text-red-500 text-xs sm:text-sm mt-1 block">{{ $message }}</span> @enderror
                             </div>
 
-                            <!-- Telepon -->
                             <div>
                                 <label for="telepon" class="block text-xs sm:text-sm font-semibold text-primary mb-1 sm:mb-2">Nomor Telepon *</label>
                                 <input 
@@ -96,7 +88,6 @@
                                 @error('telepon') <span class="text-red-500 text-xs sm:text-sm mt-1 block">{{ $message }}</span> @enderror
                             </div>
 
-                            <!-- Pesan -->
                             <div>
                                 <label for="pesan" class="block text-xs sm:text-sm font-semibold text-primary mb-1 sm:mb-2">Pesan *</label>
                                 <textarea 
@@ -110,7 +101,6 @@
                                 @error('pesan') <span class="text-red-500 text-xs sm:text-sm mt-1 block">{{ $message }}</span> @enderror
                             </div>
 
-                            <!-- Submit Button -->
                             <button 
                                 type="submit"
                                 class="w-full bg-primary text-white py-3 sm:py-4 px-6 sm:px-8 rounded-xl sm:rounded-2xl font-bold text-sm sm:text-base lg:text-lg hover:bg-opacity-90 transition duration-300 transform hover:scale-105 shadow-lg"
@@ -119,7 +109,6 @@
                                 Kirim Pesan
                             </button>
 
-                            <!-- Info tambahan -->
                             <p class="text-xs sm:text-sm text-gray-500 text-left mt-3 sm:mt-4">
                                 * Wajib diisi
                             </p>
@@ -127,12 +116,9 @@
                     </div>
                 </div>
                 
-                <!-- Informasi Kontak - PINDAH KE BAWAH UNTUK MOBILE -->
                 <div class="order-2 lg:order-1 space-y-6 sm:space-y-8">
 
-                    <!-- Cards Informasi Kontak -->
                     <div class="space-y-4 sm:space-y-6">
-                        <!-- Alamat -->
                         <a href="https://maps.app.goo.gl/wWYezxfXh7bWJsLH7" 
                         target="_blank" 
                         class="block bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 card-hover transition transform hover:scale-[1.02]">
@@ -152,7 +138,6 @@
                             </div>
                         </a>
 
-                        <!-- Email -->
                         <a href="mailto:exploresentono2k25@gmail.com" 
                         class="block bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 card-hover transition transform hover:scale-[1.02]">
                             <div class="flex items-start space-x-3 sm:space-x-4">
@@ -166,7 +151,6 @@
                             </div>
                         </a>
 
-                        <!-- Jam Operasional -->
                         <div class="bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 card-hover">
                             <div class="flex items-start space-x-3 sm:space-x-4">
                                 <div class="bg-blue-500 text-white p-2 sm:p-3 lg:p-4 rounded-full flex-shrink-0 flex items-center justify-center">
@@ -181,7 +165,6 @@
                             </div>
                         </div>
 
-                        <!-- Media Sosial -->
                         <div class="bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 card-hover">
                             <div class="flex items-start space-x-3 sm:space-x-4">
                                 <div class="bg-purple-500 text-white p-2 sm:p-3 lg:p-4 rounded-full flex-shrink-0 flex items-center justify-center">
@@ -213,7 +196,6 @@
         </div>
     </section>
 
-    <!-- FAQ Section with Font Awesome icons -->
     <section class="py-12 sm:py-16 lg:py-20 bg-cream">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8 sm:mb-10 lg:mb-12">
@@ -224,7 +206,6 @@
             </div>
 
             <div class="space-y-3 sm:space-y-4">
-                <!-- FAQ Item 1 -->
                 <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden card-hover">
                     <button class="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 text-left flex items-center justify-between focus:outline-none group" 
                             onclick="toggleFAQ('faq1')">
@@ -245,7 +226,6 @@
                     </div>
                 </div>
 
-                <!-- FAQ Item 2 -->
                 <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden card-hover">
                     <button class="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 text-left flex items-center justify-between focus:outline-none group" 
                             onclick="toggleFAQ('faq2')">
@@ -266,7 +246,6 @@
                     </div>
                 </div>
 
-                <!-- FAQ Item 3 -->
                 <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden card-hover">
                     <button class="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 text-left flex items-center justify-between focus:outline-none group" 
                             onclick="toggleFAQ('faq3')">
@@ -287,7 +266,6 @@
                     </div>
                 </div>
 
-                <!-- FAQ Item 4 -->
                 <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden card-hover">
                     <button class="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 text-left flex items-center justify-between focus:outline-none group" 
                             onclick="toggleFAQ('faq4')">
@@ -308,7 +286,6 @@
                     </div>
                 </div>
 
-                <!-- FAQ Item 5 -->
                 <div class="bg-white rounded-2xl sm:rounded-3xl overflow-hidden card-hover">
                     <button class="w-full px-4 sm:px-6 lg:px-8 py-4 sm:py-5 lg:py-6 text-left flex items-center justify-between focus:outline-none group" 
                             onclick="toggleFAQ('faq5')">
@@ -332,7 +309,6 @@
         </div>
     </section>
 
-    <!-- Anggota KKN Section -->
     @if(false)
     <section class="py-12 sm:py-16 lg:py-20 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -344,7 +320,6 @@
                 </p>
             </div>
 
-            <!-- Dosen Pembimbing Lapangan -->
             @if($dpl)
             <div class="flex justify-center mb-8 sm:mb-10 lg:mb-12">
                 <div class="w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
@@ -357,7 +332,6 @@
             </div>
             @endif
 
-            <!-- Anggota Tim KKN -->
             @if($members->isNotEmpty())
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 @foreach($members as $member)

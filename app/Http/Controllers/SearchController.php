@@ -16,14 +16,12 @@ class SearchController extends Controller
             return redirect()->back()->with('error', 'Kata kunci pencarian tidak boleh kosong.');
         }
 
-        // Search articles
         $articles = Artikel::where('judul', 'like', "%{$query}%")
             ->orWhere('isi_konten', 'like', "%{$query}%")
             ->where('published_at', '<=', now())
             ->orderBy('published_at', 'desc')
             ->paginate(6, ['*'], 'articles_page');
 
-        // Search gallery items
         $galleryItems = GaleriItem::search($query)
             ->orderBy('created_at', 'desc')
             ->paginate(8, ['*'], 'gallery_page');
@@ -31,7 +29,6 @@ class SearchController extends Controller
         return view('search.results', compact('query', 'articles', 'galleryItems'));
     }
 
-    // API endpoint for AJAX search suggestions
     public function suggestions(Request $request)
     {
         $query = $request->get('q');

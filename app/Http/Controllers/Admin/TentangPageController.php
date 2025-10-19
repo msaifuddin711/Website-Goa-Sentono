@@ -6,12 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\TentangSetting;
 use App\Models\SejarahSlider;
-use App\Models\Item; // Model untuk Keunikan, Fasilitas, Wisata Sekitar
+use App\Models\Item; 
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str; // Tambahkan ini untuk Str::slug
+use Illuminate\Support\Str;
 
-// Import class untuk cara baru Intervention Image
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 
@@ -34,7 +33,6 @@ class TentangPageController extends Controller
         ));
     }
 
-    // === SETTINGS MANAGEMENT ===
     public function updateSettings(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -78,9 +76,6 @@ class TentangPageController extends Controller
         return redirect()->back()->with('success', 'Settings berhasil diperbarui! URL YouTube telah dikonversi ke format embed.');
     }
 
-    /**
-     * Konversi URL YouTube ke format embed
-     */
     private function convertToEmbedUrl($url)
     {
         if (empty($url)) {
@@ -110,9 +105,6 @@ class TentangPageController extends Controller
         return $url;
     }
 
-    /**
-     * Validasi apakah URL adalah URL YouTube yang valid
-     */
     private function isValidYouTubeUrl($url)
     {
         $patterns = [
@@ -130,9 +122,6 @@ class TentangPageController extends Controller
         return false;
     }
 
-    /**
-     * Ekstrak Video ID dari URL YouTube
-     */
     private function extractYouTubeVideoId($url)
     {
         $patterns = [
@@ -150,11 +139,9 @@ class TentangPageController extends Controller
         return null;
     }
 
-    // === SEJARAH SLIDER MANAGEMENT ===
     public function storeSejarahSlider(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Tambah webp
             'alt_text' => 'nullable|string|max:255',
             'urutan' => 'required|integer|min:1'
         ]);
@@ -166,18 +153,15 @@ class TentangPageController extends Controller
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
-            // Menentukan nama file yang lebih unik dan slug-friendly
             $fileName = Str::slug($request->alt_text ?: 'sejarah-slider') . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'sejarah-slider/' . $fileName;
 
-            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
-            $image->scale(width: 1920); // Lebar maksimal untuk slider
-            $encodedImage = $image->toJpeg(80); // Kualitas 80%
+            $image->scale(width: 1920);
+            $encodedImage = $image->toJpeg(80); 
             Storage::disk('public')->put($filePath, $encodedImage);
             $gambarPath = $filePath;
-            // --- AKHIR OPTIMASI ---
         }
 
         SejarahSlider::create([
@@ -192,7 +176,7 @@ class TentangPageController extends Controller
     public function updateSejarahSlider(Request $request, SejarahSlider $slider)
     {
         $validator = Validator::make($request->all(), [
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Tambah webp
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'alt_text' => 'nullable|string|max:255',
             'urutan' => 'required|integer|min:1'
         ]);
@@ -207,7 +191,6 @@ class TentangPageController extends Controller
         ];
 
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
             if ($slider->gambar_path) {
                 Storage::disk('public')->delete($slider->gambar_path);
             }
@@ -216,14 +199,12 @@ class TentangPageController extends Controller
             $fileName = Str::slug($request->alt_text ?: 'sejarah-slider') . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'sejarah-slider/' . $fileName;
 
-            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
             $image->scale(width: 1920);
             $encodedImage = $image->toJpeg(80);
             Storage::disk('public')->put($filePath, $encodedImage);
             $data['gambar_path'] = $filePath;
-            // --- AKHIR OPTIMASI ---
         }
 
         $slider->update($data);
@@ -240,14 +221,13 @@ class TentangPageController extends Controller
         return redirect()->back()->with('success', 'Slider sejarah berhasil dihapus!');
     }
 
-    // === ITEM MANAGEMENT (Keunikan, Fasilitas, Wisata) ===
     public function storeItem(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'tipe' => 'required|in:keunikan,fasilitas,wisata_sekitar',
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Tambah webp
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'info_tambahan' => 'nullable|string|max:255',
             'urutan' => 'required|integer|min:1'
         ]);
@@ -259,18 +239,16 @@ class TentangPageController extends Controller
         $gambarPath = null;
         if ($request->hasFile('gambar')) {
             $file = $request->file('gambar');
-            $folder = $request->tipe; // Folder dinamis berdasarkan tipe item
+            $folder = $request->tipe; 
             $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = $folder . '/' . $fileName;
 
-            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
-            $image->scale(width: 1200); // Lebar maksimal untuk item
-            $encodedImage = $image->toJpeg(80); // Kualitas 80%
+            $image->scale(width: 1200); 
+            $encodedImage = $image->toJpeg(80); 
             Storage::disk('public')->put($filePath, $encodedImage);
             $gambarPath = $filePath;
-            // --- AKHIR OPTIMASI ---
         }
 
         Item::create([
@@ -290,7 +268,7 @@ class TentangPageController extends Controller
         $validator = Validator::make($request->all(), [
             'judul' => 'required|string|max:255',
             'deskripsi' => 'required|string',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120', // Tambah webp
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5120',
             'info_tambahan' => 'nullable|string|max:255',
             'urutan' => 'required|integer|min:1'
         ]);
@@ -307,24 +285,21 @@ class TentangPageController extends Controller
         ];
 
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama
             if ($item->gambar_path) {
                 Storage::disk('public')->delete($item->gambar_path);
             }
             
             $file = $request->file('gambar');
-            $folder = $item->tipe; // Folder dinamis berdasarkan tipe item yang sudah ada
+            $folder = $item->tipe; 
             $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = $folder . '/' . $fileName;
 
-            // --- OPTIMASI GAMBAR MENGGUNAKAN IMAGE MANAGER ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
             $image->scale(width: 1200);
             $encodedImage = $image->toJpeg(80);
             Storage::disk('public')->put($filePath, $encodedImage);
             $data['gambar_path'] = $filePath;
-            // --- AKHIR OPTIMASI ---
         }
 
         $item->update($data);
@@ -341,7 +316,6 @@ class TentangPageController extends Controller
         return redirect()->back()->with('success', 'Item berhasil dihapus!');
     }
 
-    // === AJAX ENDPOINTS FOR REORDERING ===
     public function reorderSejarahSlider(Request $request)
     {
         $items = $request->input('items');
@@ -360,7 +334,6 @@ class TentangPageController extends Controller
         return response()->json(['success' => true]);
     }
 
-    // === AJAX ENDPOINT FOR URL CONVERSION ===
     public function convertYouTubeUrl(Request $request)
     {
         $url = $request->input('url');

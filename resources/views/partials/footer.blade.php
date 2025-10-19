@@ -1,9 +1,7 @@
 {{-- resources\views\partials\footer.blade.php --}}
 <footer class="relative bg-cream from-primary via-primary-green to-accent-green text-white overflow-hidden">
     <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 lg:pt-24 pb-8 sm:pb-12">
-        {{-- Main footer content --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 lg:gap-12 mb-8 sm:mb-12 lg:mb-16">
-            {{-- Brand section --}}
             <div class="sm:col-span-2 lg:col-span-1 text-center sm:text-left">
                 <div class="flex items-center justify-center sm:justify-start space-x-3 mb-4 sm:mb-6">
                     <div class="w-10 sm:w-12 h-10 sm:h-12 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
@@ -14,7 +12,6 @@
                 <p class="text-white text-opacity-90 leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base px-4 sm:px-0">
                     Temukan keajaiban alam dan sejarah yang memukau di Goa Sentono.
                 </p>
-                {{-- Social media icons --}}
                 <div class="flex space-x-3 sm:space-x-4 justify-center sm:justify-start">
                     <a href="https://www.instagram.com/explore.sentono" target="blank" class="w-8 sm:w-10 h-8 sm:h-10 bg-white bg-opacity-20 rounded-full flex items-center justify-center hover:bg-opacity-30 transition duration-300 transform hover:scale-110 backdrop-blur-sm">
                         <i class="fab fa-instagram"></i>
@@ -25,7 +22,6 @@
                 </div>
             </div>
 
-            {{-- Quick Links --}}
             <div class="text-center sm:text-left">
                 <h4 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 flex items-center justify-center sm:justify-start">
                     <div class="w-6 sm:w-8 h-6 sm:h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-2 sm:mr-3 backdrop-blur-sm">
@@ -73,7 +69,6 @@
                 </ul>
             </div>
 
-            {{-- Contact Info --}}
             <div class="text-center sm:text-left">
                 <h4 class="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 flex items-center justify-center sm:justify-start">
                     <div class="w-6 sm:w-8 h-6 sm:h-8 bg-white bg-opacity-20 rounded-lg flex items-center justify-center mr-2 sm:mr-3 backdrop-blur-sm">
@@ -109,7 +104,6 @@
             </div>
         </div>
 
-        {{-- Bottom section --}}
         <div class="border-t border-white border-opacity-20 pt-6 sm:pt-8">
             <p class="text-center text-white text-opacity-90 text-sm sm:text-base">
                 © 2025 Goa Sentono. All rights reserved.

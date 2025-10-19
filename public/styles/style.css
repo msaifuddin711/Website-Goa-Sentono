@@ -1,5 +1,3 @@
-/* public\styles\style.css */
-
 :root {
     --primary-dark: #4c3d19;
     --primary-green: #354024;
@@ -9,7 +7,6 @@
     --cream: #e5d7c4;
 }
 
-/* Lemah-lembutkan bounce logo */
 @keyframes bounce-slow {
     0%, 100% { transform: translateY(0); }
     50%      { transform: translateY(-15%); }
@@ -18,7 +15,6 @@
     animation: bounce-slow 1.5s infinite ease-in-out;
 }
 
-/* Titik-titik ping (membesar & memudar) */
 @keyframes ping-dot {
     0%   { transform: scale(1); opacity: 1; }
     75%  { transform: scale(1.5); opacity: 0.5; }
@@ -30,7 +26,6 @@
 .animation-delay-200 { animation-delay: 0.2s; }
 .animation-delay-400 { animation-delay: 0.4s; }
 
-/* Header Styles */
 .header {
     position: absolute;
     top: 0;
@@ -75,7 +70,6 @@
     overflow: hidden;
 }
 
-/* Logo Styles */
 .logo {
     font-size: 1.25rem;
     font-weight: 700;
@@ -83,7 +77,6 @@
     transition: color 0.3s ease;
 }
 
-/* Navigation Link Styles */
 .nav-link {
     position: relative;
     padding: 0.5rem 0;
@@ -110,7 +103,6 @@
     width: 100%;
 }
 
-/* Desktop Search Styles */
 .search-container .search-input {
     transition: all 0.3s ease;
 }
@@ -119,7 +111,6 @@
     transform: scale(1.02);
 }
 
-/* Mobile Menu Button (Hamburger) */
 .hamburger {
     display: none;
     flex-direction: column;
@@ -144,7 +135,6 @@
     transform-origin: center;
 }
 
-/* Hamburger Animation */
 .hamburger.active span:nth-child(1) {
     transform: rotate(45deg) translate(6px, 6px);
 }
@@ -158,7 +148,6 @@
     transform: rotate(-45deg) translate(7px, -6px);
 }
 
-/* Mobile Menu */
 .mobile-menu {
     position: absolute;
     top: 100%;
@@ -189,12 +178,12 @@
 .mobile-nav-link {
     display: block;
     padding: 1rem 1.5rem;
-    color: var(--primary-dark); /* Changed to dark color for contrast */
+    color: var(--primary-dark);
     font-size: 1rem;
     font-weight: 500;
     text-decoration: none;
     letter-spacing: 0.5px;
-    border-bottom: 1px solid rgba(76, 61, 25, 0.1); /* Changed border color */
+    border-bottom: 1px solid rgba(76, 61, 25, 0.1); 
     transition: all 0.3s ease;
     position: relative;
 }
@@ -215,7 +204,6 @@
     background: var(--primary-dark);
 }
 
-/* Mobile Search */
 .mobile-search-container {
     border-top: 1px solid rgba(76, 61, 25, 0.1);
     padding-top: 1rem;
@@ -223,25 +211,24 @@
 
 .mobile-search-input {
     transition: all 0.3s ease;
-    background: rgba(76, 61, 25, 0.1) !important; /* Updated background */
-    border-color: rgba(76, 61, 25, 0.3) !important; /* Updated border */
-    color: var(--primary-dark) !important; /* Updated text color */
+    background: rgba(76, 61, 25, 0.1) !important; 
+    border-color: rgba(76, 61, 25, 0.3) !important; 
+    color: var(--primary-dark) !important; 
 }
 
 .mobile-search-input::placeholder {
-    color: rgba(76, 61, 25, 0.6) !important; /* Updated placeholder color */
+    color: rgba(76, 61, 25, 0.6) !important; 
 }
 
 .mobile-search-input:focus {
     transform: scale(1.02);
-    background: rgba(76, 61, 25, 0.15) !important; /* Updated focus background */
+    background: rgba(76, 61, 25, 0.15) !important;
 }
 
 .mobile-search-container svg {
-    color: var(--primary-dark) !important; /* Updated icon color */
+    color: var(--primary-dark) !important; 
 }
 
-/* Scrolled State Styles */
 .header.scrolled .logo,
 .header.scrolled .nav-link {
     color: var(--primary-dark) !important;
@@ -269,7 +256,6 @@
     color: var(--primary-dark) !important;
 }
 
-/* Header Solid State Styles */
 .header.header-solid .logo,
 .header.header-solid .nav-link {
     color: var(--primary-dark) !important;
@@ -297,7 +283,6 @@
     color: var(--primary-dark) !important;
 }
 
-/* Responsive Breakpoints */
 @media (max-width: 768px) {
     .desktop-nav {
         display: none !important;
@@ -311,7 +296,6 @@
         font-size: 1.125rem;
     }
 
-    /* Adjust header height for mobile */
     .header .flex {
         height: 64px;
     }
@@ -322,7 +306,6 @@
         margin-left: 1rem;
         margin-right: 1rem;
         border-radius: 0 0 1rem 1rem;
-        border: 1px solid rgba(76, 61, 25, 0.2); /* Added border for definition */
     }
 }
 
@@ -342,12 +325,10 @@
     }
 }
 
-/* Smooth transitions untuk semua state changes */
 .header * {
     transition: color 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Fix untuk logo image transition */
 #logo-img {
     transition: all 0.3s ease;
 }
@@ -356,8 +337,6 @@
     position: relative;
     overflow: hidden;
     margin-top: 0;
-    width: 100vw; /* Full viewport width */
-    min-height: 100vh; /* Full viewport height */
     left: 50%;
     right: 50%;
     margin-left: -50vw;
@@ -389,7 +368,6 @@
     position: relative;
     z-index: 3;
     width: 100%;
-    max-width: 1280px; /* Restore max-width for content */
     margin: 0 auto;
     padding: 0 1rem;
 }
@@ -514,7 +492,6 @@
     }
 }
 
-/* Video fallback styles */
 .video-fallback {
     position: absolute;
     top: 0;
@@ -541,7 +518,6 @@
     animation: float 20s ease-in-out infinite;
 }
 
-/* Tambahkan di CSS */
 .hero-video-element {
     position: absolute;
     top: 0;
@@ -583,7 +559,6 @@
     }
 }
 
-/* Responsive video */
 @media (max-width: 768px) {
     .hero-video video {
         min-width: 200%;
@@ -591,14 +566,12 @@
     }
 }
 
-/* Article Content Styling */
 .article-content {
     font-size: 18px;
     line-height: 1.8;
     color: #374151;
 }
 
-/* Prose styling for rich text content */
 .prose {
     max-width: none;
 }
@@ -607,15 +580,13 @@
     margin-bottom: 1.25rem;
     text-align: justify;
     line-height: 1.7;
-    text-indent: 3em; /* Semua paragraf memiliki indent */
+    text-indent: 3em; 
 }
 
-/* Class untuk paragraf yang tidak ingin di-indent */
 .prose p.no-indent {
     text-indent: 0 !important;
 }
 
-/* Exceptions for elements that shouldn't have first-line indent */
 .prose blockquote p,
 .prose li p,
 .prose table p {
@@ -633,7 +604,7 @@
     margin-top: 2rem;
     margin-bottom: 1rem;
     line-height: 1.25;
-    text-indent: 0; /* No indent for headings */
+    text-indent: 0;
 }
 
 .prose h1 {
@@ -664,7 +635,6 @@
     font-size: 1rem;
 }
 
-/* List styling */
 .prose ul, 
 .prose ol {
     margin: 1.5rem 0;
@@ -688,7 +658,6 @@
     margin-bottom: 0.5rem;
 }
 
-/* Nested lists */
 .prose ul ul, 
 .prose ol ol, 
 .prose ul ol, 
@@ -705,7 +674,6 @@
     list-style-type: square;
 }
 
-/* Blockquote styling */
 .prose blockquote {
     border-left: 4px solid #3b82f6;
     padding-left: 1.5rem;
@@ -734,7 +702,6 @@
     font-size: 1.1rem;
 }
 
-/* Link styling */
 .prose a {
     color: #3b82f6;
     text-decoration: underline;
@@ -747,7 +714,6 @@
     text-decoration: none;
 }
 
-/* Text formatting */
 .prose strong {
     font-weight: 700;
     color: #1f2937;
@@ -765,7 +731,6 @@
     text-decoration: line-through;
 }
 
-/* Code styling */
 .prose code {
     background-color: #f3f4f6;
     color: #ef4444;
@@ -791,7 +756,6 @@
     border-radius: 0;
 }
 
-/* Table styling */
 .prose table {
     width: 100%;
     border-collapse: collapse;
@@ -824,7 +788,6 @@
     background-color: #f3f4f6;
 }
 
-/* Image styling */
 .prose img {
     max-width: 100%;
     height: auto;
@@ -846,7 +809,6 @@
     font-style: italic;
 }
 
-/* Horizontal rule */
 .prose hr {
     border: none;
     height: 2px;
@@ -854,18 +816,15 @@
     margin: 3rem 0;
 }
 
-/* Text alignment classes */
 .prose .text-left { text-align: left; }
 .prose .text-center { text-align: center; }
 .prose .text-right { text-align: right; }
 .prose .text-justify { text-align: justify; }
 
-/* Font size classes */
 .prose .text-small { font-size: 0.875rem; }
 .prose .text-large { font-size: 1.125rem; }
 .prose .text-xl { font-size: 1.25rem; }
 
-/* Color classes */
 .prose .text-red { color: #dc2626; }
 .prose .text-blue { color: #2563eb; }
 .prose .text-green { color: #16a34a; }
@@ -873,13 +832,11 @@
 .prose .text-purple { color: #9333ea; }
 .prose .text-gray { color: #6b7280; }
 
-/* Background color classes */
 .prose .bg-yellow { background-color: #fef3c7; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
 .prose .bg-blue { background-color: #dbeafe; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
 .prose .bg-green { background-color: #dcfce7; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
 .prose .bg-red { background-color: #fee2e2; padding: 0.25rem 0.5rem; border-radius: 0.25rem; }
 
-/* Special content blocks */
 .prose .note {
     background-color: #eff6ff;
     border-left: 4px solid #3b82f6;
@@ -912,7 +869,6 @@
     border-radius: 0 0.5rem 0.5rem 0;
 }
 
-/* Mobile responsive adjustments */
 @media (max-width: 768px) {
     .prose {
         font-size: 16px;
@@ -955,7 +911,6 @@
     }
 }
 
-/* Print styles */
 @media print {
     .prose {
         font-size: 12pt;
@@ -989,7 +944,6 @@
     }
 }
 
-/* Line clamp utility */
 .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -1004,7 +958,6 @@
     overflow: hidden;
 }
 
-/* Mobile responsive */
 @media (max-width: 768px) {
     .article-content {
         font-size: 16px;
@@ -1045,19 +998,15 @@
     }
 }
 
-/* Hover effects */
 .gallery-item .group:hover img {
     transform: scale(1.05);
 }
 
-/* Additional CSS for Footer - Add this to your public/styles/style.css */
 
-/* Footer gradient colors */
 .from-primary { background-image: linear-gradient(to bottom right, var(--primary-dark), var(--primary-green), var(--accent-green)); }
-.via-primary-green { /* Already handled by the gradient above */ }
-.to-accent-green { /* Already handled by the gradient above */ }
+.via-primary-green { background-image: linear-gradient(to bottom right, var(--primary-dark), var(--primary-green), var(--accent-green)); }
+.to-accent-green { background-image: linear-gradient(to bottom right, var(--primary-dark), var(--primary-green), var(--accent-green)); }
 
-/* Footer animations */
 @keyframes pulse-slow {
     0%, 100% { opacity: 1; }
     50% { opacity: 0.5; }
@@ -1067,7 +1016,6 @@
     animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Scroll to top button */
 #scroll-to-top {
     transition: all 0.3s ease;
 }
@@ -1077,18 +1025,15 @@
     pointer-events: auto;
 }
 
-/* Social media hover effects */
 footer a:hover svg {
     transform: scale(1.1);
     transition: transform 0.2s ease;
 }
 
-/* Newsletter input focus styles */
 footer input:focus {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-/* Mobile responsive adjustments */
 @media (max-width: 768px) {
     footer .grid {
         gap: 2rem;
@@ -1105,7 +1050,6 @@ footer input:focus {
     }
 }
 
-/* Backdrop blur support */
 @supports (backdrop-filter: blur(10px)) {
     .backdrop-blur-sm {
         backdrop-filter: blur(4px);
@@ -1118,15 +1062,12 @@ footer input:focus {
     }
 }
 
-/* Search Functionality Styles */
 
-/* Search Container */
 .search-container,
 .mobile-search-container {
     position: relative;
 }
 
-/* Search Input Enhancements */
 .search-input,
 .mobile-search-input {
     transition: all 0.3s ease-in-out;
@@ -1139,7 +1080,6 @@ footer input:focus {
     transform: scale(1.02);
 }
 
-/* Search Suggestions Dropdown */
 .search-suggestions {
     position: absolute;
     top: 100%;
@@ -1167,7 +1107,6 @@ footer input:focus {
     }
 }
 
-/* Suggestion Items */
 .suggestion-item {
     display: block;
     padding: 0.75rem;
@@ -1190,7 +1129,6 @@ footer input:focus {
     background-color: #f3f4f6;
 }
 
-/* Suggestion Content */
 .suggestion-item .flex {
     align-items: center;
 }
@@ -1200,7 +1138,7 @@ footer input:focus {
     height: 1.5rem;
     margin-right: 0.75rem;
     flex-shrink: 0;
-    color: #6366f1; /* primary color */
+    color: #6366f1; 
 }
 
 .suggestion-item p {
@@ -1213,7 +1151,6 @@ footer input:focus {
     margin: 0;
 }
 
-/* Search Result Categories */
 .search-suggestions .category-header {
     padding: 0.5rem;
     font-size: 0.75rem;
@@ -1224,7 +1161,6 @@ footer input:focus {
     background-color: #f9fafb;
 }
 
-/* Scrollbar Styling */
 .search-suggestions::-webkit-scrollbar {
     width: 4px;
 }
@@ -1243,7 +1179,6 @@ footer input:focus {
     background: #a8a8a8;
 }
 
-/* Mobile Specific Styles */
 @media (max-width: 768px) {
     .mobile-search-container .search-suggestions {
         left: -1rem;
@@ -1252,7 +1187,6 @@ footer input:focus {
     }
 }
 
-/* Search Results Page Styles */
 .search-results-container {
     min-height: 60vh;
 }
@@ -1263,7 +1197,6 @@ footer input:focus {
     border-radius: 0.25rem;
 }
 
-/* Loading State */
 .suggestion-loading {
     padding: 1rem;
     text-align: center;
@@ -1288,7 +1221,6 @@ footer input:focus {
     100% { transform: rotate(360deg); }
 }
 
-/* Empty State */
 .suggestion-empty {
     padding: 1rem;
     text-align: center;
@@ -1296,7 +1228,6 @@ footer input:focus {
     font-size: 0.875rem;
 }
 
-/* Search Icon Enhancement */
 .search-input-icon {
     position: absolute;
     right: 0.75rem;
@@ -1309,13 +1240,11 @@ footer input:focus {
     transition: color 0.3s ease-in-out;
 }
 
-/* Focus states */
 .search-input:focus + .search-input-icon,
 .mobile-search-input:focus + .search-input-icon {
     color: rgba(255, 255, 255, 1);
 }
 
-/* Responsive adjustments */
 @media (min-width: 768px) {
     .search-input {
         width: 8rem;
@@ -1327,7 +1256,6 @@ footer input:focus {
     }
 }
 
-/* Dark theme compatibility */
 .header-solid .search-suggestions {
     border-color: #d1d5db;
 }
@@ -1337,7 +1265,6 @@ footer input:focus {
     background-color: #f9fafb;
 }
 
-/* Animation for search icon */
 .search-input-container {
     position: relative;
 }
@@ -1346,14 +1273,12 @@ footer input:focus {
     transform: translateY(-50%) scale(1.1);
 }
 
-/* Accessibility improvements */
 .suggestion-item:focus {
     outline: 2px solid #6366f1;
     outline-offset: -2px;
     background-color: #f9fafb;
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
     .search-suggestions {
         border: 2px solid #000;

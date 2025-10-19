@@ -11,7 +11,6 @@ class GaleriController extends Controller
     {
         $galeriItems = GaleriItem::visible()->latest()->paginate(6);
 
-        // Tambahkan data untuk JavaScript (dibutuhkan untuk gallery modal di search results)
         $initialGalleryData = [
             'data' => $galeriItems->items(),
             'currentPage' => $galeriItems->currentPage(),
@@ -24,7 +23,6 @@ class GaleriController extends Controller
         ]);
     }
 
-    // TAMBAHKAN METHOD INI untuk API endpoint yang dibutuhkan search
     public function apiIndex(Request $request)
     {
         $perPage = $request->get('per_page', 6);
@@ -32,7 +30,6 @@ class GaleriController extends Controller
         
         $query = GaleriItem::visible()->latest();
         
-        // Jika ada parameter search, gunakan scope search dari model
         if ($search) {
             $query->search($search);
         }

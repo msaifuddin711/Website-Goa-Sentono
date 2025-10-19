@@ -7,7 +7,6 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div class="bg-white rounded-2xl shadow-sm border border-light-beige p-6 card-hover">
             <div class="flex items-center space-x-4">
@@ -58,7 +57,6 @@
         </div>
     </div>
 
-    <!-- Tabs Navigation -->
     <div class="bg-white rounded-2xl shadow-sm border border-light-beige overflow-hidden">
         <div class="border-b border-light-beige">
             <nav class="flex space-x-8 px-6" aria-label="Tabs">
@@ -73,7 +71,6 @@
             </nav>
         </div>
 
-        <!-- Messages Tab -->
         <div id="messages-tab" class="tab-content p-6">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-primary-dark">Pesan Masuk</h3>
@@ -86,7 +83,6 @@
                 </div>
             </div>
 
-            <!-- Filter and Search -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 space-y-4 md:space-y-0">
                 <div class="flex items-center space-x-4">
                     <div class="flex items-center space-x-2">
@@ -162,7 +158,6 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
                 <div class="mt-8">
                     {{ $messages->links() }}
                 </div>
@@ -177,7 +172,6 @@
             @endif
         </div>
 
-        <!-- Members Tab -->
         <div id="members-tab" class="tab-content p-6 hidden">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-bold text-primary-dark">Anggota KKN</h3>
@@ -239,14 +233,12 @@
     </div>
 </div>
 
-<!-- Pop-up Overlay -->
 <div id="popup-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden opacity-0 transition-opacity duration-300">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div id="popup-content" class="transform scale-95 transition-transform duration-300"></div>
     </div>
 </div>
 
-<!-- Delete Confirmation Pop-up -->
 <div id="delete-confirmation-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden opacity-0 transition-opacity duration-300">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 transform scale-95 transition-transform duration-300">
@@ -273,7 +265,6 @@
     </div>
 </div>
 
-<!-- Bulk Delete Confirmation Pop-up -->
 <div id="bulk-delete-confirmation-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden opacity-0 transition-opacity duration-300">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 transform scale-95 transition-transform duration-300">
@@ -301,7 +292,6 @@
 </div>
 
 <script>
-// Define routes for JavaScript to use
 window.adminKontakRoutes = {
     destroyMessage: "{{ route('admin.kontak.message.destroy', ['message' => ':id']) }}",
     bulkDeleteMessages: "{{ route('admin.kontak.messages.bulk-delete') }}",
@@ -313,12 +303,10 @@ window.adminKontakRoutes = {
     reorderMembers: "{{ route('admin.kontak.members.reorder') }}",
 };
 
-// Delete confirmation variables
 let deleteType = '';
 let deleteId = '';
 let deleteName = '';
 
-// Show delete confirmation popup
 function showDeleteConfirmation(type, id, name) {
     deleteType = type;
     deleteId = id;
@@ -339,7 +327,6 @@ function showDeleteConfirmation(type, id, name) {
     }, 10);
 }
 
-// Hide delete confirmation popup
 function hideDeleteConfirmation() {
     const overlay = document.getElementById('delete-confirmation-overlay');
     overlay.classList.add('opacity-0');
@@ -349,7 +336,6 @@ function hideDeleteConfirmation() {
     }, 300);
 }
 
-// Confirm delete action
 function confirmDelete() {
     if (deleteType === 'message') {
         deleteMessage(deleteId);
@@ -359,7 +345,6 @@ function confirmDelete() {
     hideDeleteConfirmation();
 }
 
-// Show bulk delete confirmation
 function showBulkDeleteConfirmation(count) {
     document.getElementById('bulk-count').textContent = count;
     
@@ -371,7 +356,6 @@ function showBulkDeleteConfirmation(count) {
     }, 10);
 }
 
-// Hide bulk delete confirmation
 function hideBulkDeleteConfirmation() {
     const overlay = document.getElementById('bulk-delete-confirmation-overlay');
     overlay.classList.add('opacity-0');
@@ -381,7 +365,6 @@ function hideBulkDeleteConfirmation() {
     }, 300);
 }
 
-// Modified bulk delete function to show confirmation
 function bulkDeleteMessages() {
     const selectedCheckboxes = document.querySelectorAll('.message-checkbox:checked');
     
@@ -392,12 +375,10 @@ function bulkDeleteMessages() {
     showBulkDeleteConfirmation(selectedCheckboxes.length);
 }
 
-// Confirm bulk delete
 function confirmBulkDelete() {
     const selectedCheckboxes = document.querySelectorAll('.message-checkbox:checked');
     const selectedIds = Array.from(selectedCheckboxes).map(cb => cb.value);
     
-    // Make AJAX request to delete messages
     fetch(window.adminKontakRoutes.bulkDeleteMessages, {
         method: 'POST',
         headers: {
@@ -411,7 +392,6 @@ function confirmBulkDelete() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Remove deleted messages from DOM
             selectedIds.forEach(id => {
                 const messageElement = document.querySelector(`[data-id="${id}"]`);
                 if (messageElement) {
@@ -419,7 +399,6 @@ function confirmBulkDelete() {
                 }
             });
             
-            // Optionally reload the page to update statistics
             location.reload();
         }
     })

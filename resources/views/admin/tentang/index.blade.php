@@ -7,7 +7,6 @@
 
 @section('content')
 <div class="space-y-8">
-    <!-- Settings Section -->
     <div class="bg-white rounded-2xl shadow-sm border border-light-beige overflow-hidden card-hover">
         <div class="bg-primary-green px-6 py-4">
             <div class="flex items-center justify-between">
@@ -38,56 +37,54 @@
                         </p>
                     </div>
                     
-<div>
-    <label for="video_url" class="block text-sm font-semibold text-primary-dark mb-2">
-        <i class="fab fa-youtube text-medium-brown mr-2"></i>URL Video YouTube
-    </label>
-    <div class="relative">
-        <input type="url" 
-               class="w-full px-4 py-3 pr-12 border border-light-beige rounded-xl focus:ring-2 focus:ring-accent-green focus:border-transparent bg-soft-cream transition-all duration-200" 
-               id="video_url" name="video_url" value="{{ $settings['video_url'] ?? '' }}" required
-               placeholder="Masukkan URL YouTube (akan otomatis dikonversi ke format embed)">
-        
-        <!-- Tombol Convert Manual (opsional) -->
-        <button type="button" 
-                onclick="manualConvertUrl()" 
-                class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-accent-green hover:bg-primary-green text-white p-2 rounded-lg transition-colors duration-200"
-                title="Konversi manual ke format embed">
-            <i class="fas fa-sync-alt text-sm"></i>
-        </button>
-    </div>
-    
-    <div class="mt-2 space-y-1">
-        <p class="text-xs text-accent-green flex items-center">
-            <i class="fas fa-info-circle mr-1"></i>
-            Format yang didukung:
-        </p>
-        <ul class="text-xs text-gray-600 ml-4 space-y-1">
-            <li>• https://www.youtube.com/watch?v=VIDEO_ID</li>
-            <li>• https://youtu.be/VIDEO_ID</li>
-            <li>• https://m.youtube.com/watch?v=VIDEO_ID</li>
-        </ul>
-        <p class="text-xs text-green-600 flex items-center">
-            <i class="fas fa-magic mr-1"></i>
-            URL akan otomatis dikonversi ke format embed saat Anda mengetik atau menyimpan
-        </p>
-    </div>
-    
-    <!-- Preview iframe (opsional) -->
-    <div id="video-preview" class="mt-4 hidden">
-        <p class="text-sm font-medium text-primary-dark mb-2">Preview Video:</p>
-        <div class="relative pb-[56.25%] rounded-lg overflow-hidden bg-gray-100">
-            <iframe id="preview-iframe" 
-                    class="absolute inset-0 w-full h-full" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-            </iframe>
-        </div>
-    </div>
-</div>
+                    <div>
+                        <label for="video_url" class="block text-sm font-semibold text-primary-dark mb-2">
+                            <i class="fab fa-youtube text-medium-brown mr-2"></i>URL Video YouTube
+                        </label>
+                        <div class="relative">
+                            <input type="url" 
+                                class="w-full px-4 py-3 pr-12 border border-light-beige rounded-xl focus:ring-2 focus:ring-accent-green focus:border-transparent bg-soft-cream transition-all duration-200" 
+                                id="video_url" name="video_url" value="{{ $settings['video_url'] ?? '' }}" required
+                                placeholder="Masukkan URL YouTube (akan otomatis dikonversi ke format embed)">
+                            
+                            <button type="button" 
+                                    onclick="manualConvertUrl()" 
+                                    class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-accent-green hover:bg-primary-green text-white p-2 rounded-lg transition-colors duration-200"
+                                    title="Konversi manual ke format embed">
+                                <i class="fas fa-sync-alt text-sm"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="mt-2 space-y-1">
+                            <p class="text-xs text-accent-green flex items-center">
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Format yang didukung:
+                            </p>
+                            <ul class="text-xs text-gray-600 ml-4 space-y-1">
+                                <li>• https://www.youtube.com/watch?v=VIDEO_ID</li>
+                                <li>• https://youtu.be/VIDEO_ID</li>
+                                <li>• https://m.youtube.com/watch?v=VIDEO_ID</li>
+                            </ul>
+                            <p class="text-xs text-green-600 flex items-center">
+                                <i class="fas fa-magic mr-1"></i>
+                                URL akan otomatis dikonversi ke format embed saat Anda mengetik atau menyimpan
+                            </p>
+                        </div>
+                        
+                        <div id="video-preview" class="mt-4 hidden">
+                            <p class="text-sm font-medium text-primary-dark mb-2">Preview Video:</p>
+                            <div class="relative pb-[56.25%] rounded-lg overflow-hidden bg-gray-100">
+                                <iframe id="preview-iframe" 
+                                        class="absolute inset-0 w-full h-full" 
+                                        frameborder="0" 
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                        allowfullscreen>
+                                </iframe>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                
+                    
                 <div class="flex justify-end pt-4 border-t border-light-beige">
                     <button type="submit" class="bg-primary-green text-cream px-6 py-3 rounded-xl font-semibold hover:bg-primary-dark hover:shadow-lg transform hover:scale-105 transition-all duration-200 flex items-center space-x-2">
                         <i class="fas fa-save"></i>
@@ -98,7 +95,6 @@
         </div>
     </div>
 
-    <!-- Sejarah Slider Section -->
     <div class="bg-white rounded-2xl shadow-sm border border-light-beige overflow-hidden card-hover">
         <div class="bg-accent-green px-6 py-4">
             <div class="flex items-center justify-between">
@@ -168,7 +164,6 @@
         </div>
     </div>
 
-    <!-- Dynamic Sections -->
     @foreach([
         ['title' => 'Fasilitas', 'items' => $fasilitasItems, 'type' => 'fasilitas', 'bg_color' => 'bg-medium-brown', 'icon' => 'fas fa-tools'],
         ['title' => 'Wisata Sekitar', 'items' => $wisataItems, 'type' => 'wisata_sekitar', 'bg_color' => 'bg-sage-green', 'icon' => 'fas fa-map-marked-alt']
@@ -242,7 +237,6 @@
     @endforeach
 </div>
 
-<!-- Pop-up Overlay (sama seperti di galeri) -->
 <div id="popup-overlay" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden opacity-0 transition-opacity duration-300">
     <div class="flex items-center justify-center min-h-screen p-4">
         <div id="popup-content" class="transform scale-95 transition-transform duration-300"></div>
@@ -250,7 +244,6 @@
 </div>
 
 <script>
-// Define routes for JavaScript to use
 window.adminRoutes = {
     sejarahReorder: "{{ route('admin.tentang.sejarah.reorder') }}",
     sejarahStore: "{{ route('admin.tentang.sejarah.store') }}",
@@ -262,14 +255,12 @@ window.adminRoutes = {
 };
 </script>
 <script>
-// Tambahkan ke script yang sudah ada
 document.addEventListener('DOMContentLoaded', function() {
     const videoUrlInput = document.getElementById('video_url');
     const videoPreview = document.getElementById('video-preview');
     const previewIframe = document.getElementById('preview-iframe');
     
     if (videoUrlInput) {
-        // Fungsi untuk update preview
         function updatePreview(url) {
             if (url && isValidYouTubeUrl(url)) {
                 const embedUrl = convertToEmbedUrl(url);
@@ -281,7 +272,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Auto convert dan preview saat user mengetik
         let timeout;
         videoUrlInput.addEventListener('input', function(e) {
             clearTimeout(timeout);
@@ -300,12 +290,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }, 1000);
         });
         
-        // Load preview saat halaman pertama kali dimuat
         if (videoUrlInput.value) {
             updatePreview(videoUrlInput.value);
         }
         
-        // Convert saat form di-submit
         const form = videoUrlInput.closest('form');
         if (form) {
             form.addEventListener('submit', function(e) {
@@ -318,7 +306,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// Fungsi untuk mengkonversi URL YouTube ke format embed
 function convertToEmbedUrl(url) {
     if (!url) return '';
     
@@ -363,7 +350,6 @@ function manualConvertUrl() {
             const embedUrl = convertToEmbedUrl(originalUrl);
             videoUrlInput.value = embedUrl;
             showUrlConvertedNotification();
-            // Update preview
             const previewIframe = document.getElementById('preview-iframe');
             const videoPreview = document.getElementById('video-preview');
             if (previewIframe && videoPreview) {

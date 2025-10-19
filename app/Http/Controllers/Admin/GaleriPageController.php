@@ -42,16 +42,13 @@ class GaleriPageController extends Controller
             $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'galeri/' . $fileName;
 
-            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
-            // Untuk galeri, kita bisa pakai resolusi lebih besar
             $image->scale(width: 1920); 
-            $encodedImage = $image->toJpeg(80); // Kualitas sedikit lebih tinggi
+            $encodedImage = $image->toJpeg(80);
             Storage::disk('public')->put($filePath, $encodedImage);
             
             $gambarPath = $filePath;
-            // --- AKHIR PERUBAHAN ---
         }
 
         GaleriItem::create([
@@ -92,7 +89,6 @@ class GaleriPageController extends Controller
             $fileName = Str::slug($request->judul) . '-' . time() . '.' . $file->getClientOriginalExtension();
             $filePath = 'galeri/' . $fileName;
 
-            // --- PERUBAHAN MENGGUNAKAN IMAGE MANAGER (CARA BARU) ---
             $manager = new ImageManager(new Driver());
             $image = $manager->read($file);
             $image->scale(width: 1920);
@@ -100,7 +96,6 @@ class GaleriPageController extends Controller
             Storage::disk('public')->put($filePath, $encodedImage);
 
             $data['gambar_path'] = $filePath;
-            // --- AKHIR PERUBAHAN ---
         }
 
         $galeri->update($data);
@@ -108,7 +103,6 @@ class GaleriPageController extends Controller
         return redirect()->route('admin.galeri.index')->with('success', 'Foto galeri berhasil diperbarui!');
     }
 
-    // METHOD BARU UNTUK TOGGLE VISIBILITY
     public function toggleVisibility(GaleriItem $galeri)
     {
         $galeri->is_visible = !$galeri->is_visible;
@@ -116,7 +110,6 @@ class GaleriPageController extends Controller
 
         $message = $galeri->is_visible ? 'Foto sekarang ditampilkan.' : 'Foto sekarang disembunyikan.';
         
-        // --- PERUBAHAN DI SINI: HITUNG ULANG TOTAL ---
         $totalVisible = GaleriItem::where('is_visible', true)->count();
         $totalHidden = GaleriItem::where('is_visible', false)->count();
 
@@ -124,8 +117,6 @@ class GaleriPageController extends Controller
             'success' => true, 
             'message' => $message, 
             'is_visible' => $galeri->is_visible,
-            'totalVisible' => $totalVisible, // Kirim total baru
-            'totalHidden' => $totalHidden   // Kirim total baru
         ]);
     }
 
@@ -142,7 +133,6 @@ class GaleriPageController extends Controller
 
     public function reorder(Request $request)
     {
-        // Karena tidak ada kolom urutan, fungsi ini akan mengurutkan berdasarkan ID atau timestamp
         return response()->json(['success' => true, 'message' => 'Fitur reorder tidak tersedia tanpa kolom urutan']);
     }
 

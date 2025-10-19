@@ -171,7 +171,7 @@
 
                     <model-viewer 
                         id="map-3d-viewer"
-                        src="{{ asset('models/model-web-1.glb') }}"
+                        src="{{ asset('models/model-final-correct.glb') }}"
                         alt="Model 3D Goa Sentono sebagai Peta"
                         camera-controls
                         enable-pan
@@ -319,9 +319,9 @@
                 
                 <div class="relative overflow-auto max-h-[80vh]" id="peta-container">
                     <img id="peta-image" 
-                         src="{{ asset('images/peta_2d_new.png') }}" 
+                         src="{{ asset('images/Layout Masterplan.jpg') }}" 
                          alt="Peta 2D Goa Sentono" 
-                         class="w-full h-auto"
+                         class="w-full h-auto p-5"
                          draggable="false">
                     
                     <div id="peta-loading" class="absolute inset-0 bg-gray-100 flex items-center justify-center">
@@ -720,7 +720,7 @@ function closePeta2DModal() {
 
 function downloadPeta2D() {
     const link = document.createElement('a');
-    link.href = "{{ asset('images/IMG_3726.jpg') }}";
+    link.href = "{{ asset('images/Layout Masterplan.jpg') }}";
     link.download = 'Peta-2D-Goa-Sentono.jpg';
     document.body.appendChild(link);
     link.click();

@@ -8,7 +8,6 @@
 
 @section('content')
 <body class="bg-white">
-    {{-- Hero Section (Tetap statis sesuai desain) --}}
     <section class="hero-video text-white py-16 sm:py-24 lg:py-32 relative min-h-[60vh] sm:min-h-screen flex items-center bg-cover bg-center" style="background-image: url('{{ asset('images/IMG_0721.jpg') }}');">
         <div class="video-fallback opacity-0"></div>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full h-full flex flex-col justify-center space-y-2 hero-content animate-fade-in sm:text-left">
@@ -21,19 +20,16 @@
         </div>
     </section>
 
-    {{-- Sejarah Goa Sentono --}}
     <section class="py-12 sm:py-16 lg:py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             
-            {{-- Slider Container Dinamis --}}
             @if($sejarahSliders->isNotEmpty())
             <div class="relative order-2 lg:order-1">
                 <div class="overflow-hidden rounded-2xl sm:rounded-3xl shadow-xl">
                     <div class="flex transition-transform duration-500 ease-in-out" 
                         id="sejarah-images" data-count="{{ $sejarahSliders->count() }}" data-current="0">
                         
-                        {{-- Loop untuk gambar slider dari database --}}
                         @foreach($sejarahSliders as $slide)
                             <div class="flex-shrink-0 w-full">
                                 <div class="aspect-square">
@@ -45,14 +41,12 @@
                         @endforeach
                     </div>
                 </div>
-                {{-- Navigation Buttons --}}
                 <button id="sejarah-prev" class="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 shadow-lg rounded-full p-2 sm:p-3 hover:bg-opacity-100 z-10">
                     <i class="fas fa-chevron-left text-primary text-base sm:text-lg"></i>
                 </button>
                 <button id="sejarah-next" class="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-white bg-opacity-90 shadow-lg rounded-full p-2 sm:p-3 hover:bg-opacity-100 z-10">
                     <i class="fas fa-chevron-right text-primary text-base sm:text-lg"></i>
                 </button>
-                {{-- Dots Indicator Dinamis --}}
                 <div class="flex justify-center mt-4 sm:mt-6 space-x-2">
                     @foreach($sejarahSliders as $index => $slide)
                     <button data-slide="{{ $index }}" class="sejarah-dot w-2 sm:w-3 h-2 sm:h-3 rounded-full {{ $index == 0 ? 'bg-primary' : 'bg-gray-300' }} transition duration-300"></button>
@@ -61,13 +55,11 @@
             </div>
             @endif
 
-            {{-- Konten Teks Sejarah Dinamis --}}
             <div class="order-1 lg:order-2 text-center lg:text-left">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 sm:mb-6 lg:mb-8">
                     Sejarah Goa Sentono
                 </h2>
                 <div class="space-y-4 sm:space-y-6 text-accent leading-relaxed text-sm sm:text-base lg:text-lg">
-                    {{-- Menggunakan nl2br untuk mengubah baris baru (enter) menjadi tag --}}
                     {!! nl2br(e($settings['sejarah_deskripsi'] ?? 'Deskripsi sejarah belum diatur.')) !!}
                 </div>
             </div>
@@ -75,7 +67,6 @@
         </div>
     </section>
 
-    {{-- Video Cerita Sejarah Dinamis --}}
     <section class="py-12 sm:py-16 lg:py-24 section-bg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -105,287 +96,212 @@
         </div>
     </section>
 
-{{-- Peta Lokasi Dinamis dengan Enhanced 3D Controls --}}
-<section class="py-12 sm:py-16 lg:py-24 bg-white" id="peta-lokasi">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="text-center mb-8 sm:mb-12 lg:mb-16">
-            <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 sm:mb-6">
-                Peta Lokasi
-            </h2>
-            <p class="text-base sm:text-lg lg:text-xl text-accent max-w-2xl mx-auto px-4 sm:px-0">
-                Temukan lokasi Goa Sentono dan rencanakan perjalanan
-            </p>
-        </div>
-        
-        <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
-            @php
-                // Definisikan gambar Anda di sini agar mudah dikelola
-                $locationImages = [
-                        ['url' => asset('images/render1.jpeg')],
-                        ['url' => asset('images/render2.jpeg')],
-                        ['url' => asset('images/render3.jpeg')],
-                        ['url' => asset('images/render4.jpeg')],
-                        ['url' => asset('images/render5.jpeg')],
-                        ['url' => asset('images/render6.jpeg')],
-                        ['url' => asset('images/render7.jpeg')],
-                ];
-                $imagesPerView = 4; // Jumlah gambar yang terlihat per slide
-            @endphp
-
-            <div class="p-4 md:p-6 lg:p-8">
-                <div id="peta-lokasi-carousel-container" class="relative">
-                    <div class="overflow-hidden rounded-xl md:rounded-2xl">
-                        {{-- Container ini akan memiliki lebar total semua gambar --}}
-                        <div id="peta-lokasi-carousel-track" class="flex transition-transform duration-500 ease-in-out">
-                            @foreach($locationImages as $image)
-                                {{-- Setiap item gambar memiliki lebar 1/4 dari viewport --}}
-                                <div class="flex-shrink-0 w-1/4 p-2">
-                                    <div class="aspect-video rounded-md overflow-hidden shadow-md">
-                                        <img src="{{ $image['url'] }}" class="w-full h-full object-cover" loading="lazy">
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-
-                    {{-- Tombol Navigasi --}}
-                    <button id="peta-lokasi-carousel-prev" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-10 h-10 flex items-center justify-center shadow-md transition z-10">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button id="peta-lokasi-carousel-next" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white/80 hover:bg-white text-primary rounded-full w-10 h-10 flex items-center justify-center shadow-md transition z-10">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-
-                    {{-- Indikator Titik (Dots) --}}
-                    <div id="peta-lokasi-carousel-dots" class="flex justify-center space-x-2 mt-4">
-                        @for ($i = 0; $i < ceil(count($locationImages) / $imagesPerView); $i++)
-                            <button data-slide-to="{{ $i }}" class="peta-carousel-dot h-3 w-3 rounded-full transition {{ $i == 0 ? 'bg-primary' : 'bg-gray-300' }}"></button>
-                        @endfor
-                    </div>
-                </div>
+    <section class="py-12 sm:py-16 lg:py-24 bg-white" id="peta-lokasi">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-8 sm:mb-12 lg:mb-16">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 sm:mb-6">
+                    Peta Lokasi
+                </h2>
+                <p class="text-base sm:text-lg lg:text-xl text-accent max-w-2xl mx-auto px-4 sm:px-0">
+                    Temukan lokasi Goa Sentono dan rencanakan perjalanan
+                </p>
             </div>
-
-            {{-- Pemisah Visual --}}
-            <div class="border-t border-gray-200 mx-6 lg:mx-8"></div>
             
-            {{-- 3D Model Viewer dengan Enhanced Controls --}}
-            <div class="relative bg-gradient-to-b from-blue-50 to-green-50">
-                {{-- Control Panel Overlay --}}
-                <div class="absolute top-4 left-4 z-20 bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg p-3 sm:p-4">
-                    <h3 class="text-sm sm:text-base font-bold text-primary mb-2 flex items-center">
-                        <i class="fas fa-cubes mr-2"></i>
-                        Kontrol 3D
-                    </h3>
-                    <div class="space-y-2">
-                        {{-- Preset Views --}}
-                        <div class="grid grid-cols-3 gap-1">
-                            <button id="view-top" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition">
-                                <i class="fas fa-arrow-up mr-1"></i>
-                                Atas
-                            </button>
-                            <button id="view-side" class="bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600 transition">
-                                <i class="fas fa-arrow-right mr-1"></i>
-                                Samping
-                            </button>
-                            <button id="view-iso" class="bg-purple-500 text-white px-2 py-1 rounded text-xs hover:bg-purple-600 transition">
-                                <i class="fas fa-cube mr-1"></i>
-                                Reset View
-                            </button>
+            <div class="bg-white rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden">
+                <div class="relative bg-gradient-to-b from-blue-50 to-green-50">
+                    <div class="absolute top-4 left-4 z-20 bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg p-3 sm:p-4">
+                        <h3 class="text-sm sm:text-base font-bold text-primary mb-2 flex items-center">
+                            <i class="fas fa-cubes mr-2"></i>
+                            Kontrol 3D
+                        </h3>
+                        <div class="space-y-2">
+                            <div class="grid grid-cols-3 gap-1">
+                                <button id="view-top" class="bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600 transition">
+                                    <i class="fas fa-arrow-up mr-1"></i>
+                                    Atas
+                                </button>
+                                <button id="view-side" class="bg-green-500 text-white px-2 py-1 rounded text-xs hover:bg-green-600 transition">
+                                    <i class="fas fa-arrow-right mr-1"></i>
+                                    Samping
+                                </button>
+                                <button id="view-iso" class="bg-purple-500 text-white px-2 py-1 rounded text-xs hover:bg-purple-600 transition">
+                                    <i class="fas fa-cube mr-1"></i>
+                                    Reset View
+                                </button>
+                            </div>
+                            
+                            <label class="flex items-center justify-between text-xs sm:text-sm text-accent cursor-pointer">
+                                <span class="flex items-center">
+                                    <i class="fas fa-sync-alt mr-1"></i>
+                                    Auto Rotate
+                                </span>
+                                <input type="checkbox" id="auto-rotate-toggle" class="toggle-checkbox" checked>
+                            </label>
                         </div>
-                        
-                        {{-- Auto Rotate Toggle --}}
-                        <label class="flex items-center justify-between text-xs sm:text-sm text-accent cursor-pointer">
-                            <span class="flex items-center">
-                                <i class="fas fa-sync-alt mr-1"></i>
-                                Auto Rotate
-                            </span>
-                            <input type="checkbox" id="auto-rotate-toggle" class="toggle-checkbox" checked>
-                        </label>
                     </div>
-                </div>
 
-                {{-- Info Panel Overlay --}}
-                <div class="absolute top-4 right-4 z-20 bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg p-3 sm:p-4 max-w-xs">
-                    <h3 class="text-sm sm:text-base font-bold text-primary mb-2 flex items-center">
-                        <i class="fas fa-info-circle mr-2"></i>
-                        Panduan
-                    </h3>
-                    <div class="text-xs sm:text-sm text-accent space-y-1">
-                        <p class="flex items-center">
-                            <i class="fas fa-mouse-pointer mr-2 text-primary"></i>
-                            Klik & drag untuk memutar
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-search mr-2 text-primary"></i>
-                            Scroll untuk zoom
-                        </p>
-                        <p class="flex items-center">
-                            <i class="fas fa-hand-paper mr-2 text-primary"></i>
-                            2 jari untuk pan (mobile)
-                        </p>
+                    <div class="absolute top-4 right-4 z-20 bg-white bg-opacity-90 backdrop-blur-sm rounded-xl shadow-lg p-3 sm:p-4 max-w-xs">
+                        <h3 class="text-sm sm:text-base font-bold text-primary mb-2 flex items-center">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Panduan
+                        </h3>
+                        <div class="text-xs sm:text-sm text-accent space-y-1">
+                            <p class="flex items-center">
+                                <i class="fas fa-mouse-pointer mr-2 text-primary"></i>
+                                Klik & drag untuk memutar
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-search mr-2 text-primary"></i>
+                                Scroll untuk zoom
+                            </p>
+                            <p class="flex items-center">
+                                <i class="fas fa-hand-paper mr-2 text-primary"></i>
+                                2 jari untuk pan (mobile)
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                {{-- Loading Overlay --}}
-                <div id="model-loading" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-30">
-                    <div class="text-center">
-                        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-                        <p class="text-accent font-medium">Memuat Model 3D...</p>
-                        <p class="text-sm text-gray-500 mt-1">Harap tunggu sebentar</p>
-                    </div>
-                </div>
-
-                {{-- Model 3D Container --}}
-                <model-viewer 
-                    id="map-3d-viewer"
-                    src="{{ asset('models/model-web-1.glb') }}"
-                    alt="Model 3D Goa Sentono sebagai Peta"
-                    camera-controls
-                    enable-pan
-                    touch-action="pan-y"
-                    auto-rotate
-                    auto-rotate-delay="3000"
-                    rotation-per-second="30deg"
-                    min-camera-orbit="auto 0deg auto"
-                    max-camera-orbit="auto 90deg auto"
-                    camera-orbit="45deg 75deg 5m"
-                    field-of-view="30deg"
-                    min-field-of-view="5deg"
-                    max-field-of-view="20deg"
-                    shadow-intensity="1"
-                    shadow-softness="0.5"
-                    exposure="1"
-                    environment-image="neutral"
-                    style="width: 100%; height: 400px; --poster-color: #f0f8ff;"
-                    poster="{{ asset('images/model-poster.jpg') }}"
-                    loading="eager">
-                    
-                    {{-- Loading Slot --}}
-                    <div slot="poster" class="flex items-center justify-center h-full bg-gradient-to-b from-blue-50 to-green-50">
+                    <div id="model-loading" class="absolute inset-0 bg-white bg-opacity-90 flex items-center justify-center z-30">
                         <div class="text-center">
-                            <i class="fas fa-mountain text-4xl text-primary mb-4"></i>
-                            <p class="text-accent font-medium">Klik untuk memuat model 3D</p>
+                            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+                            <p class="text-accent font-medium">Memuat Model 3D...</p>
+                            <p class="text-sm text-gray-500 mt-1">Harap tunggu sebentar</p>
                         </div>
                     </div>
 
-                    {{-- Error Slot --}}
-                    <div slot="error" class="flex items-center justify-center h-full bg-red-50">
-                        <div class="text-center text-red-600">
-                            <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
-                            <p class="font-medium">Gagal memuat model 3D</p>
-                            <p class="text-sm mt-2">Periksa koneksi internet Anda</p>
+                    <model-viewer 
+                        id="map-3d-viewer"
+                        src="{{ asset('models/model-web-1.glb') }}"
+                        alt="Model 3D Goa Sentono sebagai Peta"
+                        camera-controls
+                        enable-pan
+                        touch-action="pan-y"
+                        auto-rotate
+                        auto-rotate-delay="3000"
+                        rotation-per-second="30deg"
+                        min-camera-orbit="auto 0deg auto"
+                        max-camera-orbit="auto 90deg auto"
+                        camera-orbit="45deg 75deg 5m"
+                        field-of-view="30deg"
+                        min-field-of-view="5deg"
+                        max-field-of-view="20deg"
+                        shadow-intensity="1"
+                        shadow-softness="0.5"
+                        exposure="1"
+                        environment-image="neutral"
+                        style="width: 100%; height: 400px; --poster-color: #f0f8ff;"
+                        poster="{{ asset('images/model-poster.jpg') }}"
+                        loading="eager">
+                        
+                        <div slot="poster" class="flex items-center justify-center h-full bg-gradient-to-b from-blue-50 to-green-50">
+                            <div class="text-center">
+                                <i class="fas fa-mountain text-4xl text-primary mb-4"></i>
+                                <p class="text-accent font-medium">Klik untuk memuat model 3D</p>
+                            </div>
                         </div>
-                    </div>
-                </model-viewer>
 
-                {{-- Bottom Control Bar --}}
-                <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 bg-white bg-opacity-90 backdrop-blur-sm rounded-full shadow-lg px-4 py-2">
-                    <div class="flex items-center space-x-3">
-                        {{-- Zoom Controls --}}
-                        <button id="zoom-in" class="p-2 text-primary hover:bg-primary hover:text-white rounded-full transition duration-300">
-                            <i class="fas fa-plus text-sm"></i>
-                        </button>
-                        <button id="zoom-out" class="p-2 text-primary hover:bg-primary hover:text-white rounded-full transition duration-300">
-                            <i class="fas fa-minus text-sm"></i>
-                        </button>
-                        
-                        {{-- Separator --}}
-                        <div class="w-px h-6 bg-gray-300"></div>
-                        
-                        {{-- Fullscreen Toggle --}}
-                        <button id="fullscreen-toggle" class="p-2 text-primary hover:bg-primary hover:text-white rounded-full transition duration-300">
-                            <i class="fas fa-expand text-sm"></i>
-                        </button>
-                        
+                        <div slot="error" class="flex items-center justify-center h-full bg-red-50">
+                            <div class="text-center text-red-600">
+                                <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+                                <p class="font-medium">Gagal memuat model 3D</p>
+                                <p class="text-sm mt-2">Periksa koneksi internet Anda</p>
+                            </div>
+                        </div>
+                    </model-viewer>
+
+                    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-20 bg-white bg-opacity-90 backdrop-blur-sm rounded-full shadow-lg px-4 py-2">
+                        <div class="flex items-center space-x-3">
+                            <button id="zoom-in" class="p-2 text-primary hover:bg-primary hover:text-white rounded-full transition duration-300">
+                                <i class="fas fa-plus text-sm"></i>
+                            </button>
+                            <button id="zoom-out" class="p-2 text-primary hover:bg-primary hover:text-white rounded-full transition duration-300">
+                                <i class="fas fa-minus text-sm"></i>
+                            </button>
+                            
+                            <div class="w-px h-6 bg-gray-300"></div>
+                            
+                            <button id="fullscreen-toggle" class="p-2 text-primary hover:bg-primary hover:text-white rounded-full transition duration-300">
+                                <i class="fas fa-expand text-sm"></i>
+                            </button>
+                            
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            {{-- Tombol Aksi --}}
-            <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 my-6 sm:my-8 justify-center px-4">
-                <a href="https://maps.google.com?q=Goa+Sentono" target="_blank"
-                    class="bg-primary text-white px-6 sm:px-8 py-3 rounded-full font-bold text-sm sm:text-base hover:bg-opacity-90 transition duration-300 transform hover:scale-105 shadow-lg text-center">
-                    <i class="fab fa-google text-white mr-2"></i>
-                    Lihat di Google Maps
-                </a>
-                <button onclick="openPeta2DModal()"
-                    class="bg-primary text-white px-6 sm:px-8 py-3 rounded-full font-bold text-sm sm:text-base hover:bg-opacity-90 transition duration-300 transform hover:scale-105 shadow-lg text-center">
-                    <i class="fas fa-map text-white mr-2"></i>
-                    Lihat Peta 2D
-                </button>
-                <button id="ar-button" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 sm:px-8 py-3 rounded-full font-bold text-sm sm:text-base hover:opacity-90 transition duration-300 transform hover:scale-105 shadow-lg text-center">
-                    <i class="fas fa-mobile-alt text-white mr-2"></i>
-                    Lihat dalam AR
-                </button>
+                <div class="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4 my-6 sm:my-8 justify-center px-4">
+                    <a href="https://maps.google.com?q=Goa+Sentono" target="_blank"
+                        class="w-full sm:w-auto min-w-[300px] bg-primary text-white px-6 sm:px-8 py-3 rounded-full font-bold text-sm sm:text-base hover:bg-opacity-90 transition duration-300 transform hover:scale-105 shadow-lg text-center flex items-center justify-center">
+                        <i class="fab fa-google text-white mr-2"></i>
+                        Lihat di Google Maps
+                    </a>
+
+                    <button onclick="openPeta2DModal()"
+                        class="w-full sm:w-auto min-w-[300px] bg-primary text-white px-6 sm:px-8 py-3 rounded-full font-bold text-sm sm:text-base hover:bg-opacity-90 transition duration-300 transform hover:scale-105 shadow-lg text-center flex items-center justify-center">
+                        <i class="fas fa-map text-white mr-2"></i>
+                        Lihat Peta 2D
+                    </button>
+                </div>
             </div>
-        </div>
-        
-        {{-- Informasi Lokasi --}}
-        <div class="py-6 sm:py-8">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-                {{-- Alamat Lengkap --}}
-                <div class="bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition duration-300">
-                    <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                        <div class="bg-primary text-white p-2 sm:p-3 rounded-full shadow-md">
-                            <i class="fas fa-map-pin text-base sm:text-xl"></i>
+            
+            <div class="py-6 sm:py-8">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+                    <div class="bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition duration-300">
+                        <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div class="bg-primary text-white p-2 sm:p-3 rounded-full shadow-md">
+                                <i class="fas fa-map-pin text-base sm:text-xl"></i>
+                            </div>
+                            <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-primary">Alamat Lengkap</h3>
                         </div>
-                        <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-primary">Alamat Lengkap</h3>
-                    </div>
-                    <p class="text-accent leading-relaxed mb-3 sm:mb-4 text-sm sm:text-base">
-                        Goa Sentono<br>
-                        Nglaren, Mendenrejo, Kradenan,<br>
-                        Blora, Jawa Tengah 58383<br>
-                        Indonesia
-                    </p>
-                    <div class="space-y-1 sm:space-y-2 text-accent text-sm sm:text-base">
-                        <p class="flex items-center">
-                            <i class="fas fa-envelope text-primary mr-2"></i>
-                            <strong>Email:</strong> 
-                            <span class="ml-1">exploresentono2k25@gmail.com</span>
+                        <p class="text-accent leading-relaxed mb-3 sm:mb-4 text-sm sm:text-base">
+                            Goa Sentono<br>
+                            Nglaren, Mendenrejo, Kradenan,<br>
+                            Blora, Jawa Tengah 58383<br>
+                            Indonesia
                         </p>
-                    </div>
-                </div>
-
-                {{-- Akses Transportasi --}}
-                <div class="bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition duration-300">
-                    <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                        <div class="bg-primary text-white p-2 sm:p-3 rounded-full shadow-md">
-                            <i class="fas fa-bus text-base sm:text-xl"></i>
+                        <div class="space-y-1 sm:space-y-2 text-accent text-sm sm:text-base">
+                            <p class="flex items-center">
+                                <i class="fas fa-envelope text-primary mr-2"></i>
+                                <strong>Email:</strong> 
+                                <span class="ml-1">exploresentono2k25@gmail.com</span>
+                            </p>
                         </div>
-                        <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-primary">Akses Transportasi</h3>
                     </div>
-                    <ul class="space-y-1 sm:space-y-2 text-accent text-sm sm:text-base">
-                        <li class="flex items-center">
-                            <i class="fas fa-route text-primary mr-2 text-xs"></i>
-                            40 km dari Alun-alun Blora
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-building text-primary mr-2 text-xs"></i>
-                            1 km dari Kantor Kecamatan Kradenan, Blora
-                        </li>
-                        <li class="flex items-center">
-                            <i class="fas fa-bus-alt text-primary mr-2 text-xs"></i>
-                            Dapat Diakses Menggunakan Tranportasi Umum
-                        </li>
-                    </ul>
+
+                    <div class="bg-cream rounded-2xl sm:rounded-3xl p-4 sm:p-6 shadow-lg hover:shadow-2xl transition duration-300">
+                        <div class="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                            <div class="bg-primary text-white p-2 sm:p-3 rounded-full shadow-md">
+                                <i class="fas fa-bus text-base sm:text-xl"></i>
+                            </div>
+                            <h3 class="text-lg sm:text-xl lg:text-2xl font-bold text-primary">Akses Transportasi</h3>
+                        </div>
+                        <ul class="space-y-1 sm:space-y-2 text-accent text-sm sm:text-base">
+                            <li class="flex items-center">
+                                <i class="fas fa-route text-primary mr-2 text-xs"></i>
+                                40 km dari Alun-alun Blora
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-building text-primary mr-2 text-xs"></i>
+                                1 km dari Kantor Kecamatan Kradenan, Blora
+                            </li>
+                            <li class="flex items-center">
+                                <i class="fas fa-bus-alt text-primary mr-2 text-xs"></i>
+                                Dapat Diakses Menggunakan Tranportasi Umum
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
 
-    <!-- Modal Peta 2D -->
     <div id="peta-2d-modal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-80 transition-opacity duration-300">
         <div class="w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-8" id="peta-modal-backdrop">
-            <!-- Tombol Close di pojok kanan atas -->
             <button id="peta-modal-close" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-white hover:text-red-400 transition-all duration-300 z-30 group">
                 <i class="fa-solid fa-circle-xmark fa-2xl"></i>
             </button>
             
-            <!-- Konten Peta -->
             <div id="peta-modal-content" class="relative w-full max-w-6xl max-h-full bg-white rounded-2xl overflow-hidden shadow-2xl">
-                <!-- Header Modal -->
                 <div class="bg-primary text-white p-4 sm:p-6">
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg sm:text-xl md:text-2xl font-bold flex items-center">
@@ -401,7 +317,6 @@
                     </div>
                 </div>
                 
-                <!-- Container Gambar Peta -->
                 <div class="relative overflow-auto max-h-[80vh]" id="peta-container">
                     <img id="peta-image" 
                          src="{{ asset('images/peta_2d_new.png') }}" 
@@ -409,7 +324,6 @@
                          class="w-full h-auto"
                          draggable="false">
                     
-                    <!-- Loading State -->
                     <div id="peta-loading" class="absolute inset-0 bg-gray-100 flex items-center justify-center">
                         <div class="text-center">
                             <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-2"></div>
@@ -421,7 +335,6 @@
         </div>
     </div>
 
-    {{-- Fasilitas Dinamis --}}
     <section class="py-12 sm:py-16 lg:py-24 section-bg">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -469,7 +382,6 @@
         </div>
     </section>
 
-    {{-- Wisata Sekitar Dinamis --}}
     <section class="py-12 sm:py-16 lg:py-24 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-8 sm:mb-12 lg:mb-16">
@@ -526,7 +438,6 @@
 @endsection
 
 <style>
-/* Custom Toggle Switch */
 .toggle-checkbox {
     appearance: none;
     width: 2rem;
@@ -558,13 +469,11 @@
     transform: translateX(1rem);
 }
 
-/* Model Viewer Enhancements */
 model-viewer {
     --progress-bar-color: #3b82f6;
     --progress-bar-height: 4px;
 }
 
-/* Fullscreen Styles */
 .fullscreen-active {
     position: fixed !important;
     top: 0 !important;
@@ -575,7 +484,6 @@ model-viewer {
     background: white !important;
 }
 
-/* Animation Classes */
 .fade-in {
     animation: fadeIn 0.5s ease-in-out;
 }
@@ -585,7 +493,6 @@ model-viewer {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* Mobile Responsive Adjustments */
 @media (max-width: 640px) {
     .absolute.top-4.left-4,
     .absolute.top-4.right-4 {
@@ -609,15 +516,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadingOverlay = document.getElementById('model-loading');
     const autoRotateToggle = document.getElementById('auto-rotate-toggle');
     
-    // Enhanced 3D Model Controls
     if (modelViewer) {
-        // Hide loading when model is loaded
         modelViewer.addEventListener('load', () => {
             loadingOverlay.style.display = 'none';
             console.log('3D Model loaded successfully');
         });
 
-        // Handle loading errors
         modelViewer.addEventListener('error', (error) => {
             loadingOverlay.innerHTML = `
                 <div class="text-center text-red-600">
@@ -634,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         document.getElementById('view-side')?.addEventListener('click', () => {
-            modelViewer.cameraOrbit = '90deg 90deg 6m';
+            modelViewer.cameraOrbit = '60deg 90deg 3m';
         });
 
         document.getElementById('view-iso')?.addEventListener('click', () => {
@@ -642,7 +546,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modelViewer.fieldOfView = '30deg';
         });
 
-        // Auto Rotate Toggle
         autoRotateToggle?.addEventListener('change', (e) => {
             if (e.target.checked) {
                 modelViewer.setAttribute('auto-rotate', '');
@@ -651,7 +554,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Zoom Controls
         document.getElementById('zoom-in')?.addEventListener('click', () => {
             const currentFOV = parseFloat(modelViewer.fieldOfView);
             const newFOV = Math.max(currentFOV - 5, 10);
@@ -664,7 +566,6 @@ document.addEventListener('DOMContentLoaded', function() {
             modelViewer.fieldOfView = newFOV + 'deg';
         });
 
-        // Fullscreen Toggle
         let isFullscreen = false;
         document.getElementById('fullscreen-toggle')?.addEventListener('click', () => {
             const container = modelViewer.parentElement;
@@ -683,20 +584,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // AR Button (if supported)
-        const arButton = document.getElementById('ar-button');
-        if (arButton) {
-            // Check if AR is supported
-            if (modelViewer.canActivateAR) {
-                arButton.addEventListener('click', () => {
-                    modelViewer.activateAR();
-                });
-            } else {
-                arButton.style.display = 'none';
-            }
-        }
-
-        // Keyboard Controls
         document.addEventListener('keydown', (e) => {
             if (!modelViewer.matches(':focus-within')) return;
             
@@ -724,7 +611,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Touch Gestures for Mobile
         let touchStartY = 0;
         modelViewer.addEventListener('touchstart', (e) => {
             if (e.touches.length === 2) {
@@ -749,7 +635,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Notification System
     function showNotification(message, type = 'info') {
         const notification = document.createElement('div');
         notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg transform transition-all duration-300 translate-x-full`;
@@ -777,7 +662,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
 
-    // ESC key to exit fullscreen
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && isFullscreen) {
             document.getElementById('fullscreen-toggle')?.click();
@@ -789,111 +673,42 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const carouselContainer = document.getElementById('peta-lokasi-carousel-container');
-    if (carouselContainer) {
-        const track = document.getElementById('peta-lokasi-carousel-track');
-        const prevBtn = document.getElementById('peta-lokasi-carousel-prev');
-        const nextBtn = document.getElementById('peta-lokasi-carousel-next');
-        const dotsContainer = document.getElementById('peta-lokasi-carousel-dots');
-        
-        const totalImages = {{ count($locationImages) }};
-        const imagesPerView = {{ $imagesPerView }};
-        const totalPages = Math.ceil(totalImages / imagesPerView);
-        
-        let currentPage = 0;
-
-        function updateCarousel() {
-            // Pergeseran didasarkan pada lebar viewport (100%)
-            const offset = currentPage * 100;
-            track.style.transform = `translateX(-${offset}%)`;
-
-            // Update dots
-            Array.from(dotsContainer.children).forEach((dot, index) => {
-                dot.classList.toggle('bg-primary', index === currentPage);
-                dot.classList.toggle('bg-gray-300', index !== currentPage);
-            });
-
-            // Tampilkan/sembunyikan tombol prev/next
-            prevBtn.style.display = currentPage === 0 ? 'none' : 'flex';
-            nextBtn.style.display = currentPage === totalPages - 1 ? 'none' : 'flex';
-        }
-
-        nextBtn.addEventListener('click', () => {
-            if (currentPage < totalPages - 1) {
-                currentPage++;
-                updateCarousel();
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentPage > 0) {
-                currentPage--;
-                updateCarousel();
-            }
-        });
-
-        dotsContainer.addEventListener('click', (e) => {
-            if (e.target.matches('[data-slide-to]')) {
-                currentPage = parseInt(e.target.dataset.slideTo);
-                updateCarousel();
-            }
-        });
-
-        // Panggil saat pertama kali dimuat untuk mengatur status tombol
-        updateCarousel();
-    }
-});
-</script>
-
-<script>
-// Fungsi untuk membuka modal peta 2D
 function openPeta2DModal() {
     const modal = document.getElementById('peta-2d-modal');
     const petaImage = document.getElementById('peta-image');
     const loading = document.getElementById('peta-loading');
     
-    // Show modal
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
     
-    // Check if image is already loaded
     if (petaImage.complete && petaImage.naturalHeight !== 0) {
-        // Image already loaded, hide loading immediately
         loading.classList.add('hidden');
     } else {
-        // Show loading state
         loading.classList.remove('hidden');
         
-        // Set up load event listener
         petaImage.onload = function() {
             loading.classList.add('hidden');
         };
         
-        // Set up error handler
         petaImage.onerror = function() {
             loading.classList.add('hidden');
             console.error('Failed to load map image');
         };
         
-        // Fallback: hide loading after 3 seconds regardless
         setTimeout(() => {
             loading.classList.add('hidden');
         }, 3000);
     }
     
-    // Add fade in animation
     setTimeout(() => {
         modal.style.opacity = '1';
     }, 10);
 }
 
-// Fungsi untuk menutup modal
 function closePeta2DModal() {
     const modal = document.getElementById('peta-2d-modal');
     
-    // Add fade out animation
     modal.style.opacity = '0';
     
     setTimeout(() => {
@@ -903,7 +718,6 @@ function closePeta2DModal() {
     }, 300);
 }
 
-// Fungsi download peta
 function downloadPeta2D() {
     const link = document.createElement('a');
     link.href = "{{ asset('images/IMG_3726.jpg') }}";
@@ -913,7 +727,6 @@ function downloadPeta2D() {
     document.body.removeChild(link);
 }
 
-// Event listeners untuk modal
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('peta-2d-modal');
     const modalClose = document.getElementById('peta-modal-close');
@@ -924,24 +737,20 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
     }
     
-    // Close button
     modalClose.addEventListener('click', closePeta2DModal);
     
-    // Click outside to close
     modalBackdrop.addEventListener('click', (e) => {
         if (e.target === modalBackdrop) {
             closePeta2DModal();
         }
     });
     
-    // Escape key to close
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
             closePeta2DModal();
         }
     });
     
-    // Initialize modal styles
     modal.style.transition = 'opacity 0.3s ease-in-out';
     modal.style.opacity = '0';
     
